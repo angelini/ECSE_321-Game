@@ -1,7 +1,6 @@
 package mcgill.game;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -18,14 +17,9 @@ public class Chat {
 		this.users = users;
 	}
 	
-	public Chat(User ...users) {
-		this.users = new HashSet<User>();
+	public Chat(Set<User> users) {
 		this.messages = new ArrayList<Message>();
-		
-		for (int i = 0; i < users.length; i++) {
-			this.users.add(users[i]);
-		}
-		
+		this.users = users;
 		this.id = UUID.randomUUID().toString();
 	}
 	

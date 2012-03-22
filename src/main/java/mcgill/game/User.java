@@ -12,6 +12,20 @@ public class User {
 	private int credits;
 	private User[] friends;
 	
+	public static User createUser(String username, String password, Database db) throws Exception {
+		User exists = db.getUser(username, false);
+		
+		if (exists != null) {
+			throw new Exception("User already exists");
+		}
+		
+		String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
+		User user = new User(username, passwordHash, 0); 
+		
+		db.setUser(user);
+		return user;
+	}
+	
 	public static User verifyUser(String username, String password, Database db) {
 		User user = db.getUser(username, false);
 		
@@ -24,18 +38,10 @@ public class User {
 		return null;
 	}
 	
-	public User(String username, String password, Database db) throws Exception {
-		User exists = db.getUser(username, false);
-		
-		if (exists != null) {
-			throw new Exception("User already exists");
-		}
-		
+	public User(String username, String passwordHash, int credits) throws Exception {
 		this.username = username;
-		this.passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
+		this.passwordHash = passwordHash;
 		this.credits = 0;
-		
-		db.setUser(this);
 	}
 	
 	public User(Map<String, String> info) {

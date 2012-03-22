@@ -11,12 +11,12 @@ public class UserTest {
 	
 	@Before
 	public void setUp() {
-		this.db = new Database(Server.REDIS_HOST, Server.REDIS_PORT);
+		this.db = new Database(Config.REDIS_HOST, Config.REDIS_PORT);
 	}
 	
 	@Test
 	public void testNewUser() throws Exception {
-		User user = new User("alex", "1234", this.db);
+		User user = User.createUser("alex", "1234", this.db);
     	
     	assertEquals("alex", user.getUsername());
     	assertNotSame("1234", user.getPasswordHash());
@@ -26,7 +26,7 @@ public class UserTest {
 	
 	@Test
 	public void testVerifyUser() throws Exception {
-		User test = new User("alex", "1234", this.db);
+		User test = User.createUser("alex", "1234", this.db);
 		
 		User user = User.verifyUser("alex", "1234", this.db);
 		assertEquals("alex", user.getUsername());

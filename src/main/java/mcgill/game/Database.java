@@ -106,11 +106,18 @@ public class Database {
 	}
 	
 	public void setChat(Chat chat) {
+		for (User user : chat.getUsers()) {
+			this.jedis.sadd(cat(CHATS, chat.getId(), USERS), user.getUsername());
+		}
 		
+		for (Message message : chat.getMessages()) {
+			this.jedis.sadd(cat(CHATS, chat.getId(), MESSAGES), message.getId());
+		}
 	}
 	
 	public void delChat(String id) {
-		
+		this.jedis.del(cat(CHATS, id, USERS));
+		this.jedis.del(cat(CHATS, id, MESSAGES));
 	}
 	
 }
