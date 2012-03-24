@@ -10,5 +10,6 @@ public class Config {
 	// Network commands
 	
 	static final String LOGIN = "login";
+	static final String REGISTER = "register";
 
 }

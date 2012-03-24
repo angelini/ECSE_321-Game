@@ -12,15 +12,15 @@ public class User {
 	private int credits;
 	private User[] friends;
 	
-	public static User createUser(String username, String password, Database db) throws Exception {
+	public static User createUser(String username, String password, Database db) {
 		User exists = db.getUser(username, false);
 		
 		if (exists != null) {
-			throw new Exception("User already exists");
+			return null;
 		}
 		
 		String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
-		User user = new User(username, passwordHash, 0); 
+		User user = new User(username, passwordHash, 0);
 		
 		db.setUser(user);
 		return user;
@@ -38,7 +38,7 @@ public class User {
 		return null;
 	}
 	
-	public User(String username, String passwordHash, int credits) throws Exception {
+	public User(String username, String passwordHash, int credits) {
 		this.username = username;
 		this.passwordHash = passwordHash;
 		this.credits = 0;

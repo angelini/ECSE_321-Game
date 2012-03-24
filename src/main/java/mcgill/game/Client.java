@@ -27,7 +27,23 @@ public class Client {
 	}
 	
 	public void createUser() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
+		try {
+			System.out.print("Username: ");
+			String username = br.readLine();
+			System.out.print("Password: ");
+			String password = br.readLine();
+			
+			String[] args = {this.session, username, password};
+			NetworkCommand nc = new NetworkCommand(this.session, Config.REGISTER, args);
+			
+			this.jedis.publish("server::" + this.session, this.gson.toJson(nc));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 	
 	public void login() {
@@ -39,7 +55,7 @@ public class Client {
 			System.out.print("Password: ");
 			String password = br.readLine();
 			
-			String[] args = {username, password};
+			String[] args = {this.session, username, password};
 			NetworkCommand nc = new NetworkCommand(this.session, Config.LOGIN, args);
 			
 			this.jedis.publish("server::" + this.session, this.gson.toJson(nc));
