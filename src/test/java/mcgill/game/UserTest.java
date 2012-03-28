@@ -7,6 +7,9 @@ import org.junit.Test;
 
 public class UserTest {
 
+	private static String USER = "test-user";
+	private static String PASS = "test-pass";
+	
 	private Database db;
 	
 	@Before
@@ -16,26 +19,26 @@ public class UserTest {
 	
 	@Test
 	public void testNewUser() throws Exception {
-		User user = User.createUser("alex", "1234", this.db);
+		User user = User.createUser(USER, PASS, this.db);
     	
-    	assertEquals("alex", user.getUsername());
-    	assertNotSame("1234", user.getPasswordHash());
+    	assertEquals(USER, user.getUsername());
+    	assertNotSame(PASS, user.getPasswordHash());
     	
     	this.db.delUser(user.getUsername());
 	}
 	
 	@Test
 	public void testVerifyUser() throws Exception {
-		User test = User.createUser("alex", "1234", this.db);
+		User test = User.createUser(USER, PASS, this.db);
 		
-		User user = User.verifyUser("alex", "1234", this.db);
-		assertEquals("alex", user.getUsername());
-    	assertNotSame("1234", user.getPasswordHash());
+		User user = User.verifyUser(USER, PASS, this.db);
+		assertEquals(USER, user.getUsername());
+    	assertNotSame(PASS, user.getPasswordHash());
 		
-		User wrong_pass = User.verifyUser("alex", "1243", this.db);
+		User wrong_pass = User.verifyUser(USER, "1243", this.db);
     	assertNull(wrong_pass);
     	
-    	User wrong_name = User.verifyUser("alex2", "1234", this.db);
+    	User wrong_name = User.verifyUser("alex2", PASS, this.db);
     	assertNull(wrong_name);
     	
     	this.db.delUser(test.getUsername());
