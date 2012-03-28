@@ -29,11 +29,10 @@ public class Server {
     	this.jedis.psubscribe(this.listener, "server::*");
     }
     
-    public User login(Object args) {
-    	String[] typed_args = (String[]) args;
-    	String session = typed_args[0];
-    	String username = typed_args[1];
-    	String password = typed_args[2];
+    public User login(String[] args) {
+    	String session = args[0];
+    	String username = args[1];
+    	String password = args[2];
     	
     	User user = User.verifyUser(username, password, this.db);
     	this.session.put(session, user);
@@ -41,13 +40,12 @@ public class Server {
     	return user;
     }
     
-    public User register(Object args) {
-    	String[] typed_args = (String[]) args;
-    	String session = typed_args[0];
-    	String username = typed_args[1];
-    	String password = typed_args[2];
+    public User register(String[] args) {
+    	String session = args[0];
+    	String username = args[1];
+    	String password = args[2];
     	
-    	User user = User.verifyUser(username, password, this.db);
+    	User user = User.createUser(username, password, this.db);
     	this.session.put(session, user);
     	
     	return user;

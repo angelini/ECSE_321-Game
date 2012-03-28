@@ -1,7 +1,5 @@
 package mcgill.game;
 
-import java.lang.reflect.Method;
-
 import com.google.gson.Gson;
 
 import redis.clients.jedis.JedisPubSub;
@@ -18,15 +16,15 @@ public class ServerListener extends JedisPubSub {
 	
 	@Override
 	public void onPMessage(String pattern, String channel, String message) {
-		NetworkCommand nc = gson.fromJson(message, NetworkCommand.class);
+		String[] keys = Database.split(channel);
+		String method = keys[1];
 		
-		try {
-			Method method = Class.forName("mcgill.game.Server")
-								 .getMethod(nc.getCommand(), new Class[] {Object.class});
-			method.invoke(this.server, (Object) nc.getArgs());
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (method.equals(Config.LOGIN)) {
+			this.server.login(this.gson.fromJson(message, String[].class));
+		}
+		
+		if (method.equals(Config.REGISTER)) {
+			this.server.register(this.gson.fromJson(message, String[].class));
 		}
 	}
 

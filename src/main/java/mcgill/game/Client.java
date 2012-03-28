@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import redis.clients.jedis.Jedis;
 
 public class Client {
-
+	
 	private String session;
 	private Gson gson;
 	private Jedis jedis;
@@ -36,9 +36,9 @@ public class Client {
 			String password = br.readLine();
 			
 			String[] args = {this.session, username, password};
-			NetworkCommand nc = new NetworkCommand(this.session, Config.REGISTER, args);
 			
-			this.jedis.publish("server::" + this.session, this.gson.toJson(nc));
+			String key = Database.cat(Config.SERVER, Config.REGISTER, this.session);
+			this.jedis.publish(key, this.gson.toJson(args));
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -56,9 +56,9 @@ public class Client {
 			String password = br.readLine();
 			
 			String[] args = {this.session, username, password};
-			NetworkCommand nc = new NetworkCommand(this.session, Config.LOGIN, args);
 			
-			this.jedis.publish("server::" + this.session, this.gson.toJson(nc));
+			String key = Database.cat(Config.SERVER, Config.LOGIN, this.session);
+			this.jedis.publish(key, this.gson.toJson(args));
 			
 		} catch (IOException e) {
 			e.printStackTrace();

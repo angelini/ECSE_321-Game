@@ -19,7 +19,7 @@ public class Database {
 	
 	private Jedis jedis;
 	
-	private static String cat(String ... keys) {
+	public static String cat(String ... keys) {
 		String result = "";
 		
 		for (int i = 0; i < keys.length; i++) {
@@ -28,6 +28,10 @@ public class Database {
 		}
 		
 		return result;
+	}
+	
+	public static String[] split(String key) {
+		return key.split(SEPERATOR);
 	}
 	
 	public Database(String host, int port) {

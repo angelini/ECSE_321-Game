@@ -9,6 +9,7 @@ public class Config {
 	
 	// Network commands
 	
+	static final String SERVER = "server";
 	static final String LOGIN = "login";
 	static final String REGISTER = "register";
 
