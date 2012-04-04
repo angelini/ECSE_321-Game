@@ -5,14 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.UUID;
 
-import com.google.gson.Gson;
-
 import redis.clients.jedis.Jedis;
 
 public class Client {
 	
 	private String session;
-	private Gson gson;
 	private Jedis jedis;
 	
 	public static void main(String[] args) {
@@ -22,7 +19,6 @@ public class Client {
 	
 	public Client(String host, int port) {
 		this.session = UUID.randomUUID().toString();
-		this.gson = new Gson();
 		this.jedis = new Jedis(host, port);
 	}
 	
@@ -37,8 +33,10 @@ public class Client {
 			
 			String[] args = {this.session, username, password};
 			
-			String key = Database.cat(Config.SERVER, Config.REGISTER, this.session);
-			this.jedis.publish(key, this.gson.toJson(args));
+			ServerCall server = new ServerCall(this.jedis, this.session);
+			String res = server.call(Config.REGISTER, args);
+			
+			System.out.println("Res is: " + res);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -57,8 +55,10 @@ public class Client {
 			
 			String[] args = {this.session, username, password};
 			
-			String key = Database.cat(Config.SERVER, Config.LOGIN, this.session);
-			this.jedis.publish(key, this.gson.toJson(args));
+			ServerCall server = new ServerCall(this.jedis, this.session);
+			String res = server.call(Config.LOGIN, args);
+			
+			System.out.println("Res is: " + res);
 			
 		} catch (IOException e) {
 			e.printStackTrace();

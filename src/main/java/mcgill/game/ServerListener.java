@@ -18,13 +18,16 @@ public class ServerListener extends JedisPubSub {
 	public void onPMessage(String pattern, String channel, String message) {
 		String[] keys = Database.split(channel);
 		String method = keys[1];
+		String session = keys[2];
+		
+		String c_key = Database.cat(Config.CLIENT, session);
 		
 		if (method.equals(Config.LOGIN)) {
-			this.server.login(this.gson.fromJson(message, String[].class));
+			this.server.login(c_key, this.gson.fromJson(message, String[].class));
 		}
 		
 		if (method.equals(Config.REGISTER)) {
-			this.server.register(this.gson.fromJson(message, String[].class));
+			this.server.register(c_key, this.gson.fromJson(message, String[].class));
 		}
 	}
 
