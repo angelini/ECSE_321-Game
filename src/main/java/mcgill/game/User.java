@@ -1,16 +1,20 @@
 package mcgill.game;
 
+import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-public class User {
+public class User implements Serializable {
+	
+	private static final long serialVersionUID = 2000312905803278839L;
 	
 	private String username;
 	private String passwordHash;
 	private int credits;
-	private User[] friends;
+	private List<User> friends;
 	
 	public static User createUser(String username, String password, Database db) {
 		User exists = db.getUser(username, false);
@@ -48,7 +52,7 @@ public class User {
 		this.init(info);
 	}
 	
-	public User(Map<String, String> info, User[] friends) {
+	public User(Map<String, String> info, List<User> friends) {
 		this.init(info);
 		this.friends = friends;
 	}
@@ -67,7 +71,7 @@ public class User {
 		
 		return info;
 	}
-
+	
 	public String getUsername() {
 		return username;
 	}
@@ -80,7 +84,11 @@ public class User {
 		return credits;
 	}
 
-	public User[] getFriends() {
+	public void setCredits(int credits) {
+		this.credits = credits;
+	}
+
+	public List<User> getFriends() {
 		return friends;
 	}
 

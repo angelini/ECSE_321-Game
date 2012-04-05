@@ -29,6 +29,30 @@ public class ServerListener extends JedisPubSub {
 		if (method.equals(Config.REGISTER)) {
 			this.server.register(c_key, this.gson.fromJson(message, String[].class));
 		}
+		
+		if (method.equals(Config.GET_FRIENDS)) {
+			this.server.getFriends(c_key, this.gson.fromJson(message, String[].class));
+		}
+		
+		if (method.equals(Config.ADD_FRIEND)) {
+			this.server.addFriend(c_key, this.gson.fromJson(message, String[].class));
+		}
+		
+		if (method.equals(Config.GET_CHATS)) {
+			this.server.getChats(c_key, this.gson.fromJson(message, String[].class));
+		}
+		
+		if (method.equals(Config.CREATE_CHAT)) {
+			this.server.createChat(c_key, this.gson.fromJson(message, String[].class));
+		}
+		
+		if (method.equals(Config.MESSAGE)) {
+			this.server.message(c_key, this.gson.fromJson(message, String[].class));
+		}
+		
+		if (method.equals(Config.ADD_CREDITS)) {
+			this.server.addCredits(c_key, this.gson.fromJson(message, String[].class));
+		}
 	}
 
 	@Override

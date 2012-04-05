@@ -37,10 +37,10 @@ public class ServerCall {
 		
 	}
 	
-	public ServerCall(Jedis jedis, String session) {
-		this.jedis = jedis;
+	public ServerCall(String session) {
 		this.session = session;
 		this.gson = new Gson();
+		this.jedis = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT);
 	}
 	
 	public String call(String method, String[] args) {

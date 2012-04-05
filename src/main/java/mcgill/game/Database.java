@@ -46,13 +46,11 @@ public class Database {
 		if (info.get("username") == null) return null;
 		
 		if (include_friends) {
-			int i = 0;
 			Set<String> friend_names = this.jedis.smembers(cat(FRIENDS, username));
-			User[] friends = new User[friend_names.size()];
+			List<User> friends = new ArrayList<User>();
 			
 			for (String friend : friend_names) {
-				friends[i] = getUser(friend, false);
-				i++;
+				friends.add(getUser(friend, false));
 			}
 			
 			return new User(info, friends);
@@ -115,7 +113,7 @@ public class Database {
 		}
 		
 		for (Message message : chat.getMessages()) {
-			this.jedis.sadd(cat(CHATS, chat.getId(), MESSAGES), message.getId());
+			this.jedis.rpush(cat(CHATS, chat.getId(), MESSAGES), message.getId());
 		}
 	}
 	

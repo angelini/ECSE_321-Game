@@ -9,11 +9,13 @@ public class Message {
 
 	private String id;
 	private String message;
+	private String username;
 	private Date time;
 	
-	public Message(String message, Database db) {
+	public Message(String message, String username, Database db) {
 		this.id = UUID.randomUUID().toString();
 		this.message = message;
+		this.username = username;
 		this.time = new Date();
 		
 		db.setMessage(this);
@@ -22,6 +24,7 @@ public class Message {
 	public Message(Map<String, String> info) {
 		this.id = info.get("id");
 		this.message = info.get("message");
+		this.username = info.get("username");
 		this.time = new Date(Long.parseLong(info.get("time")));
 	}
 
@@ -29,6 +32,7 @@ public class Message {
 		Map<String, String> info = new HashMap<String, String>();
 		info.put("id", this.id);
 		info.put("message", this.message);
+		info.put("username", this.username);
 		info.put("time", "" + this.time.getTime());
 		
 		return info;
@@ -40,6 +44,10 @@ public class Message {
 
 	public String getMessage() {
 		return message;
+	}
+	
+	public String getUsername() {
+		return username;
 	}
 
 	public Date getTime() {

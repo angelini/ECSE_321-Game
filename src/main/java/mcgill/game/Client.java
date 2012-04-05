@@ -5,12 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.UUID;
 
-import redis.clients.jedis.Jedis;
-
 public class Client {
 	
 	private String session;
-	private Jedis jedis;
 	
 	public static void main(String[] args) {
     	Client client = new Client(Config.REDIS_HOST, Config.REDIS_PORT);
@@ -19,7 +16,6 @@ public class Client {
 	
 	public Client(String host, int port) {
 		this.session = UUID.randomUUID().toString();
-		this.jedis = new Jedis(host, port);
 	}
 	
 	public void createUser() {
@@ -33,10 +29,10 @@ public class Client {
 			
 			String[] args = {this.session, username, password};
 			
-			ServerCall server = new ServerCall(this.jedis, this.session);
+			ServerCall server = new ServerCall(this.session);
 			String res = server.call(Config.REGISTER, args);
 			
-			System.out.println("Res is: " + res);
+			System.out.println("Register Res is: " + res + "\n");
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -55,15 +51,143 @@ public class Client {
 			
 			String[] args = {this.session, username, password};
 			
-			ServerCall server = new ServerCall(this.jedis, this.session);
+			ServerCall server = new ServerCall(this.session);
 			String res = server.call(Config.LOGIN, args);
 			
-			System.out.println("Res is: " + res);
+			System.out.println("Login Res is: " + res + "\n");
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
+	}
+	
+	public void getFriends() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			System.out.print("Username: ");
+			String username = br.readLine();
+			
+			String[] args = {this.session, username};
+			
+			ServerCall server = new ServerCall(this.session);
+			String res = server.call(Config.GET_FRIENDS, args);
+			
+			System.out.println("Get Friends Res is: " + res + "\n");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}		
+	}
+	
+	public void addFriend() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			System.out.print("Username: ");
+			String username = br.readLine();
+			System.out.print("Friend: ");
+			String friend = br.readLine();
+			
+			String[] args = {this.session, username, friend};
+			
+			ServerCall server = new ServerCall(this.session);
+			String res = server.call(Config.ADD_FRIEND, args);
+			
+			System.out.println("Add Friends Res is: " + res + "\n");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}		
+	}
+	
+	public void getChats() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			System.out.print("Username: ");
+			String username = br.readLine();
+			
+			String[] args = {this.session, username};
+			
+			ServerCall server = new ServerCall(this.session);
+			String res = server.call(Config.GET_CHATS, args);
+			
+			System.out.println("Get Chats Res is: " + res + "\n");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+	
+	public void createChat() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			System.out.print("Username: ");
+			String username = br.readLine();
+			System.out.print("Friend: ");
+			String friend = br.readLine();
+			
+			String[] args = {this.session, username, friend};
+			
+			ServerCall server = new ServerCall(this.session);
+			String res = server.call(Config.CREATE_CHAT, args);
+			
+			System.out.println("Create Chat Res is: " + res + "\n");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+	
+	public void sendMessage() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			System.out.print("Username: ");
+			String username = br.readLine();
+			System.out.print("Message: ");
+			String message = br.readLine();
+			System.out.print("Chat ID: ");
+			String chat_id = br.readLine();
+			
+			String[] args = {this.session, username, message, chat_id};
+			
+			ServerCall server = new ServerCall(this.session);
+			String res = server.call(Config.MESSAGE, args);
+			
+			System.out.println("Message Res is: " + res + "\n");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+	
+	public void addCredits() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			System.out.print("Username: ");
+			String username = br.readLine();
+			
+			String[] args = {this.session, username};
+			
+			ServerCall server = new ServerCall(this.session);
+			String res = server.call(Config.ADD_CREDITS, args);
+			
+			System.out.println("Add Credits Res is: " + res + "\n");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}		
 	}
 	
 	public void exit() {
@@ -77,7 +201,13 @@ public class Client {
 			System.out.println("Client Started, choose action:");
 			System.out.println("1. Login");
 			System.out.println("2. Create User");
-			System.out.println("3. Exit");
+			System.out.println("3. Get Friends");
+			System.out.println("4. Add Friend");
+			System.out.println("5. Get Chats");
+			System.out.println("6. Create Chat");
+			System.out.println("7. Send Message");
+			System.out.println("8. Add Credits");
+			System.out.println("9. Exit");
 			System.out.print("=> ");
 		
 			try {
@@ -93,6 +223,30 @@ public class Client {
 					break;
 					
 				case 3:
+					this.getFriends();
+					break;
+					
+				case 4:
+					this.addFriend();
+					break;
+					
+				case 5:
+					this.getChats();
+					break;
+					
+				case 6:
+					this.createChat();
+					break;
+					
+				case 7:
+					this.sendMessage();
+					break;
+					
+				case 8:
+					this.addCredits();
+					break;
+					
+				case 9:
 					this.exit();
 					break;
 				}
