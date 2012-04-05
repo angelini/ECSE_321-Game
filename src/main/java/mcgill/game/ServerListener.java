@@ -53,6 +53,18 @@ public class ServerListener extends JedisPubSub {
 		if (method.equals(Config.ADD_CREDITS)) {
 			this.server.addCredits(c_key, this.gson.fromJson(message, String[].class));
 		}
+		
+		if (method.equals(Config.GET_TABLES)) {
+			this.server.getTables(c_key, this.gson.fromJson(message, String[].class));
+		}
+		
+		if (method.equals(Config.CREATE_TABLE)) {
+			this.server.createTable(c_key, this.gson.fromJson(message, String[].class));
+		}
+		
+		if (method.equals(Config.JOIN_TABLE)) {
+			this.server.joinTable(c_key, this.gson.fromJson(message, String[].class));
+		}
 	}
 
 	@Override

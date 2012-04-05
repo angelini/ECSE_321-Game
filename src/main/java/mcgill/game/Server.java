@@ -161,4 +161,41 @@ public class Server {
     	this.emit.publish(c_key, this.gson.toJson(user));
     }
     
+    public void getTables(String c_key, String[] args) {
+    	this.emit.publish(c_key, this.gson.toJson(this.db.getTables()));
+    }
+    
+    public void createTable(String c_key, String[] args) {
+    	String username = args[1];
+    	String name = args[2];
+    	
+    	User user = this.db.getUser(username, false);
+    	if (user == null) {
+    		this.emit.publish(c_key, "");
+    		return;
+    	}
+    	
+    	Table table = new Table(name);
+    	table.addUser(user);
+    	this.db.setTable(table);
+    	this.emit.publish(c_key, this.gson.toJson(table));
+    }
+
+	public void joinTable(String c_key, String[] args) {
+		String username = args[1];
+		String table_id = args[2];
+		
+		User user = this.db.getUser(username, false);
+		Table table = this.db.getTable(table_id);
+		
+		if (user == null || table == null) {
+			this.emit.publish(c_key, "");
+    		return;
+		}
+		
+		Boolean result = table.addUser(user);
+		this.db.setTable(table);
+		this.emit.publish(c_key, this.gson.toJson(result));
+	}
+    
 }

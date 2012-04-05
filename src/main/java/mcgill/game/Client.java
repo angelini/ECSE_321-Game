@@ -190,6 +190,59 @@ public class Client {
 		}		
 	}
 	
+	public void getTables() {
+		String[] args = {this.session};
+		
+		ServerCall server = new ServerCall(this.session);
+		String res = server.call(Config.GET_TABLES, args);
+		
+		System.out.println("Get Tables Res is: " + res + "\n");
+	}
+	
+	public void createTable() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			System.out.print("Username: ");
+			String username = br.readLine();
+			System.out.print("Name: ");
+			String name = br.readLine();
+			
+			String[] args = {this.session, username, name};
+			
+			ServerCall server = new ServerCall(this.session);
+			String res = server.call(Config.CREATE_TABLE, args);
+			
+			System.out.println("Create Table Res is: " + res + "\n");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}		
+	}
+	
+	public void joinTable() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			System.out.print("Username: ");
+			String username = br.readLine();
+			System.out.print("Table ID: ");
+			String table_id = br.readLine();
+			
+			String[] args = {this.session, username, table_id};
+			
+			ServerCall server = new ServerCall(this.session);
+			String res = server.call(Config.JOIN_TABLE, args);
+			
+			System.out.println("Join Table Res is: " + res + "\n");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}		
+	}
+	
 	public void exit() {
 		System.exit(0);
 	}
@@ -207,7 +260,10 @@ public class Client {
 			System.out.println("6. Create Chat");
 			System.out.println("7. Send Message");
 			System.out.println("8. Add Credits");
-			System.out.println("9. Exit");
+			System.out.println("9. Get Tables");
+			System.out.println("10. Create Table");
+			System.out.println("11. Join Table");
+			System.out.println("12. Exit");
 			System.out.print("=> ");
 		
 			try {
@@ -247,6 +303,18 @@ public class Client {
 					break;
 					
 				case 9:
+					this.getTables();
+					break;
+					
+				case 10:
+					this.createTable();
+					break;
+					
+				case 11:
+					this.joinTable();
+					break;
+					
+				case 12:
 					this.exit();
 					break;
 				}

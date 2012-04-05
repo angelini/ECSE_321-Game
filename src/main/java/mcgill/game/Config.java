@@ -20,9 +20,13 @@ public class Config {
 	static final String GET_CHATS = "get_chats";
 	static final String CREATE_CHAT = "create_chat";
 	static final String ADD_CREDITS = "add_credits";
+	static final String GET_TABLES = "get_tables";
+	static final String CREATE_TABLE = "create_table";
+	static final String JOIN_TABLE = "join_table";
 	
 	// Game Configs
 	
 	static final int REFILL_CREDITS = 1000;
+	static final int MAX_PLAYERS = 5;
 
 }

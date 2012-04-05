@@ -16,6 +16,7 @@ public class Database {
 	static final String FRIENDS = "friends";
 	static final String CHATS = "chats";
 	static final String MESSAGES = "messages";
+	static final String TABLES = "tables";
 	
 	private Jedis jedis;
 	
@@ -115,11 +116,71 @@ public class Database {
 		for (Message message : chat.getMessages()) {
 			this.jedis.rpush(cat(CHATS, chat.getId(), MESSAGES), message.getId());
 		}
+		
+		this.jedis.sadd(CHATS, cat(CHATS, chat.getId()));
 	}
 	
 	public void delChat(String id) {
 		this.jedis.del(cat(CHATS, id, USERS));
 		this.jedis.del(cat(CHATS, id, MESSAGES));
+		this.jedis.srem(CHATS, cat(CHATS, id));
+	}
+	
+	public List<Chat> getUserChats(String username) {
+		List<Chat> chats = new ArrayList<Chat>();
+		Set<String> keys = this.jedis.keys(CHATS);
+		
+		for (String key : keys) {
+			String id = split(key)[1];
+			if (this.jedis.sismember(cat(CHATS, id, USERS), username)) {
+				chats.add(getChat(id));
+			}
+		}
+		
+		return chats;
+	}
+	
+	// TABLE DB Adapter
+	
+	public Table getTable(String id) {
+		Set<User> users = new HashSet<User>();
+		
+		Set<String> usernames = this.jedis.smembers(cat(TABLES, id, USERS));
+		
+		for (String username : usernames) {
+			users.add(getUser(username, false));
+		}
+		
+		String name = this.jedis.get(cat(TABLES, id));
+		
+		return new Table(id, name, users);
+	}
+	
+	public void setTable(Table table) {
+		for (User user : table.getUsers()) {
+			this.jedis.sadd(cat(TABLES, table.getId(), USERS), user.getUsername());
+		}
+		
+		this.jedis.set(cat(TABLES, table.getId()), table.getName());
+		this.jedis.sadd(TABLES, cat(TABLES, table.getId()));
+	}
+	
+	public void delTable(String id) {
+		this.jedis.del(cat(TABLES, id, USERS));
+		this.jedis.del(cat(TABLES, id));
+		this.jedis.srem(TABLES, cat(TABLES, id));
+	}
+	
+	public List<Table> getTables() {
+		List<Table> tables = new ArrayList<Table>();
+		Set<String> table_keys = this.jedis.smembers(TABLES);
+		
+		for (String table_key : table_keys) {
+			String id = split(table_key)[1];
+			tables.add(getTable(id));
+		}
+		
+		return tables;
 	}
 	
 }
