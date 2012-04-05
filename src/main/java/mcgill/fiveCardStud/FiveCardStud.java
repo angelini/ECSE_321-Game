@@ -2,7 +2,9 @@ package mcgill.fiveCardStud;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import mcgill.game.Server;
 import mcgill.poker.Deck;
 import mcgill.poker.HandRank;
 import mcgill.poker.Player;
@@ -11,10 +13,12 @@ import mcgill.poker.OutOfMoneyException;
 import mcgill.poker.TooFewCardsException;
 import mcgill.poker.TooManyCardsException;
 
-public class FiveCardStud {
+public class FiveCardStud implements Runnable {
 	public static final int FOLDED = -1;
 	public static final int BETTING = 0;
 	public static final int ALL_IN = 1;
+	
+	private Server server;
 	
 	private int maxRaises;
 	private int street;
@@ -22,11 +26,12 @@ public class FiveCardStud {
 	private int lowBet;
 	private int bringIn;
 	private Deck deck;
-	private ArrayList<Player> players;
-	private ArrayList<Pot> pots;
+	private List<Player> players;
+	private List<Pot> pots;
 	private int startingPlayer;
 	
-	public FiveCardStud(ArrayList<Player> players, int lowBet, int maxRaises, int bringIn) {
+	public FiveCardStud(Server server, List<Player> players, int lowBet, int maxRaises, int bringIn) {
+		this.server = server;
 		this.raises = 0;
 		this.players = players;
 		this.pots= new ArrayList<Pot>();
@@ -36,6 +41,15 @@ public class FiveCardStud {
 		this.maxRaises = maxRaises;
 		this.bringIn = bringIn;
 		this.startingPlayer = 0;
+	}
+	
+	public void run() {
+		try {
+			this.playRound();
+		} catch (Exception e) {
+			System.out.println("*** PLAY ROUND EXCEPTION ***");
+			e.printStackTrace();
+		}
 	}
 	
 	public void playRound() throws TooFewCardsException, TooManyCardsException, OutOfMoneyException {
@@ -115,9 +129,9 @@ public class FiveCardStud {
 				
 				if (currentPlayer.isBetting()) {
 					
-					GameTest.printHand(players.get(index));
-					GameTest.printAmountInPots(players.get(index));
-					GameTest.printPlayerStatus(players.get(index));
+					//GameTest.printHand(players.get(index));
+					//GameTest.printAmountInPots(players.get(index));
+					//GameTest.printPlayerStatus(players.get(index));
 					
 					if (raises > maxRaises) {
 						System.out.println("You cannot raise");
@@ -126,8 +140,11 @@ public class FiveCardStud {
 					}
 					
 					int callAmount = getCallAmount() - currentPlayer.getAmountInPots();
-					//perform action (bet, fold, check)
-					int action = GameTest.getAction(index, callAmount);
+					
+					int action = server.getAction(players.get(index).getUsername(), callAmount);
+					
+					System.out.println("Action for " + players.get(index).getUsername() + " is: " + action);
+					
 					if (action == 0);
 					else if (action == -1) {
 						currentPlayer.setStatus(FOLDED);
@@ -141,7 +158,7 @@ public class FiveCardStud {
 						}
 					}
 					
-					GameTest.printAmountInPots(players.get(index));
+					//GameTest.printAmountInPots(players.get(index));
 					System.out.println("\n ---------------------------------------- \n");
 				}	
 			}
@@ -298,8 +315,8 @@ public class FiveCardStud {
 			
 			for (Player player : potPlayers) {
 				
-				GameTest.printHand(potPlayers.get(winningPlayer));
-				GameTest.printHand(player);
+				//GameTest.printHand(potPlayers.get(winningPlayer));
+				//GameTest.printHand(player);
 				System.out.println(i);
 				
 				if (player.isBetting() && (HandRank.compareHands(potPlayers.get(winningPlayer).getHand(), player.getHand(), 5) == 1)) {

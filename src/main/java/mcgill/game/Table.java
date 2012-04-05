@@ -1,8 +1,13 @@
 package mcgill.game;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import mcgill.fiveCardStud.FiveCardStud;
+import mcgill.poker.Player;
 
 public class Table {
 
@@ -33,6 +38,17 @@ public class Table {
 	
 	public Boolean removeUser(User user) {
 		return users.remove(user);
+	}
+	
+	public void startRound(Server server) {
+		List<Player> players = new ArrayList<Player>();
+		
+		for (User user : this.users) {
+			players.add(new Player(user.getUsername(), user.getCredits()));
+		}
+		
+		FiveCardStud round = new FiveCardStud(server, players, Config.LOW_BET, Config.MAX_RAISES, Config.BRING_IN);
+		server.executor.execute(round);
 	}
 
 	public String getId() {
