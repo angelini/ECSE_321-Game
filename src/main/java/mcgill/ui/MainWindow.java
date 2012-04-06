@@ -552,10 +552,6 @@ public class MainWindow {
 		JList listChatArea = new JList();
 		chatContainer.setViewportView(listChatArea);
 		
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon("D:\\Documents\\!McGill\\ECSE 321\\avatar main.png"));
-		frame.getContentPane().add(label, "8, 5, center, bottom");
-		
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -570,6 +566,10 @@ public class MainWindow {
 			}
 		});
 		frame.getContentPane().add(btnRefresh, "10, 5");
+		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar main.png")));
+		frame.getContentPane().add(label, "8, 7, center, bottom");
 		
 		JButton btnOptions = new JButton("Options");
 		frame.getContentPane().add(btnOptions, "10, 7");
