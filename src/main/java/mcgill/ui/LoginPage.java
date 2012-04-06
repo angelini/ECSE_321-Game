@@ -18,6 +18,11 @@ import mcgill.game.Config;
 import java.awt.Color;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.RowSpec;
+import java.awt.Font;
 
 public class LoginPage {
 
@@ -26,6 +31,7 @@ public class LoginPage {
 	private JPasswordField passwordField;
 	
 	private Client client;
+	private JLabel lblTitle;
 
 	/**
 	 * Launch the application.
@@ -73,7 +79,6 @@ public class LoginPage {
 		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JButton login = new JButton("Log-in");
-		login.setBounds(53, 191, 113, 23);
 		login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String username = textEmail.getText();
@@ -90,28 +95,46 @@ public class LoginPage {
 				}
 			}
 		});
-		frmLogin.getContentPane().setLayout(null);
-		frmLogin.getContentPane().add(login);
+		frmLogin.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
+				ColumnSpec.decode("35px"),
+				ColumnSpec.decode("49px"),
+				FormFactory.UNRELATED_GAP_COLSPEC,
+				ColumnSpec.decode("73px"),
+				FormFactory.UNRELATED_GAP_COLSPEC,
+				ColumnSpec.decode("127px"),},
+			new RowSpec[] {
+				RowSpec.decode("max(19dlu;default)"),
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("64px"),
+				RowSpec.decode("max(13dlu;default)"),
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("20px"),
+				FormFactory.LINE_GAP_ROWSPEC,
+				RowSpec.decode("20px"),
+				RowSpec.decode("23px"),
+				RowSpec.decode("23px"),
+				FormFactory.UNRELATED_GAP_ROWSPEC,
+				RowSpec.decode("23px"),}));
+		
+		lblTitle = new JLabel("Full Suit T3");
+		lblTitle.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 30));
+		frmLogin.getContentPane().add(lblTitle, "2, 3, 5, 1, center, center");
+		frmLogin.getContentPane().add(login, "2, 10, 3, 1, fill, top");
 		
 		JLabel lblEmail = new JLabel("Email:");
-		lblEmail.setBounds(35, 126, 49, 14);
-		frmLogin.getContentPane().add(lblEmail);
+		frmLogin.getContentPane().add(lblEmail, "2, 6, fill, center");
 		
 		JLabel lblPassword = new JLabel("Password:");
-		lblPassword.setBounds(35, 151, 70, 14);
-		frmLogin.getContentPane().add(lblPassword);
+		frmLogin.getContentPane().add(lblPassword, "2, 8, 3, 1, left, center");
 		
 		textEmail = new JTextField();
-		textEmail.setBounds(93, 123, 210, 20);
-		frmLogin.getContentPane().add(textEmail);
+		frmLogin.getContentPane().add(textEmail, "4, 6, 3, 1, fill, top");
 		textEmail.setColumns(10);
 		
 		JButton forgotPass = new JButton("Forgot Password");
-		forgotPass.setBounds(53, 225, 113, 23);
-		frmLogin.getContentPane().add(forgotPass);
+		frmLogin.getContentPane().add(forgotPass, "2, 12, 3, 1, fill, top");
 		
 		JButton register = new JButton("Register");
-		register.setBounds(176, 191, 113, 23);
 		register.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Registration register = new Registration();
@@ -119,7 +142,7 @@ public class LoginPage {
 				frmLogin.setVisible(false);
 			}
 		});
-		frmLogin.getContentPane().add(register);
+		frmLogin.getContentPane().add(register, "6, 10, fill, top");
 		
 		JButton quit = new JButton("Quit");
 		quit.addActionListener(new ActionListener() {
@@ -127,13 +150,11 @@ public class LoginPage {
 				System.exit(0);
 			}
 		});
-		quit.setBounds(176, 225, 113, 23);
-		frmLogin.getContentPane().add(quit);
+		frmLogin.getContentPane().add(quit, "6, 12, fill, top");
 		
 		passwordField = new JPasswordField();
 		passwordField.setEchoChar('*');
-		passwordField.setBounds(93, 148, 210, 20);
-		frmLogin.getContentPane().add(passwordField);
+		frmLogin.getContentPane().add(passwordField, "4, 8, 3, 1, fill, top");
 	}
 	
 }
