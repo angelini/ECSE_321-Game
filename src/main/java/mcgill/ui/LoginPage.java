@@ -82,8 +82,8 @@ public class LoginPage {
 				Boolean result = client.loginUI(username, password);
 				
 				if (result) {
-					MainWindow main = new MainWindow();
-					main.open(client);
+					MainWindow main = new MainWindow(client);
+					main.open();
 					frmLogin.setVisible(false);
 				} else {
 					JOptionPane.showMessageDialog(frmLogin, "No you failed...");
@@ -123,7 +123,7 @@ public class LoginPage {
 		
 		JButton quit = new JButton("Quit");
 		quit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
 			}
 		});

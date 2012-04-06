@@ -27,22 +27,6 @@ public class Registration {
 	private Client client;
 	private JPasswordField passwordField;
 	private JPasswordField passwordField_1;
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Registration window = new Registration();
-					window.registration.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -151,8 +135,8 @@ public class Registration {
 				Boolean result = client.registerUI(username, password);
 				
 				if (result) {
-					MainWindow main = new MainWindow();
-					main.open(client);
+					MainWindow main = new MainWindow(client);
+					main.open();
 					registration.setVisible(false);
 				} else {
 					JOptionPane.showMessageDialog(registration, "Username already in use");

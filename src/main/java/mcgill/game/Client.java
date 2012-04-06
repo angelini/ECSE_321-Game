@@ -30,6 +30,10 @@ public class Client implements Runnable {
 		this.notifications = new Notifications(this.session);
 	}
 	
+	public User getUser() {
+		return this.user;
+	}
+	
 	public void createUser() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -239,6 +243,15 @@ public class Client implements Runnable {
 		System.out.println("Get Tables Res is: " + res + "\n");
 	}
 	
+	public Table[] getTablesUI() {
+		String[] args = {this.session};
+		
+		ServerCall server = new ServerCall(this.session);
+		String res = server.call(Config.GET_TABLES, args);
+		
+		return this.gson.fromJson(res, Table[].class);
+	}
+	
 	public void createTable() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -311,7 +324,7 @@ public class Client implements Runnable {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		this.executor.execute(this.notifications);
-		
+
 		while (true) {
 			System.out.println("Client Started, choose action:");
 			System.out.println("1. Login");

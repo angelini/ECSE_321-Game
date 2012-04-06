@@ -5,9 +5,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 import mcgill.game.Client;
+import mcgill.game.Table;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
+
+import javax.swing.DefaultListModel;
 import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -30,8 +33,6 @@ import javax.swing.border.LineBorder;
 import java.awt.Insets;
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.ScrollPaneConstants;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.JList;
 
 
@@ -46,30 +47,14 @@ public class MainWindow {
 	private JTextField txtChatHere;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainWindow window = new MainWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the application.
 	 */
-	public MainWindow() {
+	public MainWindow(Client client) {
+		this.client = client;
 		initialize();
 	}
 	
-	public void open(Client client) {
-		this.client = client;
+	public void open() {
 		frame.setVisible(true);
 	}
 
@@ -79,7 +64,7 @@ public class MainWindow {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 775, 583);
+		frame.setBounds(100, 100, 879, 633);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("max(74dlu;default)"),
@@ -97,7 +82,9 @@ public class MainWindow {
 			new RowSpec[] {
 				RowSpec.decode("383px"),
 				RowSpec.decode("15px"),
-				RowSpec.decode("default:grow"),
+				RowSpec.decode("max(16dlu;default)"),
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("max(14dlu;default)"),
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("26px"),
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -115,7 +102,7 @@ public class MainWindow {
 		main.setBorder(new LineBorder(new Color(0, 0, 0)));
 		frame.getContentPane().add(main, "1, 1, 4, 1, fill, fill");
 		
-		JScrollPane allGames = new JScrollPane();
+		final JScrollPane allGames = new JScrollPane();
 		main.addTab("All Games", null, allGames, null);
 		allGames.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
@@ -552,44 +539,64 @@ public class MainWindow {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		frame.getContentPane().add(scrollPane, "1, 3, 1, 7, fill, fill");
+		frame.getContentPane().add(scrollPane, "1, 3, 1, 9, fill, fill");
 		
 		JList listChats = new JList();
 		scrollPane.setViewportView(listChats);
 		
 		JScrollPane chatContainer = new JScrollPane();
 		chatContainer.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		frame.getContentPane().add(chatContainer, "3, 3, 2, 5, fill, fill");
+		frame.getContentPane().add(chatContainer, "3, 3, 2, 7, fill, fill");
 		
 		JList listChatArea = new JList();
 		chatContainer.setViewportView(listChatArea);
 		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon("D:\\Documents\\!McGill\\ECSE 321\\avatar main.png"));
-		frame.getContentPane().add(label, "8, 3, 1, 3, center, bottom");
+		frame.getContentPane().add(label, "8, 5, center, bottom");
+		
+		JButton btnRefresh = new JButton("Refresh");
+		btnRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Table[] tables = client.getTablesUI();
+				DefaultListModel listModel = new DefaultListModel();
+				
+				for (int i = 0; i < tables.length; i++) {
+					listModel.addElement(tables[i].getName() + " --- " + tables[i].getUsers().size() + "/5 players");
+				}
+				
+				allGames.setViewportView(new JList(listModel));
+			}
+		});
+		frame.getContentPane().add(btnRefresh, "10, 5");
 		
 		JButton btnOptions = new JButton("Options");
-		frame.getContentPane().add(btnOptions, "10, 5");
+		frame.getContentPane().add(btnOptions, "10, 7");
 		
-		JLabel lblScreenName = new JLabel("Screen Name");
-		frame.getContentPane().add(lblScreenName, "8, 7, center, center");
+		JLabel lblScreenName = new JLabel(this.client.getUser().getUsername());
+		frame.getContentPane().add(lblScreenName, "8, 9, center, center");
 		
 		JButton btnLogOut = new JButton("Log Out");
-		frame.getContentPane().add(btnLogOut, "10, 7");
+		frame.getContentPane().add(btnLogOut, "10, 9");
 		
 		txtChatHere = new JTextField();
 		txtChatHere.setText("chat here");
-		frame.getContentPane().add(txtChatHere, "3, 9, fill, fill");
+		frame.getContentPane().add(txtChatHere, "3, 11, fill, fill");
 		txtChatHere.setColumns(10);
 		
 		JButton btnSend = new JButton("Send");
-		frame.getContentPane().add(btnSend, "4, 9");
+		frame.getContentPane().add(btnSend, "4, 11");
 		
-		JLabel cash = new JLabel("$$$$");
-		frame.getContentPane().add(cash, "8, 9, center, top");
+		JLabel cash = new JLabel(client.getUser().getCredits() + "$");
+		frame.getContentPane().add(cash, "8, 11, center, top");
 		
 		JButton btnQuit = new JButton("Quit");
-		frame.getContentPane().add(btnQuit, "10, 9");
+		btnQuit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		frame.getContentPane().add(btnQuit, "10, 11");
 		frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{frame.getContentPane()}));
 	}
 }
