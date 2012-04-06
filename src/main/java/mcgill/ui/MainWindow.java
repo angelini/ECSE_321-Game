@@ -32,18 +32,18 @@ import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.ScrollPaneConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JList;
 
 
 public class MainWindow {
 	
 	private JFrame frame;
-	private JTextField txtChatHere;
 	private JTextField txtBetAmt;
 	private JTextField txtGame;
 	private JTable table_1;
-	private JTable allGameTable;
 	
 	private Client client;
+	private JTextField txtChatHere;
 
 	/**
 	 * Launch the application.
@@ -82,8 +82,12 @@ public class MainWindow {
 		frame.setBounds(100, 100, 775, 583);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("562px"),
-				ColumnSpec.decode("max(4dlu;default)"),
+				ColumnSpec.decode("max(74dlu;default)"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("308px:grow"),
+				ColumnSpec.decode("max(90dlu;default)"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(9dlu;default)"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("71px"),
 				FormFactory.RELATED_GAP_COLSPEC,
@@ -93,7 +97,7 @@ public class MainWindow {
 			new RowSpec[] {
 				RowSpec.decode("383px"),
 				RowSpec.decode("15px"),
-				FormFactory.DEFAULT_ROWSPEC,
+				RowSpec.decode("default:grow"),
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("26px"),
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -103,67 +107,20 @@ public class MainWindow {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(21dlu;default)"),}));
 		
-		JLabel lblChatWindow = new JLabel("Chat Window");
-		lblChatWindow.setFont(new Font("Tahoma", Font.BOLD, 14));
-		frame.getContentPane().add(lblChatWindow, "1, 2, center, bottom");
-		
-		JTabbedPane chat = new JTabbedPane(JTabbedPane.TOP);
-		chat.setBorder(new LineBorder(new Color(0, 0, 0)));
-		frame.getContentPane().add(chat, "1, 3, 1, 9, fill, fill");
-		
-		JPanel panel = new JPanel();
-		chat.addTab("Global Chat", null, panel, null);
-		panel.setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("86px"),
-				ColumnSpec.decode("294px:grow"),
-				ColumnSpec.decode("89px"),},
-			new RowSpec[] {
-				RowSpec.decode("76px:grow"),
-				RowSpec.decode("23px"),}));
-		
-		
-		
-		JButton btnSend = new JButton("Send");
-		btnSend.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-		
-			}
-		});
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		panel.add(scrollPane_1, "1, 1, 3, 1, fill, fill");
-		
-		JLabel chatArea = new JLabel("");
-		scrollPane_1.setViewportView(chatArea);
-		panel.add(btnSend, "3, 2, fill, fill");
-		
-		txtChatHere = new JTextField();
-		txtChatHere.setAlignmentY(Component.BOTTOM_ALIGNMENT);
-		txtChatHere.setText("chat here");
-		panel.add(txtChatHere, "1, 2, 2, 1, fill, fill");
-		txtChatHere.setColumns(10);
+		JLabel lblChat = new JLabel("Chat");
+		lblChat.setFont(new Font("Tahoma", Font.BOLD, 14));
+		frame.getContentPane().add(lblChat, "1, 2, center, bottom");
 		
 		JTabbedPane main = new JTabbedPane(JTabbedPane.TOP);
 		main.setBorder(new LineBorder(new Color(0, 0, 0)));
-		frame.getContentPane().add(main, "1, 1, fill, fill");
+		frame.getContentPane().add(main, "1, 1, 4, 1, fill, fill");
 		
 		JScrollPane allGames = new JScrollPane();
 		main.addTab("All Games", null, allGames, null);
 		allGames.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		
-		String[] gameColumnNames = {"Game Name"};
-		
-		Object[][] gameData = {
-			    {"Game 1"}
-			};
-		
-		
-		allGameTable = new JTable(gameData,gameColumnNames);
-		allGameTable.setColumnSelectionAllowed(true);
-		allGames.setViewportView(allGameTable);
+		JList listAllGames = new JList();
+		allGames.setViewportView(listAllGames);
 		
 		JPanel createGame = new JPanel();
 		main.addTab("Create Game", null, createGame, null);
@@ -581,56 +538,58 @@ public class MainWindow {
 		currentGame.add(table, "4, 2, 29, 13, left, center");
 		
 		JTabbedPane friends = new JTabbedPane(JTabbedPane.TOP);
-		frame.getContentPane().add(friends, "2, 1, 7, 1, fill, fill");	
-		
-		
-		
-		
-		String[] columnNames = {"Name",
-                "Status",
-                "Options"};
-		Object[][] data = {
-			    {"Kathy", "Online","something"
-			     },
-			    {"John", "offline",
-			     "no options"},
-	
-			};
+		frame.getContentPane().add(friends, "6, 1, 7, 1, fill, fill");	
 	
 		JScrollPane allFriends = new JScrollPane();
 		allFriends.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		allFriends.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		friends.addTab("Friends", null, allFriends, null);
-		
-		table_1 = new JTable(data,columnNames);
-		table_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-			}
-		});
+
 		allFriends.setViewportView(table_1);		
 		
 		JScrollPane search = new JScrollPane();
 		friends.addTab("Search", null, search, null);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		frame.getContentPane().add(scrollPane, "1, 3, 1, 7, fill, fill");
+		
+		JList listChats = new JList();
+		scrollPane.setViewportView(listChats);
+		
+		JScrollPane chatContainer = new JScrollPane();
+		chatContainer.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		frame.getContentPane().add(chatContainer, "3, 3, 2, 5, fill, fill");
+		
+		JList listChatArea = new JList();
+		chatContainer.setViewportView(listChatArea);
+		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon("D:\\Documents\\!McGill\\ECSE 321\\avatar main.png"));
-		frame.getContentPane().add(label, "4, 3, 1, 3, center, bottom");
+		frame.getContentPane().add(label, "8, 3, 1, 3, center, bottom");
 		
 		JButton btnOptions = new JButton("Options");
-		frame.getContentPane().add(btnOptions, "6, 5");
+		frame.getContentPane().add(btnOptions, "10, 5");
 		
 		JLabel lblScreenName = new JLabel("Screen Name");
-		frame.getContentPane().add(lblScreenName, "4, 7, center, center");
+		frame.getContentPane().add(lblScreenName, "8, 7, center, center");
 		
 		JButton btnLogOut = new JButton("Log Out");
-		frame.getContentPane().add(btnLogOut, "6, 7");
+		frame.getContentPane().add(btnLogOut, "10, 7");
+		
+		txtChatHere = new JTextField();
+		txtChatHere.setText("chat here");
+		frame.getContentPane().add(txtChatHere, "3, 9, fill, fill");
+		txtChatHere.setColumns(10);
+		
+		JButton btnSend = new JButton("Send");
+		frame.getContentPane().add(btnSend, "4, 9");
 		
 		JLabel cash = new JLabel("$$$$");
-		frame.getContentPane().add(cash, "4, 9, center, top");
+		frame.getContentPane().add(cash, "8, 9, center, top");
 		
 		JButton btnQuit = new JButton("Quit");
-		frame.getContentPane().add(btnQuit, "6, 9");
+		frame.getContentPane().add(btnQuit, "10, 9");
 		frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{frame.getContentPane()}));
 	}
 }
