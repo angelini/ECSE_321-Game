@@ -1,32 +1,22 @@
+package mcgill.ui;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
 import javax.swing.JTabbedPane;
-import javax.swing.JDesktopPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import java.awt.SystemColor;
-import javax.swing.border.BevelBorder;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 
-import java.awt.GridLayout;
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import java.awt.BorderLayout;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import java.awt.FlowLayout;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.JTextArea;
-import javax.swing.JComboBox;
-import javax.swing.JScrollBar;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
@@ -36,7 +26,6 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import java.awt.Insets;
 import com.jgoodies.forms.factories.FormFactory;
-import javax.swing.DropMode;
 import javax.swing.ScrollPaneConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

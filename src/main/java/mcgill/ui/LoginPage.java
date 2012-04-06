@@ -1,22 +1,15 @@
+package mcgill.ui;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
-import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.GridLayout;
-import javax.swing.BoxLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.JComboBox;
 import javax.swing.JPasswordField;
 import java.awt.Color;
-import java.awt.SystemColor;
 
 
 public class LoginPage {

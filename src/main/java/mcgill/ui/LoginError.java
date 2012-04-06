@@ -1,11 +1,11 @@
+package mcgill.ui;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import java.awt.Toolkit;
 import javax.swing.JLabel;
-import java.awt.BorderLayout;
 import javax.swing.JButton;
-import java.awt.Component;
 
 
 public class LoginError {
