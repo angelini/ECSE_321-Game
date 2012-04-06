@@ -310,16 +310,12 @@ public class FiveCardStud implements Runnable {
 		
 		for (Pot pot : this.pots) {
 			int winningPlayer = 0;
+			int winners = 0;
 			int i = 0;
 			ArrayList<Player> potPlayers = pot.getPlayers();
 			
 			for (Player player : potPlayers) {
-				
-				//GameTest.printHand(potPlayers.get(winningPlayer));
-				//GameTest.printHand(player);
-				System.out.println(i);
-				
-				if (player.isBetting() && (HandRank.compareHands(potPlayers.get(winningPlayer).getHand(), player.getHand(), 5) == 1)) {
+				if ((!player.isFolded()) && (HandRank.compareHands(potPlayers.get(winningPlayer).getHand(), player.getHand(), 5) == 1)) {
 					winningPlayer = i;
 				}
 				i++;
@@ -328,9 +324,16 @@ public class FiveCardStud implements Runnable {
 			Player winner = potPlayers.get(winningPlayer);
 			
 			for (Player player : this.players) {
-				if (winner.equals(player)) {
-					player.addMoney(pot.getTotalAmount());
-					System.out.println("Player "+this.players.indexOf(player)+" won "+pot.getTotalAmount());
+				if ((!player.isFolded()) && (HandRank.compareHands(winner.getHand(), player.getHand(), 5) == -1)) {
+					player.setWinner(true);
+					winners++;
+				}
+			}
+			
+			for (Player player : this.players) {
+				if (player.isWinner()) {
+					player.addMoney(pot.getTotalAmount()/winners);
+					player.setWinner(false);
 				}
 			}
 		}
