@@ -114,6 +114,7 @@ public class MainWindow {
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				client.logout();
 				System.exit(0);
 			}
 		});
@@ -640,6 +641,10 @@ public class MainWindow {
 		JButton btnLogOut = new JButton("Log Out");
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				client.logout();
+				LoginPage login = new LoginPage();
+				login.open(client);
+				frame.setVisible(false);
 				
 			}
 		});
@@ -659,6 +664,7 @@ public class MainWindow {
 		JButton btnQuit = new JButton("Quit");
 		btnQuit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				client.logout();
 				System.exit(0);
 			}
 		});

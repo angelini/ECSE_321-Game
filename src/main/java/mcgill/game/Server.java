@@ -71,9 +71,9 @@ public class Server {
     }
     
     public void logout(String c_key, String[] args) {
-    	String session = args[0];
+    	String session_str = args[0];
     	
-    	this.session.remove(session);
+    	this.session.remove(session_str);
     	this.emit.publish(c_key, "");
     }
     

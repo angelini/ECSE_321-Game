@@ -22,6 +22,8 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.RowSpec;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class LoginPage {
 
@@ -71,6 +73,12 @@ public class LoginPage {
 	 */
 	private void initialize() {
 		frmLogin = new JFrame();
+		frmLogin.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
 		frmLogin.setResizable(false);
 		frmLogin.setTitle("Log-in");
 		frmLogin.setBounds(100, 100, 356, 302);
