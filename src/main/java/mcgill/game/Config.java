@@ -18,6 +18,7 @@ public class Config {
 	public static final String NOTIFICATIONS = "notifications";
 	
 	public static final String LOGIN = "login";
+	public static final String LOGOUT = "logout";
 	public static final String REGISTER = "register";
 	public static final String MESSAGE = "message";
 	public static final String GET_FRIENDS = "get_friends";

@@ -70,6 +70,13 @@ public class Server {
     	}
     }
     
+    public void logout(String c_key, String[] args) {
+    	String session = args[0];
+    	
+    	this.session.remove(session);
+    	this.emit.publish(c_key, "");
+    }
+    
     public void register(String c_key, String[] args) {
     	String session_str = args[0];
     	String username = args[1];

@@ -155,9 +155,6 @@ public class MainWindow {
 		JButton btnJoinGame = new JButton("Join Game");
 		frame.getContentPane().add(btnJoinGame, "4, 2");
 		
-		JButton btnChat = new JButton("Chat");
-		frame.getContentPane().add(btnChat, "6, 2, 3, 1, left, default");
-		
 		JButton btnJoinFriendsGame = new JButton("Join Friend's Game");
 		frame.getContentPane().add(btnJoinFriendsGame, "10, 2, 3, 1, right, default");
 		
@@ -563,8 +560,23 @@ public class MainWindow {
 
 		allFriends.setViewportView(table_1);		
 		
-		JList listFriends = new JList(getFriendList());
+		final JList listFriends = new JList(getFriendList());
 		allFriends.setViewportView(listFriends);
+		
+		JButton btnChat = new JButton("Chat");
+		btnChat.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String username = (String) listFriends.getSelectedValue();
+				
+				if (username == null) {
+					JOptionPane.showMessageDialog(frame, "No Friend Selected");
+					return;
+				}
+				
+				client.createChat(client.getUser().getUsername(), username);
+			}
+		});
+		frame.getContentPane().add(btnChat, "6, 2, 3, 1, left, default");
 		
 		JPanel addFriend = new JPanel();
 		friends.addTab("Add Friend", null, addFriend, null);
