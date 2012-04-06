@@ -11,6 +11,7 @@ public class Player implements Comparable<Player> {
 	private int amountInPots;
 	private Hand hand;
 	private int status;
+	private boolean winner;
 
 	public Player(String username, int money) {
 		this.username = username;
@@ -18,6 +19,7 @@ public class Player implements Comparable<Player> {
 		this.amountInPots = 0;
 		this.hand = new Hand();
 		this.status = BETTING;
+		this.winner = false;
 	}
 	
 	public void reset() {
@@ -107,4 +109,11 @@ public class Player implements Comparable<Player> {
 		return this.username;
 	}
 	
+	public void setWinner(boolean winner) {
+		this.winner = winner;
+	}
+	
+	public boolean isWinner() {
+		return this.winner;
+	}
 }
