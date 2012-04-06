@@ -73,7 +73,6 @@ public class LoginPage {
 	private void initialize() {
 		frmLogin = new JFrame();
 		frmLogin.setResizable(false);
-		frmLogin.setBackground(Color.WHITE);
 		frmLogin.setTitle("Log-in");
 		frmLogin.setBounds(100, 100, 356, 302);
 		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
