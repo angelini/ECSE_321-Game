@@ -2,13 +2,16 @@ package mcgill.ui;
 
 import javax.swing.JFrame;
 
+import mcgill.game.Chat;
 import mcgill.game.Client;
 import mcgill.game.Table;
+import mcgill.game.User;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -29,6 +32,8 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
 import java.awt.Insets;
+import java.util.Set;
+
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JList;
@@ -43,6 +48,7 @@ public class MainWindow {
 	private Client client;
 	private JTextField txtChatHere;
 	private JTextField txtBetAmt;
+	private JTextField textFriendName;
 
 	/**
 	 * Create the application.
@@ -54,6 +60,48 @@ public class MainWindow {
 	
 	public void open() {
 		frame.setVisible(true);
+	}
+	
+	public DefaultListModel getGameList() {
+		Table[] tables = client.getTables();
+		DefaultListModel listModel = new DefaultListModel();
+		
+		for (int i = 0; i < tables.length; i++) {
+			listModel.addElement(tables[i].getName() + " --- " + tables[i].getUsers().size() + "/5 players");
+		}
+		
+		return listModel;
+	}
+	
+	public DefaultListModel getFriendList() {
+		User[] friends = client.getFriends(client.getUser().getUsername());
+		DefaultListModel listModel = new DefaultListModel();
+		
+		for (int i = 0; i < friends.length; i++) {
+			listModel.addElement(friends[i].getUsername());
+		}
+		
+		return listModel;
+	}
+	
+	public DefaultListModel getChatList() {
+		String username = client.getUser().getUsername();
+		Chat[] chats = client.getChats(username);
+		DefaultListModel listModel = new DefaultListModel();
+		
+		for (int i = 0; i < chats.length; i++) {
+			String chat_str = "";
+			Set<User> users = chats[i].getUsers();
+			for (User user : users) {
+				if (user.getUsername() != username) {
+					chat_str += user.getUsername() + " ";
+				}
+			}
+			
+			listModel.addElement(chat_str);
+		}
+		
+		return listModel;
 	}
 
 	/**
@@ -106,14 +154,8 @@ public class MainWindow {
 		main.addTab("All Games", null, allGames, null);
 		allGames.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		Table[] tables = client.getTables();
-		DefaultListModel listModel = new DefaultListModel();
 		
-		for (int i = 0; i < tables.length; i++) {
-			listModel.addElement(tables[i].getName() + " --- " + tables[i].getUsers().size() + "/5 players");
-		}
-		
-		JList listAllGames = new JList(listModel);
+		JList listAllGames = new JList(getGameList());
 		allGames.setViewportView(listAllGames);
 		
 		JPanel createGame = new JPanel();
@@ -496,21 +538,55 @@ public class MainWindow {
 		JTabbedPane friends = new JTabbedPane(JTabbedPane.TOP);
 		frame.getContentPane().add(friends, "6, 1, 7, 1, fill, fill");	
 	
-		JScrollPane allFriends = new JScrollPane();
+		final JScrollPane allFriends = new JScrollPane();
 		allFriends.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		allFriends.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		friends.addTab("Friends", null, allFriends, null);
 
 		allFriends.setViewportView(table_1);		
 		
-		JScrollPane search = new JScrollPane();
-		friends.addTab("Search", null, search, null);
+		JList listFriends = new JList(getFriendList());
+		allFriends.setViewportView(listFriends);
 		
-		JScrollPane scrollPane = new JScrollPane();
+		JPanel addFriend = new JPanel();
+		friends.addTab("Add Friend", null, addFriend, null);
+		addFriend.setLayout(new FormLayout(new ColumnSpec[] {
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("default:grow"),},
+			new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,}));
+		
+		JLabel lblFriend = new JLabel("Friend:");
+		addFriend.add(lblFriend, "2, 2, right, default");
+		
+		textFriendName = new JTextField();
+		addFriend.add(textFriendName, "4, 2, fill, default");
+		textFriendName.setColumns(10);
+		
+		JButton btnAddFriend = new JButton("Add Friend");
+		btnAddFriend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Boolean result = client.addFriend(client.getUser().getUsername(), textFriendName.getText());
+				
+				if (result) {
+					allFriends.setViewportView(new JList(getFriendList()));
+				} else {
+					JOptionPane.showMessageDialog(frame, "Friend not found :(");
+				}
+			}
+		});
+		addFriend.add(btnAddFriend, "4, 4");
+		
+		final JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		frame.getContentPane().add(scrollPane, "1, 3, 1, 9, fill, fill");
 		
-		JList listChats = new JList();
+		JList listChats = new JList(getChatList());
 		scrollPane.setViewportView(listChats);
 		
 		JScrollPane chatContainer = new JScrollPane();
@@ -523,14 +599,9 @@ public class MainWindow {
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Table[] tables = client.getTables();
-				DefaultListModel listModel = new DefaultListModel();
-				
-				for (int i = 0; i < tables.length; i++) {
-					listModel.addElement(tables[i].getName() + " --- " + tables[i].getUsers().size() + "/5 players");
-				}
-				
-				allGames.setViewportView(new JList(listModel));
+				allGames.setViewportView(new JList(getGameList()));
+				scrollPane.setViewportView(new JList(getChatList()));
+				allFriends.setViewportView(new JList(getFriendList()));
 			}
 		});
 		frame.getContentPane().add(btnRefresh, "10, 5");
