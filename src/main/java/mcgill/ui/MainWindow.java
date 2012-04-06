@@ -158,7 +158,6 @@ public class MainWindow {
 		frame.getContentPane().add(lblChat, "1, 4, center, bottom");
 		
 		JTabbedPane main = new JTabbedPane(JTabbedPane.TOP);
-		main.setBorder(new LineBorder(new Color(0, 0, 0)));
 		frame.getContentPane().add(main, "1, 1, 4, 1, fill, fill");
 		
 		final JScrollPane allGames = new JScrollPane();
@@ -547,7 +546,6 @@ public class MainWindow {
 		currentGame.add(btnBet, "16, 32, 3, 1");
 		
 		final JTabbedPane friends = new JTabbedPane(JTabbedPane.TOP);
-		friends.setBorder(new LineBorder(new Color(0, 0, 0)));
 		frame.getContentPane().add(friends, "6, 1, 7, 1, fill, fill");	
 	
 		final JScrollPane allFriends = new JScrollPane();
