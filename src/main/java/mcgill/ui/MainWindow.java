@@ -3,6 +3,9 @@ package mcgill.ui;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+
+import mcgill.game.Client;
+
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
 import javax.swing.JTabbedPane;
@@ -32,13 +35,15 @@ import java.awt.event.MouseEvent;
 
 
 public class MainWindow {
-
+	
 	private JFrame frame;
 	private JTextField txtChatHere;
 	private JTextField txtBetAmt;
 	private JTextField txtGame;
 	private JTable table_1;
 	private JTable allGameTable;
+	
+	private Client client;
 
 	/**
 	 * Launch the application.
@@ -61,6 +66,11 @@ public class MainWindow {
 	 */
 	public MainWindow() {
 		initialize();
+	}
+	
+	public void open(Client client) {
+		this.client = client;
+		frame.setVisible(true);
 	}
 
 	/**

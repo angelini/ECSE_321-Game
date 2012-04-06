@@ -6,10 +6,18 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
+
+import mcgill.game.Client;
+import mcgill.game.Config;
+
 import java.awt.Color;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class LoginPage {
@@ -17,6 +25,8 @@ public class LoginPage {
 	private JFrame frmLogin;
 	private JTextField textEmail;
 	private JPasswordField passwordField;
+	
+	private Client client;
 
 	/**
 	 * Launch the application.
@@ -38,6 +48,11 @@ public class LoginPage {
 	 * Create the application.
 	 */
 	public LoginPage() {
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		this.client = new Client(Config.REDIS_HOST, Config.REDIS_PORT);
+		
+		executor.execute(this.client);
+		
 		initialize();
 	}
 
@@ -56,7 +71,18 @@ public class LoginPage {
 		login.setBounds(53, 191, 113, 23);
 		login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String username = textEmail.getText();
+				String password = new String(passwordField.getPassword());
 				
+				Boolean result = client.loginUI(username, password);
+				
+				if (result) {
+					MainWindow main = new MainWindow();
+					main.open(client);
+					frmLogin.setVisible(false);
+				} else {
+					JOptionPane.showMessageDialog(frmLogin, "No you failed...");
+				}
 			}
 		});
 		frmLogin.getContentPane().setLayout(null);
