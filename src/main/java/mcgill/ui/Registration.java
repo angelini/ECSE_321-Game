@@ -1,7 +1,5 @@
 package mcgill.ui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -132,7 +130,7 @@ public class Registration {
 					return;
 				}
 				
-				Boolean result = client.registerUI(username, password);
+				Boolean result = client.register(username, password);
 				
 				if (result) {
 					MainWindow main = new MainWindow(client);

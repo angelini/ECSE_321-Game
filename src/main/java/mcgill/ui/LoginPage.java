@@ -79,7 +79,7 @@ public class LoginPage {
 				String username = textEmail.getText();
 				String password = new String(passwordField.getPassword());
 				
-				Boolean result = client.loginUI(username, password);
+				Boolean result = client.login(username, password);
 				
 				if (result) {
 					MainWindow main = new MainWindow(client);

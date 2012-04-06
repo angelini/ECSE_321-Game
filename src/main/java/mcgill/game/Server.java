@@ -112,7 +112,7 @@ public class Server {
     	}
     	
     	this.db.addFriend(username, friend_name);
-    	this.emit.publish(c_key, "");
+    	this.emit.publish(c_key, "true");
     }
     
     public void getChats(String c_key, String[] args) {
@@ -130,7 +130,7 @@ public class Server {
     	User friend = this.db.getUser(friend_name, false);
     	
     	if (user == null || friend == null) {
-    		this.emit.publish(c_key, "");
+    		this.emit.publish(c_key, "null");
     		return;
     	}
     	
@@ -149,7 +149,7 @@ public class Server {
     	
     	User user = this.db.getUser(username, false);
     	if (user == null) {
-    		this.emit.publish(c_key, "");
+    		this.emit.publish(c_key, "null");
     		return;
     	}
     	
@@ -167,7 +167,7 @@ public class Server {
     	
     	User user = this.db.getUser(username, false);
     	if (user == null) {
-    		this.emit.publish(c_key, "");
+    		this.emit.publish(c_key, "null");
     		return;
     	}
     	
@@ -190,7 +190,7 @@ public class Server {
     	
     	User user = this.db.getUser(username, false);
     	if (user == null) {
-    		this.emit.publish(c_key, "");
+    		this.emit.publish(c_key, "null");
     		return;
     	}
     	
@@ -208,7 +208,7 @@ public class Server {
 		Table table = this.db.getTable(table_id);
 		
 		if (user == null || table == null) {
-			this.emit.publish(c_key, "");
+			this.emit.publish(c_key, "null");
     		return;
 		}
 		

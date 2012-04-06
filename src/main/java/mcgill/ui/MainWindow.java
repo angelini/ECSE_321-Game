@@ -1,7 +1,5 @@
 package mcgill.ui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 
 import mcgill.game.Client;
@@ -106,26 +104,42 @@ public class MainWindow {
 		main.addTab("All Games", null, allGames, null);
 		allGames.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		JList listAllGames = new JList();
+		Table[] tables = client.getTables();
+		DefaultListModel listModel = new DefaultListModel();
+		
+		for (int i = 0; i < tables.length; i++) {
+			listModel.addElement(tables[i].getName() + " --- " + tables[i].getUsers().size() + "/5 players");
+		}
+		
+		JList listAllGames = new JList(listModel);
 		allGames.setViewportView(listAllGames);
 		
 		JPanel createGame = new JPanel();
 		main.addTab("Create Game", null, createGame, null);
 		GridBagLayout gbl_createGame = new GridBagLayout();
 		gbl_createGame.columnWidths = new int[]{94, 181, 0, 0};
-		gbl_createGame.rowHeights = new int[]{27, 0, 0, 0, 0, 0, 0, 0};
+		gbl_createGame.rowHeights = new int[]{27, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_createGame.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_createGame.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_createGame.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		createGame.setLayout(gbl_createGame);
 		
-		JLabel lblGameCreationOptions = new JLabel("Game Creation Options:");
-		lblGameCreationOptions.setFont(new Font("Tahoma", Font.BOLD, 22));
+		JButton btnCreate = new JButton("Create");
+		btnCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String username = client.getUser().getUsername();
+				Table table = client.createTable(username, txtGame.getText());
+				client.joinTable(username, table.getId());
+			}
+		});
+		
+		JLabel lblGameCreationOptions = new JLabel("  Game Creation Options:");
+		lblGameCreationOptions.setFont(new Font("Tahoma", Font.BOLD, 18));
 		GridBagConstraints gbc_lblGameCreationOptions = new GridBagConstraints();
 		gbc_lblGameCreationOptions.gridwidth = 2;
 		gbc_lblGameCreationOptions.insets = new Insets(0, 0, 5, 5);
 		gbc_lblGameCreationOptions.anchor = GridBagConstraints.NORTHWEST;
 		gbc_lblGameCreationOptions.gridx = 0;
-		gbc_lblGameCreationOptions.gridy = 0;
+		gbc_lblGameCreationOptions.gridy = 1;
 		createGame.add(lblGameCreationOptions, gbc_lblGameCreationOptions);
 		
 		JLabel lblGameName = new JLabel("Game Name:");
@@ -133,7 +147,7 @@ public class MainWindow {
 		gbc_lblGameName.anchor = GridBagConstraints.EAST;
 		gbc_lblGameName.insets = new Insets(0, 0, 5, 5);
 		gbc_lblGameName.gridx = 0;
-		gbc_lblGameName.gridy = 1;
+		gbc_lblGameName.gridy = 3;
 		createGame.add(lblGameName, gbc_lblGameName);
 		
 		txtGame = new JTextField();
@@ -142,26 +156,13 @@ public class MainWindow {
 		gbc_txtGame.insets = new Insets(0, 0, 5, 5);
 		gbc_txtGame.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtGame.gridx = 1;
-		gbc_txtGame.gridy = 1;
+		gbc_txtGame.gridy = 3;
 		createGame.add(txtGame, gbc_txtGame);
 		txtGame.setColumns(10);
-		
-		JButton btnResetToDefault = new JButton("Reset to Default");
-		GridBagConstraints gbc_btnResetToDefault = new GridBagConstraints();
-		gbc_btnResetToDefault.insets = new Insets(0, 0, 0, 5);
-		gbc_btnResetToDefault.gridx = 1;
-		gbc_btnResetToDefault.gridy = 6;
-		createGame.add(btnResetToDefault, gbc_btnResetToDefault);
-		
-		JButton btnCreate = new JButton("Create");
-		btnCreate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
+		gbc_btnCreate.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCreate.gridx = 2;
-		gbc_btnCreate.gridy = 6;
+		gbc_btnCreate.gridy = 3;
 		createGame.add(btnCreate, gbc_btnCreate);
 		
 		JPanel currentGame = new JPanel();
@@ -558,7 +559,7 @@ public class MainWindow {
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Table[] tables = client.getTablesUI();
+				Table[] tables = client.getTables();
 				DefaultListModel listModel = new DefaultListModel();
 				
 				for (int i = 0; i < tables.length; i++) {
