@@ -3,6 +3,7 @@ package mcgill.fiveCardStud;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import mcgill.game.Server;
 import mcgill.poker.Deck;
@@ -13,7 +14,7 @@ import mcgill.poker.OutOfMoneyException;
 import mcgill.poker.TooFewCardsException;
 import mcgill.poker.TooManyCardsException;
 
-public class FiveCardStud implements Runnable {
+public class FiveCardStud implements Callable<List<Player>> {
 	public static final int FOLDED = -1;
 	public static final int BETTING = 0;
 	public static final int ALL_IN = 1;
@@ -43,13 +44,15 @@ public class FiveCardStud implements Runnable {
 		this.startingPlayer = 0;
 	}
 	
-	public void run() {
+	public List<Player> call() {
 		try {
 			this.playRound();
 		} catch (Exception e) {
 			System.out.println("*** PLAY ROUND EXCEPTION ***");
 			e.printStackTrace();
 		}
+		
+		return this.players;
 	}
 	
 	public void playRound() throws TooFewCardsException, TooManyCardsException, OutOfMoneyException {

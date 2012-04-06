@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import mcgill.fiveCardStud.FiveCardStud;
 import mcgill.poker.Player;
@@ -47,8 +49,23 @@ public class Table {
 			players.add(new Player(user.getUsername(), user.getCredits()));
 		}
 		
-		FiveCardStud round = new FiveCardStud(server, players, Config.LOW_BET, Config.MAX_RAISES, Config.BRING_IN);
-		server.executor.execute(round);
+		Callable<List<Player>> round = new FiveCardStud(server, players, Config.LOW_BET, Config.MAX_RAISES, Config.BRING_IN);
+		try {
+			players = server.executor.submit(round).get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		
+		for (Player player : players) {
+			for (User user : this.users) {
+				if (player.getUsername().equals(user.getUsername())) {
+					user.setCredits(player.getTotalMoney());
+					break;
+				}
+			}
+		}
 	}
 
 	public String getId() {
