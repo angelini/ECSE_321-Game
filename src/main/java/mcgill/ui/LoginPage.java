@@ -77,7 +77,9 @@ public class LoginPage {
 				Boolean result = client.loginUI(username, password);
 				
 				if (result) {
-					JOptionPane.showMessageDialog(frmLogin, "Yay you logged in!");
+					MainWindow main = new MainWindow();
+					main.open(client);
+					frmLogin.setVisible(false);
 				} else {
 					JOptionPane.showMessageDialog(frmLogin, "No you failed...");
 				}
