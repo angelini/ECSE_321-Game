@@ -80,7 +80,7 @@ public class Client implements Runnable {
 		ServerCall server = new ServerCall(this.session);
 		String result = server.call(Config.LOGIN, args);
 		
-		if (result == "") {
+		if (result.equals("")) {
 			return false;
 		}
 		
