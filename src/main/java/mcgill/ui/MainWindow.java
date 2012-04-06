@@ -535,7 +535,7 @@ public class MainWindow {
 		JButton btnBet = new JButton("Bet");
 		currentGame.add(btnBet, "16, 32, 3, 1");
 		
-		JTabbedPane friends = new JTabbedPane(JTabbedPane.TOP);
+		final JTabbedPane friends = new JTabbedPane(JTabbedPane.TOP);
 		frame.getContentPane().add(friends, "6, 1, 7, 1, fill, fill");	
 	
 		final JScrollPane allFriends = new JScrollPane();
@@ -575,6 +575,7 @@ public class MainWindow {
 				
 				if (result) {
 					allFriends.setViewportView(new JList(getFriendList()));
+					friends.setSelectedIndex(0);
 				} else {
 					JOptionPane.showMessageDialog(frame, "Friend not found :(");
 				}
