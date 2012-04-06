@@ -38,6 +38,7 @@ public class MainWindow {
 	private JTextField txtBetAmt;
 	private JTextField txtGame;
 	private JTable table_1;
+	private JTable allGameTable;
 
 	/**
 	 * Launch the application.
@@ -112,8 +113,8 @@ public class MainWindow {
 		
 		
 		
-		JButton btnNewButton = new JButton("Send");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnSend = new JButton("Send");
+		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		
 			}
@@ -126,7 +127,7 @@ public class MainWindow {
 		
 		JLabel chatArea = new JLabel("");
 		scrollPane_1.setViewportView(chatArea);
-		panel.add(btnNewButton, "3, 2, fill, fill");
+		panel.add(btnSend, "3, 2, fill, fill");
 		
 		txtChatHere = new JTextField();
 		txtChatHere.setAlignmentY(Component.BOTTOM_ALIGNMENT);
@@ -141,9 +142,21 @@ public class MainWindow {
 		main.setBorder(new LineBorder(new Color(0, 0, 0)));
 		frame.getContentPane().add(main, "1, 1, fill, fill");
 		
-		JPanel allGames = new JPanel();
+		JScrollPane allGames = new JScrollPane();
 		main.addTab("All Games", null, allGames, null);
-		allGames.setLayout(null);
+		allGames.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		
+		
+		String[] gameColumnNames = {"Game Name"};
+		
+		Object[][] gameData = {
+			    {"Game 1"}
+			};
+		
+		
+		allGameTable = new JTable(gameData,gameColumnNames);
+		allGameTable.setColumnSelectionAllowed(true);
+		allGames.setViewportView(allGameTable);
 		
 		JPanel createGame = new JPanel();
 		main.addTab("Create Game", null, createGame, null);
@@ -190,6 +203,11 @@ public class MainWindow {
 		createGame.add(btnResetToDefault, gbc_btnResetToDefault);
 		
 		JButton btnCreate = new JButton("Create");
+		btnCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
 		gbc_btnCreate.gridx = 2;
 		gbc_btnCreate.gridy = 6;
