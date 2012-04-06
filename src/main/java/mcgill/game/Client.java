@@ -4,10 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Client {
 	
 	private String session;
+	private ExecutorService executor;
+	private Notifications notifications;
 	
 	public static void main(String[] args) {
     	Client client = new Client(Config.REDIS_HOST, Config.REDIS_PORT);
@@ -16,6 +20,8 @@ public class Client {
 	
 	public Client(String host, int port) {
 		this.session = UUID.randomUUID().toString();
+		this.executor = Executors.newSingleThreadExecutor();
+		this.notifications = new Notifications(this.session);
 	}
 	
 	public void createUser() {
@@ -242,6 +248,26 @@ public class Client {
 			System.exit(1);
 		}		
 	}
+
+	public void startRound() {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		try {
+			System.out.print("Table ID: ");
+			String table_id = br.readLine();
+			
+			String[] args = {this.session, table_id};
+			
+			ServerCall server = new ServerCall(this.session);
+			String res = server.call(Config.START_ROUND, args);
+			
+			System.out.println("Start Round Res is: " + res + "\n");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
 	
 	public void exit() {
 		System.exit(0);
@@ -249,6 +275,8 @@ public class Client {
 	
 	public void start() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		this.executor.execute(this.notifications);
 		
 		while (true) {
 			System.out.println("Client Started, choose action:");
@@ -263,7 +291,8 @@ public class Client {
 			System.out.println("9. Get Tables");
 			System.out.println("10. Create Table");
 			System.out.println("11. Join Table");
-			System.out.println("12. Exit");
+			System.out.println("12. Start Round");
+			System.out.println("13. Exit");
 			System.out.print("=> ");
 		
 			try {
@@ -315,6 +344,10 @@ public class Client {
 					break;
 					
 				case 12:
+					this.startRound();
+					break;
+					
+				case 13:
 					this.exit();
 					break;
 				}

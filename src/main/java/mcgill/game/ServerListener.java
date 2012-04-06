@@ -65,6 +65,10 @@ public class ServerListener extends JedisPubSub {
 		if (method.equals(Config.JOIN_TABLE)) {
 			this.server.joinTable(c_key, this.gson.fromJson(message, String[].class));
 		}
+		
+		if (method.equals(Config.START_ROUND)) {
+			this.server.startRound(c_key, this.gson.fromJson(message, String[].class));
+		}
 	}
 
 	@Override

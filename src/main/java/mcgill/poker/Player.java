@@ -6,12 +6,14 @@ public class Player implements Comparable<Player> {
 	public static final int BETTING = 0;
 	public static final int ALL_IN = 1;
 
+	private String username;
 	private int money;
 	private int amountInPots;
 	private Hand hand;
 	private int status;
 
-	public Player(int money) {
+	public Player(String username, int money) {
+		this.username = username;
 		this.money = money;
 		this.amountInPots = 0;
 		this.hand = new Hand();
@@ -100,4 +102,9 @@ public class Player implements Comparable<Player> {
 			return 0;
 		}
 	}
+	
+	public String getUsername() {
+		return this.username;
+	}
+	
 }

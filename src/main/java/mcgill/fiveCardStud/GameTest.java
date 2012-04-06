@@ -1,3 +1,4 @@
+/*
 package mcgill.fiveCardStud;
 
 import java.util.ArrayList;
@@ -68,3 +69,4 @@ public class GameTest {
 		}
 	}
 }
+*/

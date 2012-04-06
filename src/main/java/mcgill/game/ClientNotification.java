@@ -1,27 +1,24 @@
 package mcgill.game;
 
-import com.google.gson.Gson;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
-public class ServerCall {
+public class ClientNotification {
 
-	private Gson gson;
 	private Jedis jedis;
 	private String session;
 	private String response;
 	
 	private class Listener extends JedisPubSub {
 
-		private ServerCall serverCall;
+		private ClientNotification clientNotify;
 		
-		public Listener(ServerCall serverCall) {
-			this.serverCall = serverCall;
+		public Listener(ClientNotification clientNotify) {
+			this.clientNotify = clientNotify;
 		}
 		
 		public void onMessage(String channel, String message) {
-			this.serverCall.setResponse(message);
+			this.clientNotify.setResponse(message);
 			this.unsubscribe();
 		}
 
@@ -37,19 +34,18 @@ public class ServerCall {
 		
 	}
 	
-	public ServerCall(String session) {
+	public ClientNotification(String session) {
 		this.session = session;
-		this.gson = new Gson();
 		this.jedis = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT);
 	}
 	
-	public String call(String method, String[] args) {
-		String s_key = Database.cat(Config.SERVER, method, this.session);
-		String c_key = Database.cat(Config.CLIENT, this.session);
+	public String getCommand(int call_amount) {
+		String n_key = Database.cat(Config.NOTIFICATIONS, Config.GET_COMMAND, this.session);
+		String c_key = Database.cat(Config.COMMAND, this.session);
 		
 		Listener listener = new Listener(this);
 		
-		this.jedis.publish(s_key, this.gson.toJson(args));
+		this.jedis.publish(n_key, Integer.toString(call_amount));
 		this.jedis.subscribe(listener, c_key);
 		
 		return this.response;
