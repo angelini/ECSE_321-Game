@@ -122,17 +122,17 @@ public class MainWindow {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("71px"),
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(54dlu;default)"),
-				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.DEFAULT_COLSPEC,
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(54dlu;default)"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.DEFAULT_COLSPEC,},
 			new RowSpec[] {
 				RowSpec.decode("488px"),
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("15px"),
 				RowSpec.decode("max(16dlu;default)"),
-				FormFactory.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(14dlu;default)"),
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("26px"),
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -142,9 +142,20 @@ public class MainWindow {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(13dlu;default)"),}));
 		
+
+		
+		JButton btnJoinGame = new JButton("Join Game");
+		frame.getContentPane().add(btnJoinGame, "4, 2");
+		
+		JButton btnChat = new JButton("Chat");
+		frame.getContentPane().add(btnChat, "6, 2, 3, 1, left, default");
+		
+		JButton btnJoinFriendsGame = new JButton("Join Friend's Game");
+		frame.getContentPane().add(btnJoinFriendsGame, "10, 2, 3, 1, right, default");
+		
 		JLabel lblChat = new JLabel("Chat");
 		lblChat.setFont(new Font("Tahoma", Font.BOLD, 14));
-		frame.getContentPane().add(lblChat, "1, 2, center, bottom");
+		frame.getContentPane().add(lblChat, "1, 4, center, bottom");
 		
 		JTabbedPane main = new JTabbedPane(JTabbedPane.TOP);
 		main.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -156,7 +167,7 @@ public class MainWindow {
 		
 		
 		JList listAllGames = new JList(getGameList());
-		allGames.setViewportView(listAllGames);
+		allGames.setRowHeaderView(listAllGames);
 		
 		JPanel createGame = new JPanel();
 		main.addTab("Create Game", null, createGame, null);
@@ -536,6 +547,7 @@ public class MainWindow {
 		currentGame.add(btnBet, "16, 32, 3, 1");
 		
 		final JTabbedPane friends = new JTabbedPane(JTabbedPane.TOP);
+		friends.setBorder(new LineBorder(new Color(0, 0, 0)));
 		frame.getContentPane().add(friends, "6, 1, 7, 1, fill, fill");	
 	
 		final JScrollPane allFriends = new JScrollPane();
@@ -585,40 +597,30 @@ public class MainWindow {
 		
 		final JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		frame.getContentPane().add(scrollPane, "1, 3, 1, 9, fill, fill");
+		frame.getContentPane().add(scrollPane, "1, 5, 1, 7, fill, fill");
 		
 		JList listChats = new JList(getChatList());
 		scrollPane.setViewportView(listChats);
 		
 		JScrollPane chatContainer = new JScrollPane();
 		chatContainer.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		frame.getContentPane().add(chatContainer, "3, 3, 2, 7, fill, fill");
+		frame.getContentPane().add(chatContainer, "3, 5, 2, 5, fill, fill");
 		
 		JList listChatArea = new JList();
 		chatContainer.setViewportView(listChatArea);
 		
-		JButton btnRefresh = new JButton("Refresh");
-		btnRefresh.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				allGames.setViewportView(new JList(getGameList()));
-				scrollPane.setViewportView(new JList(getChatList()));
-				allFriends.setViewportView(new JList(getFriendList()));
-			}
-		});
-		frame.getContentPane().add(btnRefresh, "10, 5");
-		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar main.png")));
-		frame.getContentPane().add(label, "8, 3, 1, 3, center, bottom");
+		frame.getContentPane().add(label, "8, 5, 1, 3, center, bottom");
 		
 		JButton btnOptions = new JButton("Options");
-		frame.getContentPane().add(btnOptions, "10, 7");
+		frame.getContentPane().add(btnOptions, "12, 7");
 		
 		JLabel lblScreenName = new JLabel(this.client.getUser().getUsername());
 		frame.getContentPane().add(lblScreenName, "8, 9, center, center");
 		
 		JButton btnLogOut = new JButton("Log Out");
-		frame.getContentPane().add(btnLogOut, "10, 9");
+		frame.getContentPane().add(btnLogOut, "12, 9");
 		
 		txtChatHere = new JTextField();
 		txtChatHere.setText("chat here");
@@ -637,7 +639,17 @@ public class MainWindow {
 				System.exit(0);
 			}
 		});
-		frame.getContentPane().add(btnQuit, "10, 11");
+		frame.getContentPane().add(btnQuit, "12, 11");
 		frame.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{frame.getContentPane()}));
+		
+		JButton btnRefresh = new JButton("Refresh");
+		btnRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				allGames.setViewportView(new JList(getGameList()));
+				scrollPane.setViewportView(new JList(getChatList()));
+				allFriends.setViewportView(new JList(getFriendList()));
+			}
+		});
+		frame.getContentPane().add(btnRefresh, "1, 2, left, default");
 	}
 }
