@@ -7,18 +7,24 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Client {
+import com.google.gson.Gson;
+
+public class Client implements Runnable {
 	
+	private User user;
+	
+	private Gson gson;
 	private String session;
 	private ExecutorService executor;
 	private Notifications notifications;
 	
 	public static void main(String[] args) {
     	Client client = new Client(Config.REDIS_HOST, Config.REDIS_PORT);
-    	client.start();
+    	client.run();
     }
 	
 	public Client(String host, int port) {
+		this.gson = new Gson();
 		this.session = UUID.randomUUID().toString();
 		this.executor = Executors.newSingleThreadExecutor();
 		this.notifications = new Notifications(this.session);
@@ -66,6 +72,20 @@ public class Client {
 			e.printStackTrace();
 			System.exit(1);
 		}
+	}
+	
+	public Boolean loginUI(String username, String password) {
+		String[] args = {this.session, username, password};
+		
+		ServerCall server = new ServerCall(this.session);
+		String result = server.call(Config.LOGIN, args);
+		
+		if (result == "") {
+			return false;
+		}
+		
+		this.user = this.gson.fromJson(result, User.class);
+		return true;
 	}
 	
 	public void getFriends() {
@@ -273,7 +293,7 @@ public class Client {
 		System.exit(0);
 	}
 	
-	public void start() {
+	public void run() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
 		this.executor.execute(this.notifications);
