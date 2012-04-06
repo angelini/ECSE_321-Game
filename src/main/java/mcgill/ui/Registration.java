@@ -62,7 +62,9 @@ public class Registration {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("max(48dlu;default)"),
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("129dlu"),
+				ColumnSpec.decode("max(74dlu;default)"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("57dlu"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.DEFAULT_COLSPEC,},
 			new RowSpec[] {
@@ -89,48 +91,50 @@ public class Registration {
 		registration.getContentPane().add(lblUsername, "6, 4, 3, 1, left, default");
 		
 		textUsername = new JTextField();
-		registration.getContentPane().add(textUsername, "10, 4, fill, default");
+		registration.getContentPane().add(textUsername, "10, 4, 3, 1, fill, default");
 		textUsername.setColumns(10);
 		
 		JLabel lblUsernameHelp = new JLabel("Please Enter a Username between 3 and 12 charactors");
 		lblUsernameHelp.setForeground(Color.GRAY);
-		registration.getContentPane().add(lblUsernameHelp, "8, 6, 3, 1");
+		registration.getContentPane().add(lblUsernameHelp, "8, 6, 5, 1");
 		
-		final JLabel lblUsernameWarning = new JLabel("That Username is already in use!");
+		JLabel lblUsernameWarning = new JLabel("That Username is already in use!");
 		lblUsernameWarning.setVisible(false);
 		lblUsernameWarning.setForeground(Color.RED);
-		registration.getContentPane().add(lblUsernameWarning, "8, 8, 3, 1, center, default");
+		registration.getContentPane().add(lblUsernameWarning, "8, 8, 5, 1, center, default");
 		
 		JLabel lblPassword = new JLabel("Password:");
 		registration.getContentPane().add(lblPassword, "6, 10, 3, 1, left, default");
 		
 		textPassword = new JTextField();
-		registration.getContentPane().add(textPassword, "10, 10");
+		registration.getContentPane().add(textPassword, "10, 10, 3, 1");
 		textPassword.setColumns(10);
 		
 		JLabel lblRetypePassword = new JLabel("Re-type Password:");
 		registration.getContentPane().add(lblRetypePassword, "6, 12, 3, 1, left, default");
 		
 		textRePassword = new JTextField();
-		registration.getContentPane().add(textRePassword, "10, 12, fill, default");
+		registration.getContentPane().add(textRePassword, "10, 12, 3, 1, fill, default");
 		textRePassword.setColumns(10);
 		
 		JLabel lblPassHelp = new JLabel("Please Eneter a Password between 6 and 12 charactors");
 		lblPassHelp.setForeground(Color.GRAY);
-		registration.getContentPane().add(lblPassHelp, "8, 14, 3, 1");
+		registration.getContentPane().add(lblPassHelp, "8, 14, 5, 1");
 		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				lblUsernameWarning.setVisible(true);
 			}
 		});
 		
 		JLabel lblThePasswordsDo = new JLabel("The Passwords do not match!");
 		lblThePasswordsDo.setForeground(Color.RED);
 		lblThePasswordsDo.setVisible(false);
-		registration.getContentPane().add(lblThePasswordsDo, "8, 16, 3, 1, center, default");
-		registration.getContentPane().add(btnNewButton, "8, 18");
+		registration.getContentPane().add(lblThePasswordsDo, "8, 16, 5, 1, center, default");
+		registration.getContentPane().add(btnCancel, "8, 18");
+		
+		JButton btnRegister = new JButton("Register");
+		registration.getContentPane().add(btnRegister, "12, 18");
 	}
 
 }

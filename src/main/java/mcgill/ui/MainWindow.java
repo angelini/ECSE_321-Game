@@ -79,10 +79,10 @@ public class MainWindow {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 688, 530);
+		frame.setBounds(100, 100, 775, 583);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				ColumnSpec.decode("474px"),
+				ColumnSpec.decode("562px"),
 				ColumnSpec.decode("max(4dlu;default)"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("71px"),
@@ -91,7 +91,7 @@ public class MainWindow {
 				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.DEFAULT_COLSPEC,},
 			new RowSpec[] {
-				RowSpec.decode("329px"),
+				RowSpec.decode("383px"),
 				RowSpec.decode("15px"),
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -144,9 +144,6 @@ public class MainWindow {
 		txtChatHere.setText("chat here");
 		panel.add(txtChatHere, "1, 2, 2, 1, fill, fill");
 		txtChatHere.setColumns(10);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		chat.addTab("New tab", null, scrollPane, null);
 		
 		JTabbedPane main = new JTabbedPane(JTabbedPane.TOP);
 		main.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -226,363 +223,362 @@ public class MainWindow {
 		JPanel currentGame = new JPanel();
 		currentGame.setBackground(Color.WHITE);
 		main.addTab("Current Game", null, currentGame, null);
-		currentGame.setLayout(null);
+		currentGame.setLayout(new FormLayout(new ColumnSpec[] {
+				FormFactory.UNRELATED_GAP_COLSPEC,
+				ColumnSpec.decode("33px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("3px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("8px"),
+				FormFactory.UNRELATED_GAP_COLSPEC,
+				ColumnSpec.decode("20px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("13px"),
+				ColumnSpec.decode("7px"),
+				ColumnSpec.decode("17px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("38px"),
+				ColumnSpec.decode("37px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("20px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("46px"),
+				ColumnSpec.decode("37px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("37px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("13px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("6px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("12px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("19px"),
+				FormFactory.UNRELATED_GAP_COLSPEC,
+				ColumnSpec.decode("8px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("4px"),
+				FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
+				ColumnSpec.decode("32px"),},
+			new RowSpec[] {
+				FormFactory.UNRELATED_GAP_ROWSPEC,
+				RowSpec.decode("23px"),
+				FormFactory.NARROW_LINE_GAP_ROWSPEC,
+				RowSpec.decode("19px"),
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("45px"),
+				FormFactory.NARROW_LINE_GAP_ROWSPEC,
+				RowSpec.decode("43px"),
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("45px"),
+				FormFactory.PARAGRAPH_GAP_ROWSPEC,
+				RowSpec.decode("14px"),
+				FormFactory.NARROW_LINE_GAP_ROWSPEC,
+				RowSpec.decode("13px"),
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("7px"),
+				FormFactory.NARROW_LINE_GAP_ROWSPEC,
+				RowSpec.decode("13px"),
+				RowSpec.decode("14px"),}));
 		
 		JLabel label_1 = new JLabel("Bet Amt:");
-		label_1.setBounds(413, 23, 44, 14);
-		currentGame.add(label_1);
+		currentGame.add(label_1, "32, 2, 5, 3, left, center");
 		
 		JLabel lblBetAmt = new JLabel("Bet Amt:");
-		lblBetAmt.setBounds(10, 23, 46, 14);
-		currentGame.add(lblBetAmt);
+		currentGame.add(lblBetAmt, "2, 2, 5, 3, fill, center");
 		
 		JLabel pWcard2 = new JLabel("K♥");
-		pWcard2.setBounds(48, 61, 37, 45);
 		pWcard2.setOpaque(true);
 		pWcard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pWcard2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pWcard2.setBackground(Color.WHITE);
-		currentGame.add(pWcard2);
+		currentGame.add(pWcard2, "6, 6, 3, 1, fill, fill");
 		
 		JLabel pGcard1 = new JLabel("K♥");
 		pGcard1.setOpaque(true);
 		pGcard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pGcard1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pGcard1.setBackground(Color.GRAY);
-		pGcard1.setBounds(422, 61, 37, 45);
-		currentGame.add(pGcard1);
+		currentGame.add(pGcard1, "34, 6, 3, 1, fill, fill");
 		
 		JLabel pGcard2 = new JLabel("K♥");
 		pGcard2.setOpaque(true);
 		pGcard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pGcard2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pGcard2.setBackground(Color.WHITE);
-		pGcard2.setBounds(384, 61, 37, 45);
-		currentGame.add(pGcard2);
+		currentGame.add(pGcard2, "30, 6, 3, 1, fill, fill");
 		
 		JLabel pWcard1 = new JLabel("K♥");
-		pWcard1.setBounds(10, 61, 37, 45);
 		pWcard1.setOpaque(true);
 		pWcard1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pWcard1.setBackground(Color.GRAY);
 		pWcard1.setFont(new Font("Arial", Font.BOLD, 20));
-		currentGame.add(pWcard1);
+		currentGame.add(pWcard1, "2, 6, 3, 1, fill, fill");
 		
 		JLabel pWname = new JLabel("Screen name");
 		pWname.setOpaque(true);
 		pWname.setBackground(Color.LIGHT_GRAY);
-		pWname.setBounds(99, 23, 62, 14);
-		currentGame.add(pWname);
+		currentGame.add(pWname, "11, 2, 4, 3, left, center");
 		
 		JLabel pWcash = new JLabel("$$$$$$$$");
 		pWcash.setOpaque(true);
 		pWcash.setBackground(Color.LIGHT_GRAY);
-		pWcash.setBounds(99, 36, 62, 14);
-		currentGame.add(pWcash);
+		currentGame.add(pWcash, "11, 4, 4, 1, fill, top");
 		
 		JLabel pGname = new JLabel("Screen name");
 		pGname.setBackground(Color.LIGHT_GRAY);
 		pGname.setOpaque(true);
-		pGname.setBounds(308, 23, 62, 14);
-		currentGame.add(pGname);
+		currentGame.add(pGname, "22, 2, 5, 3, left, center");
 		
 		JLabel pGcash = new JLabel("$$$$$$$$");
 		pGcash.setBackground(Color.LIGHT_GRAY);
 		pGcash.setOpaque(true);
-		pGcash.setBounds(308, 36, 62, 14);
-		currentGame.add(pGcash);
+		currentGame.add(pGcash, "22, 4, 5, 1, fill, top");
 		
 		JLabel pYname = new JLabel("Screen name");
 		pYname.setBackground(Color.LIGHT_GRAY);
 		pYname.setOpaque(true);
-		pYname.setBounds(364, 120, 62, 14);
-		currentGame.add(pYname);
+		currentGame.add(pYname, "26, 8, 9, 1, left, center");
 		
 		JLabel pYcash = new JLabel("$$$$$$$$");
 		pYcash.setBackground(Color.LIGHT_GRAY);
 		pYcash.setOpaque(true);
-		pYcash.setBounds(364, 133, 62, 14);
-		currentGame.add(pYcash);
+		currentGame.add(pYcash, "26, 8, 9, 1, fill, bottom");
 		
 		JLabel pRname = new JLabel("Screen name");
 		pRname.setBackground(Color.LIGHT_GRAY);
 		pRname.setOpaque(true);
-		pRname.setBounds(44, 120, 62, 14);
-		currentGame.add(pRname);
+		currentGame.add(pRname, "4, 8, 8, 1, left, center");
 		
 		JLabel pRcash = new JLabel("$$$$$$$$");
 		pRcash.setBackground(Color.LIGHT_GRAY);
 		pRcash.setOpaque(true);
-		pRcash.setBounds(44, 133, 62, 14);
-		currentGame.add(pRcash);
+		currentGame.add(pRcash, "4, 8, 8, 1, fill, bottom");
 		
 		JLabel pBcash = new JLabel("$$$$$$$$");
 		pBcash.setBackground(Color.LIGHT_GRAY);
 		pBcash.setOpaque(true);
-		pBcash.setBounds(202, 276, 62, 14);
-		currentGame.add(pBcash);
+		currentGame.add(pBcash, "17, 19, 3, 1, fill, top");
 		
 		JLabel pBname = new JLabel("Screen name");
 		pBname.setBackground(Color.LIGHT_GRAY);
 		pBname.setOpaque(true);
-		pBname.setBounds(202, 263, 62, 14);
-		currentGame.add(pBname);
+		currentGame.add(pBname, "17, 18, 3, 2, left, top");
 		
 		JLabel pRed = new JLabel("");
-		pRed.setBounds(10, 109, 32, 43);
 		pRed.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar.png")));
-		currentGame.add(pRed);
+		currentGame.add(pRed, "2, 8, right, top");
 		
 		JLabel pWhite = new JLabel("");
-		pWhite.setBounds(65, 12, 32, 43);
 		pWhite.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar white.png")));
-		currentGame.add(pWhite);
+		currentGame.add(pWhite, "8, 2, 3, 3, left, top");
 		
 		JLabel pGrey = new JLabel("");
-		pGrey.setBounds(371, 12, 32, 43);
 		pGrey.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar grey.png")));
-		currentGame.add(pGrey);
+		currentGame.add(pGrey, "28, 2, 3, 3, left, top");
 		
 		JLabel pYellow = new JLabel("");
-		pYellow.setBounds(427, 109, 32, 43);
 		pYellow.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar yellow.png")));
-		currentGame.add(pYellow);
+		currentGame.add(pYellow, "36, 8, left, top");
 		
 		JLabel pBlue = new JLabel("");
-		pBlue.setBounds(217, 218, 32, 43);
 		pBlue.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar blue.png")));
-		currentGame.add(pBlue);
+		currentGame.add(pBlue, "17, 12, 3, 5, center, top");
 		
 		JLabel lblPot = new JLabel("Pot:");
-		lblPot.setBounds(202, 21, 20, 14);
-		currentGame.add(lblPot);
+		currentGame.add(lblPot, "17, 2, left, bottom");
 		
 		JLabel potAmt = new JLabel("$$$$$$");
-		potAmt.setBounds(224, 21, 46, 14);
-		currentGame.add(potAmt);
+		currentGame.add(potAmt, "19, 2, fill, bottom");
 		
 		JLabel pWcard3 = new JLabel("K♥");
 		pWcard3.setOpaque(true);
 		pWcard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pWcard3.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pWcard3.setBackground(Color.WHITE);
-		pWcard3.setBounds(86, 61, 37, 45);
-		currentGame.add(pWcard3);
+		currentGame.add(pWcard3, "10, 6, 3, 1, fill, fill");
 		
 		JLabel pWcard4 = new JLabel("K♥");
 		pWcard4.setOpaque(true);
 		pWcard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pWcard4.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pWcard4.setBackground(Color.WHITE);
-		pWcard4.setBounds(124, 61, 37, 45);
-		currentGame.add(pWcard4);
+		currentGame.add(pWcard4, "14, 6, fill, fill");
 		
 		JLabel pWcard5 = new JLabel("K♥");
 		pWcard5.setOpaque(true);
 		pWcard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pWcard5.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pWcard5.setBackground(Color.WHITE);
-		pWcard5.setBounds(162, 61, 37, 45);
-		currentGame.add(pWcard5);
+		currentGame.add(pWcard5, "15, 6, fill, fill");
 		
 		JLabel pGcard5 = new JLabel("K♥");
 		pGcard5.setOpaque(true);
 		pGcard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pGcard5.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pGcard5.setBackground(Color.WHITE);
-		pGcard5.setBounds(270, 61, 37, 45);
-		currentGame.add(pGcard5);
+		currentGame.add(pGcard5, "20, 6, fill, fill");
 		
 		JLabel pGcard4 = new JLabel("K♥");
 		pGcard4.setOpaque(true);
 		pGcard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pGcard4.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pGcard4.setBackground(Color.WHITE);
-		pGcard4.setBounds(308, 61, 37, 45);
-		currentGame.add(pGcard4);
+		currentGame.add(pGcard4, "22, 6, fill, fill");
 		
 		JLabel pGcard3 = new JLabel("K♥");
 		pGcard3.setOpaque(true);
 		pGcard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pGcard3.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pGcard3.setBackground(Color.WHITE);
-		pGcard3.setBounds(346, 61, 37, 45);
-		currentGame.add(pGcard3);
+		currentGame.add(pGcard3, "24, 6, 5, 1, fill, fill");
 		
 		JLabel pYcard5 = new JLabel("K♥");
 		pYcard5.setOpaque(true);
 		pYcard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pYcard5.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pYcard5.setBackground(Color.WHITE);
-		pYcard5.setBounds(270, 158, 37, 45);
-		currentGame.add(pYcard5);
+		currentGame.add(pYcard5, "20, 10, fill, fill");
 		
 		JLabel pYcard4 = new JLabel("K♥");
 		pYcard4.setOpaque(true);
 		pYcard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pYcard4.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pYcard4.setBackground(Color.WHITE);
-		pYcard4.setBounds(308, 158, 37, 45);
-		currentGame.add(pYcard4);
+		currentGame.add(pYcard4, "22, 10, fill, fill");
 		
 		JLabel pYcard3 = new JLabel("K♥");
 		pYcard3.setOpaque(true);
 		pYcard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pYcard3.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pYcard3.setBackground(Color.WHITE);
-		pYcard3.setBounds(346, 158, 37, 45);
-		currentGame.add(pYcard3);
+		currentGame.add(pYcard3, "24, 10, 5, 1, fill, fill");
 		
 		JLabel pYcard2 = new JLabel("K♥");
 		pYcard2.setOpaque(true);
 		pYcard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pYcard2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pYcard2.setBackground(Color.WHITE);
-		pYcard2.setBounds(384, 158, 37, 45);
-		currentGame.add(pYcard2);
+		currentGame.add(pYcard2, "30, 10, 3, 1, fill, fill");
 		
 		JLabel pYcard1 = new JLabel("K♥");
 		pYcard1.setOpaque(true);
 		pYcard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pYcard1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pYcard1.setBackground(Color.GRAY);
-		pYcard1.setBounds(422, 158, 37, 45);
-		currentGame.add(pYcard1);
+		currentGame.add(pYcard1, "34, 10, 3, 1, fill, fill");
 		
 		JLabel pRcard1 = new JLabel("K♥");
 		pRcard1.setOpaque(true);
 		pRcard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pRcard1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pRcard1.setBackground(Color.GRAY);
-		pRcard1.setBounds(10, 158, 37, 45);
-		currentGame.add(pRcard1);
+		currentGame.add(pRcard1, "2, 10, 3, 1, fill, fill");
 		
 		JLabel pRcard2 = new JLabel("K♥");
 		pRcard2.setOpaque(true);
 		pRcard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pRcard2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pRcard2.setBackground(Color.WHITE);
-		pRcard2.setBounds(48, 158, 37, 45);
-		currentGame.add(pRcard2);
+		currentGame.add(pRcard2, "6, 10, 3, 1, fill, fill");
 		
 		JLabel pRcard3 = new JLabel("K♥");
 		pRcard3.setOpaque(true);
 		pRcard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pRcard3.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pRcard3.setBackground(Color.WHITE);
-		pRcard3.setBounds(86, 158, 37, 45);
-		currentGame.add(pRcard3);
+		currentGame.add(pRcard3, "10, 10, 3, 1, fill, fill");
 		
 		JLabel pRcard4 = new JLabel("K♥");
 		pRcard4.setOpaque(true);
 		pRcard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pRcard4.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pRcard4.setBackground(Color.WHITE);
-		pRcard4.setBounds(124, 158, 37, 45);
-		currentGame.add(pRcard4);
+		currentGame.add(pRcard4, "14, 10, fill, fill");
 		
 		JLabel pRcard5 = new JLabel("K♥");
 		pRcard5.setOpaque(true);
 		pRcard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pRcard5.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pRcard5.setBackground(Color.WHITE);
-		pRcard5.setBounds(162, 158, 37, 45);
-		currentGame.add(pRcard5);
+		currentGame.add(pRcard5, "15, 10, fill, fill");
 		
 		JLabel pBcard1 = new JLabel("K♥");
 		pBcard1.setOpaque(true);
 		pBcard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pBcard1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pBcard1.setBackground(Color.GRAY);
-		pBcard1.setBounds(270, 233, 37, 45);
-		currentGame.add(pBcard1);
+		currentGame.add(pBcard1, "20, 14, 1, 6, fill, fill");
 		
 		JLabel pBcard2 = new JLabel("K♥");
 		pBcard2.setOpaque(true);
 		pBcard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pBcard2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pBcard2.setBackground(Color.WHITE);
-		pBcard2.setBounds(308, 233, 37, 45);
-		currentGame.add(pBcard2);
+		currentGame.add(pBcard2, "22, 14, 1, 6, fill, fill");
 		
 		JLabel pBcard3 = new JLabel("K♥");
 		pBcard3.setOpaque(true);
 		pBcard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pBcard3.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pBcard3.setBackground(Color.WHITE);
-		pBcard3.setBounds(346, 233, 37, 45);
-		currentGame.add(pBcard3);
+		currentGame.add(pBcard3, "24, 14, 5, 6, fill, fill");
 		
 		JLabel pBcard4 = new JLabel("K♥");
 		pBcard4.setOpaque(true);
 		pBcard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pBcard4.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pBcard4.setBackground(Color.WHITE);
-		pBcard4.setBounds(384, 233, 37, 45);
-		currentGame.add(pBcard4);
+		currentGame.add(pBcard4, "30, 14, 3, 6, fill, fill");
 		
 		JLabel pBcard5 = new JLabel("K♥");
 		pBcard5.setOpaque(true);
 		pBcard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pBcard5.setBorder(new LineBorder(new Color(0, 0, 0)));
 		pBcard5.setBackground(Color.WHITE);
-		pBcard5.setBounds(422, 233, 37, 45);
-		currentGame.add(pBcard5);
+		currentGame.add(pBcard5, "34, 14, 3, 6, fill, fill");
 		
 		JButton btnBet = new JButton("Bet");
-		btnBet.setBounds(106, 254, 89, 23);
-		currentGame.add(btnBet);
+		currentGame.add(btnBet, "12, 16, 4, 4, fill, top");
 		
 		JButton btnFold = new JButton("Fold");
-		btnFold.setBounds(106, 223, 89, 23);
-		currentGame.add(btnFold);
+		currentGame.add(btnFold, "12, 12, 4, 3, fill, bottom");
 		
 		JButton btnCheck = new JButton("Check");
-		btnCheck.setBounds(10, 223, 89, 23);
-		currentGame.add(btnCheck);
+		currentGame.add(btnCheck, "2, 12, 9, 3, fill, bottom");
 		
 		txtBetAmt = new JTextField();
 		txtBetAmt.setText("Bet Amount");
-		txtBetAmt.setBounds(11, 256, 86, 20);
-		currentGame.add(txtBetAmt);
+		currentGame.add(txtBetAmt, "2, 16, 9, 3, center, bottom");
 		txtBetAmt.setColumns(10);
 		
 		JLabel label_2 = new JLabel("Bet Amt:");
-		label_2.setBounds(117, 120, 44, 14);
-		currentGame.add(label_2);
+		currentGame.add(label_2, "12, 8, 3, 1, right, center");
 		
 		JLabel label_3 = new JLabel("Bet Amt:");
-		label_3.setBounds(310, 120, 44, 14);
-		currentGame.add(label_3);
+		currentGame.add(label_3, "22, 8, 3, 1, center, center");
 		
 		JLabel label_4 = new JLabel("Bet Amt:");
-		label_4.setBounds(270, 218, 44, 14);
-		currentGame.add(label_4);
+		currentGame.add(label_4, "20, 12, 3, 1, left, top");
 		
 		JLabel pWbet = new JLabel("$$");
-		pWbet.setBounds(9, 36, 46, 14);
-		currentGame.add(pWbet);
+		currentGame.add(pWbet, "2, 4, 5, 1, fill, top");
 		
 		JLabel pGbet = new JLabel("$$");
-		pGbet.setBounds(413, 36, 46, 14);
-		currentGame.add(pGbet);
+		currentGame.add(pGbet, "32, 4, 5, 1, fill, top");
 		
 		JLabel pRbet = new JLabel("$$");
-		pRbet.setBounds(116, 133, 46, 14);
-		currentGame.add(pRbet);
+		currentGame.add(pRbet, "12, 8, 3, 1, fill, bottom");
 		
 		JLabel pYbet = new JLabel("$$");
-		pYbet.setBounds(308, 133, 46, 14);
-		currentGame.add(pYbet);
+		currentGame.add(pYbet, "22, 8, 3, 1, fill, bottom");
 		
 		JLabel pBbet = new JLabel("$$");
-		pBbet.setBounds(313, 218, 46, 14);
-		currentGame.add(pBbet);
+		currentGame.add(pBbet, "22, 12, 3, 1, fill, top");
 		
 		JLabel table = new JLabel("");
-		table.setBounds(44, 27, 374, 211);
 		table.setIcon(new ImageIcon(MainWindow.class.getResource("/images/table.png")));
-		currentGame.add(table);
+		currentGame.add(table, "4, 2, 29, 13, left, center");
 		
 		JTabbedPane friends = new JTabbedPane(JTabbedPane.TOP);
 		frame.getContentPane().add(friends, "2, 1, 7, 1, fill, fill");	
