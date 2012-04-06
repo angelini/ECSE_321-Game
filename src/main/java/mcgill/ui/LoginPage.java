@@ -19,7 +19,6 @@ import java.awt.Color;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 public class LoginPage {
 
 	private JFrame frmLogin;
@@ -35,8 +34,14 @@ public class LoginPage {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					ExecutorService executor = Executors.newSingleThreadExecutor();
+					Client client = new Client(Config.REDIS_HOST, Config.REDIS_PORT);
+					
+					executor.execute(client);
+					
 					LoginPage window = new LoginPage();
-					window.frmLogin.setVisible(true);
+					window.open(client);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -48,12 +53,12 @@ public class LoginPage {
 	 * Create the application.
 	 */
 	public LoginPage() {
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-		this.client = new Client(Config.REDIS_HOST, Config.REDIS_PORT);
-		
-		executor.execute(this.client);
-		
 		initialize();
+	}
+	
+	public void open(Client client) {
+		this.client = client;
+		frmLogin.setVisible(true);
 	}
 
 	/**
@@ -107,6 +112,13 @@ public class LoginPage {
 		
 		JButton register = new JButton("Register");
 		register.setBounds(176, 191, 113, 23);
+		register.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Registration register = new Registration();
+				register.open(client);
+				frmLogin.setVisible(false);
+			}
+		});
 		frmLogin.getContentPane().add(register);
 		
 		JButton quit = new JButton("Quit");
@@ -123,4 +135,5 @@ public class LoginPage {
 		passwordField.setBounds(93, 148, 210, 20);
 		frmLogin.getContentPane().add(passwordField);
 	}
+	
 }

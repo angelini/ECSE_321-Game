@@ -52,6 +52,20 @@ public class Client implements Runnable {
 		}
 	}
 	
+	public Boolean registerUI(String username, String password) {
+		String[] args = {this.session, username, password};
+		
+		ServerCall server = new ServerCall(this.session);
+		String res = server.call(Config.REGISTER, args);
+		
+		if (res.equals("")) {
+			return false;
+		}
+		
+		this.user = this.gson.fromJson(res, User.class);
+		return true;
+	}
+	
 	public void login() {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
