@@ -63,8 +63,6 @@ public class Server {
     	User user = User.verifyUser(username, password, this.db);
     	this.session.put(session_str, user);
     	
-    	System.out.println("Session is: " + this.gson.toJson(this.session));
-    	
     	if (user == null) {
     		this.emit.publish(c_key, "");
     	} else {
@@ -107,7 +105,7 @@ public class Server {
     	User friend = this.db.getUser(friend_name, false);
     	
     	if (user == null || friend == null) {
-    		this.emit.publish(c_key, "");
+    		this.emit.publish(c_key, "false");
     		return;
     	}
     	

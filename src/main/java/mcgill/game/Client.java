@@ -70,11 +70,7 @@ public class Client implements Runnable {
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.ADD_FRIEND, args);
 		
-		if (res.equals("")) {
-			return false;
-		}
-		
-		return true;	
+		return this.gson.fromJson(res, Boolean.class);	
 	}
 	
 	public Chat[] getChats(String username) {
