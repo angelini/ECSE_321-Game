@@ -37,6 +37,8 @@ import java.util.Set;
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JList;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public class MainWindow {
@@ -109,6 +111,12 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 900, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -618,6 +626,11 @@ public class MainWindow {
 		frame.getContentPane().add(lblScreenName, "8, 9, center, center");
 		
 		JButton btnLogOut = new JButton("Log Out");
+		btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		frame.getContentPane().add(btnLogOut, "12, 9");
 		
 		txtChatHere = new JTextField();
