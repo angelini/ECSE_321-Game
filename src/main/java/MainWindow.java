@@ -9,6 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.SystemColor;
 import javax.swing.border.BevelBorder;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.GridLayout;
@@ -35,6 +36,10 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import java.awt.Insets;
 import com.jgoodies.forms.factories.FormFactory;
+import javax.swing.DropMode;
+import javax.swing.ScrollPaneConstants;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class MainWindow {
@@ -43,6 +48,7 @@ public class MainWindow {
 	private JTextField txtChatHere;
 	private JTextField txtBetAmt;
 	private JTextField txtGame;
+	private JTable table_1;
 
 	/**
 	 * Launch the application.
@@ -72,6 +78,7 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setResizable(false);
 		frame.setBounds(100, 100, 688, 530);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
@@ -100,12 +107,12 @@ public class MainWindow {
 		lblChatWindow.setFont(new Font("Tahoma", Font.BOLD, 14));
 		frame.getContentPane().add(lblChatWindow, "1, 2, center, bottom");
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBorder(new LineBorder(new Color(0, 0, 0)));
-		frame.getContentPane().add(tabbedPane, "1, 3, 1, 9, fill, fill");
+		JTabbedPane chat = new JTabbedPane(JTabbedPane.TOP);
+		chat.setBorder(new LineBorder(new Color(0, 0, 0)));
+		frame.getContentPane().add(chat, "1, 3, 1, 9, fill, fill");
 		
 		JPanel panel = new JPanel();
-		tabbedPane.addTab("Global Chat", null, panel, null);
+		chat.addTab("Global Chat", null, panel, null);
 		panel.setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("86px"),
 				ColumnSpec.decode("294px:grow"),
@@ -114,17 +121,22 @@ public class MainWindow {
 				RowSpec.decode("76px:grow"),
 				RowSpec.decode("23px"),}));
 		
-		final JTextArea textArea = new JTextArea();
-		panel.add(textArea, "1, 1, 3, 1, fill, fill");
-		
 		
 		
 		JButton btnNewButton = new JButton("Send");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textArea.append(txtChatHere.getText() + "\n");
+		
 			}
 		});
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		panel.add(scrollPane_1, "1, 1, 3, 1, fill, fill");
+		
+		JLabel chatArea = new JLabel("");
+		scrollPane_1.setViewportView(chatArea);
 		panel.add(btnNewButton, "3, 2, fill, fill");
 		
 		txtChatHere = new JTextField();
@@ -133,16 +145,19 @@ public class MainWindow {
 		panel.add(txtChatHere, "1, 2, 2, 1, fill, fill");
 		txtChatHere.setColumns(10);
 		
-		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane_1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		frame.getContentPane().add(tabbedPane_1, "1, 1, fill, fill");
+		JScrollPane scrollPane = new JScrollPane();
+		chat.addTab("New tab", null, scrollPane, null);
+		
+		JTabbedPane main = new JTabbedPane(JTabbedPane.TOP);
+		main.setBorder(new LineBorder(new Color(0, 0, 0)));
+		frame.getContentPane().add(main, "1, 1, fill, fill");
 		
 		JPanel allGames = new JPanel();
-		tabbedPane_1.addTab("All Games", null, allGames, null);
+		main.addTab("All Games", null, allGames, null);
 		allGames.setLayout(null);
 		
 		JPanel createGame = new JPanel();
-		tabbedPane_1.addTab("Create Game", null, createGame, null);
+		main.addTab("Create Game", null, createGame, null);
 		GridBagLayout gbl_createGame = new GridBagLayout();
 		gbl_createGame.columnWidths = new int[]{94, 181, 0, 0};
 		gbl_createGame.rowHeights = new int[]{27, 0, 0, 0, 0, 0, 0, 0};
@@ -193,8 +208,16 @@ public class MainWindow {
 		
 		JPanel currentGame = new JPanel();
 		currentGame.setBackground(Color.WHITE);
-		tabbedPane_1.addTab("Current Game", null, currentGame, null);
+		main.addTab("Current Game", null, currentGame, null);
 		currentGame.setLayout(null);
+		
+		JLabel label_1 = new JLabel("Bet Amt:");
+		label_1.setBounds(413, 23, 44, 14);
+		currentGame.add(label_1);
+		
+		JLabel lblBetAmt = new JLabel("Bet Amt:");
+		lblBetAmt.setBounds(10, 23, 46, 14);
+		currentGame.add(lblBetAmt);
 		
 		JLabel pWcard2 = new JLabel("K♥");
 		pWcard2.setBounds(48, 61, 37, 45);
@@ -290,27 +313,27 @@ public class MainWindow {
 		
 		JLabel pRed = new JLabel("");
 		pRed.setBounds(10, 109, 32, 43);
-		pRed.setIcon(new ImageIcon("D:\\Documents\\!McGill\\ECSE 321\\avatar.png"));
+		pRed.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar.png")));
 		currentGame.add(pRed);
 		
 		JLabel pWhite = new JLabel("");
 		pWhite.setBounds(65, 12, 32, 43);
-		pWhite.setIcon(new ImageIcon("D:\\Documents\\!McGill\\ECSE 321\\avatar white.png"));
+		pWhite.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar white.png")));
 		currentGame.add(pWhite);
 		
 		JLabel pGrey = new JLabel("");
 		pGrey.setBounds(371, 12, 32, 43);
-		pGrey.setIcon(new ImageIcon("D:\\Documents\\!McGill\\ECSE 321\\avatar grey.png"));
+		pGrey.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar grey.png")));
 		currentGame.add(pGrey);
 		
 		JLabel pYellow = new JLabel("");
 		pYellow.setBounds(427, 109, 32, 43);
-		pYellow.setIcon(new ImageIcon("D:\\Documents\\!McGill\\ECSE 321\\avatar yellow.png"));
+		pYellow.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar yellow.png")));
 		currentGame.add(pYellow);
 		
 		JLabel pBlue = new JLabel("");
 		pBlue.setBounds(217, 218, 32, 43);
-		pBlue.setIcon(new ImageIcon("D:\\Documents\\!McGill\\ECSE 321\\avatar blue.png"));
+		pBlue.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar blue.png")));
 		currentGame.add(pBlue);
 		
 		JLabel lblPot = new JLabel("Pot:");
@@ -501,38 +524,97 @@ public class MainWindow {
 		btnCheck.setBounds(10, 223, 89, 23);
 		currentGame.add(btnCheck);
 		
-		JLabel table = new JLabel("");
-		table.setBounds(44, 27, 374, 211);
-		table.setIcon(new ImageIcon("D:\\Documents\\!McGill\\ECSE 321\\table.png"));
-		currentGame.add(table);
-		
 		txtBetAmt = new JTextField();
 		txtBetAmt.setText("Bet Amount");
 		txtBetAmt.setBounds(11, 256, 86, 20);
 		currentGame.add(txtBetAmt);
 		txtBetAmt.setColumns(10);
 		
-		JTabbedPane tabbedPane_2 = new JTabbedPane(JTabbedPane.TOP);
-		frame.getContentPane().add(tabbedPane_2, "2, 1, 7, 1, fill, fill");
+		JLabel label_2 = new JLabel("Bet Amt:");
+		label_2.setBounds(117, 120, 44, 14);
+		currentGame.add(label_2);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		tabbedPane_2.addTab("Friends", null, scrollPane, null);
+		JLabel label_3 = new JLabel("Bet Amt:");
+		label_3.setBounds(310, 120, 44, 14);
+		currentGame.add(label_3);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		tabbedPane_2.addTab("Search", null, scrollPane_1, null);
+		JLabel label_4 = new JLabel("Bet Amt:");
+		label_4.setBounds(270, 218, 44, 14);
+		currentGame.add(label_4);
+		
+		JLabel pWbet = new JLabel("$$");
+		pWbet.setBounds(9, 36, 46, 14);
+		currentGame.add(pWbet);
+		
+		JLabel pGbet = new JLabel("$$");
+		pGbet.setBounds(413, 36, 46, 14);
+		currentGame.add(pGbet);
+		
+		JLabel pRbet = new JLabel("$$");
+		pRbet.setBounds(116, 133, 46, 14);
+		currentGame.add(pRbet);
+		
+		JLabel pYbet = new JLabel("$$");
+		pYbet.setBounds(308, 133, 46, 14);
+		currentGame.add(pYbet);
+		
+		JLabel pBbet = new JLabel("$$");
+		pBbet.setBounds(313, 218, 46, 14);
+		currentGame.add(pBbet);
+		
+		JLabel table = new JLabel("");
+		table.setBounds(44, 27, 374, 211);
+		table.setIcon(new ImageIcon(MainWindow.class.getResource("/images/table.png")));
+		currentGame.add(table);
+		
+		JTabbedPane friends = new JTabbedPane(JTabbedPane.TOP);
+		frame.getContentPane().add(friends, "2, 1, 7, 1, fill, fill");	
+		
+		
+		
+		
+		String[] columnNames = {"Name",
+                "Status",
+                "Options"};
+		Object[][] data = {
+			    {"Kathy", "Online","something"
+			     },
+			    {"John", "offline",
+			     "no options"},
+	
+			};
+	
+		JScrollPane allFriends = new JScrollPane();
+		allFriends.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		allFriends.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		friends.addTab("Friends", null, allFriends, null);
+		
+		table_1 = new JTable(data,columnNames);
+		table_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			}
+		});
+		allFriends.setViewportView(table_1);		
+		
+		JScrollPane search = new JScrollPane();
+		friends.addTab("Search", null, search, null);
 		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon("D:\\Documents\\!McGill\\ECSE 321\\avatar main.png"));
-		frame.getContentPane().add(label, "4, 5, 1, 3, center, top");
+		frame.getContentPane().add(label, "4, 3, 1, 3, center, bottom");
 		
 		JButton btnOptions = new JButton("Options");
 		frame.getContentPane().add(btnOptions, "6, 5");
 		
+		JLabel lblScreenName = new JLabel("Screen Name");
+		frame.getContentPane().add(lblScreenName, "4, 7, center, center");
+		
 		JButton btnLogOut = new JButton("Log Out");
 		frame.getContentPane().add(btnLogOut, "6, 7");
 		
-		JLabel lblScreenName = new JLabel("Screen Name");
-		frame.getContentPane().add(lblScreenName, "4, 9, center, default");
+		JLabel cash = new JLabel("$$$$");
+		frame.getContentPane().add(cash, "4, 9, center, top");
 		
 		JButton btnQuit = new JButton("Quit");
 		frame.getContentPane().add(btnQuit, "6, 9");
