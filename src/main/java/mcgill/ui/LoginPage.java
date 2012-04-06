@@ -15,7 +15,6 @@ import javax.swing.JPasswordField;
 import mcgill.game.Client;
 import mcgill.game.Config;
 
-import java.awt.Color;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import com.jgoodies.forms.layout.FormLayout;

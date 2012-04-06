@@ -69,6 +69,10 @@ public class ServerListener extends JedisPubSub {
 		if (method.equals(Config.START_ROUND)) {
 			this.server.startRound(c_key, this.gson.fromJson(message, String[].class));
 		}
+		
+		if (method.equals(Config.LOGOUT)) {
+			this.server.logout(c_key, this.gson.fromJson(message, String[].class));
+		}
 	}
 
 	@Override

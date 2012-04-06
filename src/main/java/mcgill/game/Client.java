@@ -143,8 +143,11 @@ public class Client implements Runnable {
 		server.call(Config.START_ROUND, args);
 	}
 	
-	public void exit() {
-		System.exit(0);
+	public void logout() {
+		String[] args = {this.session};
+		
+		ServerCall server = new ServerCall(this.session);
+		server.call(Config.LOGOUT, args);
 	}
 	
 	public void run() {
