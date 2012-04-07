@@ -142,9 +142,17 @@ public class Server {
     	Set<User> users = new HashSet<User>();
     	users.add(user);
     	users.add(friend);
-    	Chat chat = new Chat(users);
-    	this.db.setChat(chat);
-    	this.emit.publish(c_key, this.gson.toJson(chat));
+    	
+    	Chat exists = this.db.getChatWithUsers(users);
+    	
+    	if (exists != null) {
+    		this.emit.publish(c_key, this.gson.toJson(exists));
+    	
+    	} else {
+    		Chat chat = new Chat(users);
+        	this.db.setChat(chat);
+        	this.emit.publish(c_key, this.gson.toJson(chat));
+    	}
     }
     
     public void message(String c_key, String[] args) {

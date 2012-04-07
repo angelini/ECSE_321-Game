@@ -140,6 +140,25 @@ public class Database {
 		return chats;
 	}
 	
+	public Chat getChatWithUsers(Set<User> users) {
+		Set <String> usernames = new HashSet<String>();
+		Set<String> keys = this.jedis.keys(CHATS);
+		
+		for (User user : users) {
+			usernames.add(user.getUsername());
+		}
+		
+		for (String key : keys) {
+			String id = split(key)[1];
+			Set<String> chat_usernames = this.jedis.smembers(cat(CHATS, id, USERS));
+			if (chat_usernames.equals(usernames)) {
+				return this.getChat(id);
+			}
+		}
+		
+		return null;
+	}
+	
 	// TABLE DB Adapter
 	
 	public Table getTable(String id) {
