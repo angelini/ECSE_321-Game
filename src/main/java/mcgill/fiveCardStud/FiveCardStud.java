@@ -3,8 +3,8 @@ package mcgill.fiveCardStud;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
 
+import mcgill.game.ClientNotification;
 import mcgill.game.Server;
 import mcgill.poker.Deck;
 import mcgill.poker.HandRank;
@@ -14,12 +14,10 @@ import mcgill.poker.OutOfMoneyException;
 import mcgill.poker.TooFewCardsException;
 import mcgill.poker.TooManyCardsException;
 
-public class FiveCardStud implements Callable<List<Player>> {
+public class FiveCardStud implements Runnable {
 	public static final int FOLDED = -1;
 	public static final int BETTING = 0;
 	public static final int ALL_IN = 1;
-	
-	private Server server;
 	
 	private int maxRaises;
 	private int street;
@@ -31,8 +29,7 @@ public class FiveCardStud implements Callable<List<Player>> {
 	private List<Pot> pots;
 	private int startingPlayer;
 	
-	public FiveCardStud(Server server, List<Player> players, int lowBet, int maxRaises, int bringIn) {
-		this.server = server;
+	public FiveCardStud(List<Player> players, int lowBet, int maxRaises, int bringIn) {
 		this.raises = 0;
 		this.players = players;
 		this.pots= new ArrayList<Pot>();
@@ -44,15 +41,14 @@ public class FiveCardStud implements Callable<List<Player>> {
 		this.startingPlayer = 0;
 	}
 	
-	public List<Player> call() {
+	public void run() {
 		try {
 			this.playRound();
+			System.out.println("Round is done");
 		} catch (Exception e) {
 			System.out.println("*** PLAY ROUND EXCEPTION ***");
 			e.printStackTrace();
 		}
-		
-		return this.players;
 	}
 	
 	public void playRound() throws TooFewCardsException, TooManyCardsException, OutOfMoneyException {
@@ -72,6 +68,15 @@ public class FiveCardStud implements Callable<List<Player>> {
 		
 		makePots();
 		dividePots();
+	}
+	
+	public int getAction(String username, int call_amount) {
+		String session_str = Server.getUserSession(username);
+		ClientNotification notification = new ClientNotification(session_str);
+		
+		String command = notification.getCommand(call_amount);
+		
+		return Integer.parseInt(command);
 	}
 
 	private void initialize() throws TooFewCardsException, TooManyCardsException, OutOfMoneyException {
@@ -144,7 +149,7 @@ public class FiveCardStud implements Callable<List<Player>> {
 					
 					int callAmount = getCallAmount() - currentPlayer.getAmountInPots();
 					
-					int action = server.getAction(players.get(index).getUsername(), callAmount);
+					int action = getAction(players.get(index).getUsername(), callAmount);
 					
 					System.out.println("Action for " + players.get(index).getUsername() + " is: " + action);
 					

@@ -36,7 +36,7 @@ public class ClientNotification {
 	
 	public ClientNotification(String session) {
 		this.session = session;
-		this.jedis = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT);
+		this.jedis = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT, 0);
 	}
 	
 	public String getCommand(int call_amount) {

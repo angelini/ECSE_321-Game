@@ -128,7 +128,7 @@ public class Database {
 	
 	public List<Chat> getUserChats(String username) {
 		List<Chat> chats = new ArrayList<Chat>();
-		Set<String> keys = this.jedis.keys(CHATS);
+		Set<String> keys = this.jedis.smembers(CHATS);
 		
 		for (String key : keys) {
 			String id = split(key)[1];
@@ -142,7 +142,7 @@ public class Database {
 	
 	public Chat getChatWithUsers(Set<User> users) {
 		Set <String> usernames = new HashSet<String>();
-		Set<String> keys = this.jedis.keys(CHATS);
+		Set<String> keys = this.jedis.smembers(CHATS);
 		
 		for (User user : users) {
 			usernames.add(user.getUsername());
@@ -200,6 +200,10 @@ public class Database {
 		}
 		
 		return tables;
+	}
+
+	public void close() {
+		this.jedis.quit();
 	}
 	
 }

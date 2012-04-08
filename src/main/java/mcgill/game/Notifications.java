@@ -1,15 +1,13 @@
 package mcgill.game;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
 public class Notifications implements Runnable {
  
-	private Jedis jedis;
+	private Client client;
+	private Jedis emit;
+	private Jedis subscribe;
 	private String session;
 	
 	private class Listener extends JedisPubSub {
@@ -44,33 +42,35 @@ public class Notifications implements Runnable {
 		
 	}
 	
-	public Notifications(String session) {
-		this.session = session;
-		this.jedis = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT);
+	public Notifications(Client client) {
+		this.client = client;
+		this.session = client.getSession();
+		
+		this.subscribe = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT, 0);
+		this.emit = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT);
 	}
 	
 	public void run() {
 		Listener listener = new Listener(this);
-		this.jedis.psubscribe(listener, Database.cat(Config.NOTIFICATIONS, "*", this.session));
+		this.subscribe.psubscribe(listener, Database.cat(Config.NOTIFICATIONS, "*", this.session));
 	}
 	
-	public void getCommand(String c_key, String call_amount) {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public void getCommand(final String c_key, String call_amount) {
+		System.out.println("Notifications.getCommand");
 		
-		try {
-			System.out.println("\n\nAmount to call is " + call_amount);
-			System.out.print("0 is check, -1 is fold, any positive integer is a raise or call: ");
-			String command = br.readLine();
+		ClientEvent event = new ClientEvent(new Object());
+		event.setType(ClientEvent.ACTION);
+		
+		this.client.addEventListener(new ClientEventListener() {
 			
-			System.out.println("C_Key " + c_key);
-			System.out.println("Command " + command);
-			
-			this.jedis.publish(c_key, command);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+			public void eventOccured(ClientEvent e) {
+				if (e.getType() == ClientEvent.ACTION_REC) {
+					emit.publish(c_key, Integer.toString(e.getAction()));
+				}
+			}
+		});
+		
+		this.client.fireEvent(event);
 	}
 	
 }

@@ -1,16 +1,23 @@
 package mcgill.game;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.swing.event.EventListenerList;
 
 import com.google.gson.Gson;
 
 public class Client implements Runnable {
 	
 	private User user;
+	private Table table;
 	
 	private Gson gson;
 	private String session;
 	private Notifications notifications;
+	
+	private EventListenerList eventlist;
 	
 	public static void main(String[] args) {
     	Client client = new Client(Config.REDIS_HOST, Config.REDIS_PORT);
@@ -20,11 +27,33 @@ public class Client implements Runnable {
 	public Client(String host, int port) {
 		this.gson = new Gson();
 		this.session = UUID.randomUUID().toString();
-		this.notifications = new Notifications(this.session);
+		this.notifications = new Notifications(this);
+		this.eventlist = new EventListenerList();
 	}
 	
 	public User getUser() {
 		return this.user;
+	}
+	
+	public Table getTable() {
+		return this.table;
+	}
+	
+	public void addEventListener(ClientEventListener elistener) {
+		this.eventlist.add(ClientEventListener.class, elistener);
+	}
+	
+	public void removeEventListener(ClientEventListener elistener) {
+		this.eventlist.remove(ClientEventListener.class, elistener);
+	}
+	
+	public void fireEvent(ClientEvent e) {
+		Object[] elisteners = this.eventlist.getListenerList();
+		for (int i = 0; i < elisteners.length; i = i+2) {
+			if (elisteners[i] == ClientEventListener.class) {
+				((ClientEventListener) elisteners[i + 1]).eventOccured(e);
+			}
+		}
 	}
 	
 	public Boolean register(String username, String password) {
@@ -82,6 +111,15 @@ public class Client implements Runnable {
 		return this.gson.fromJson(res, Chat[].class);
 	}
 	
+	public Chat getChat(String chat_id) {
+		String[] args = {this.session, chat_id};
+		
+		ServerCall server = new ServerCall(this.session);
+		String res = server.call(Config.GET_CHAT, args);
+		
+		return this.gson.fromJson(res, Chat.class);
+	}
+	
 	public Chat createChat(String username, String friend) {
 		String[] args = {this.session, username, friend};
 			
@@ -127,13 +165,20 @@ public class Client implements Runnable {
 		return this.gson.fromJson(res, Table.class);
 	}
 	
-	public Table joinTable(String username, String table_id) {
+	public Boolean joinTable(String username, String table_id) {
 		String[] args = {this.session, username, table_id};
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.JOIN_TABLE, args);
 		
-		return this.gson.fromJson(res, Table.class);
+		Table table = this.gson.fromJson(res, Table.class);
+		this.table = table;
+		
+		if (table == null) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	public void startRound(String table_id) {
@@ -150,8 +195,13 @@ public class Client implements Runnable {
 		server.call(Config.LOGOUT, args);
 	}
 	
+	public String getSession() {
+		return this.session;
+	}
+	
 	public void run() {
-		this.notifications.run();
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		executor.execute(this.notifications);
 	}
 	
 }

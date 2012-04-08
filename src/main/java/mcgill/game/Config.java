@@ -24,6 +24,7 @@ public class Config {
 	public static final String GET_FRIENDS = "get_friends";
 	public static final String ADD_FRIEND = "add_friend";
 	public static final String GET_CHATS = "get_chats";
+	public static final String GET_CHAT = "get_chat";
 	public static final String CREATE_CHAT = "create_chat";
 	public static final String ADD_CREDITS = "add_credits";
 	public static final String GET_TABLES = "get_tables";

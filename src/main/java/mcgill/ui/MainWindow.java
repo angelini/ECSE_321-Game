@@ -4,6 +4,9 @@ import javax.swing.JFrame;
 
 import mcgill.game.Chat;
 import mcgill.game.Client;
+import mcgill.game.ClientEvent;
+import mcgill.game.ClientEventListener;
+import mcgill.game.Message;
 import mcgill.game.Table;
 import mcgill.game.User;
 
@@ -15,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
@@ -31,7 +35,11 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.Insets;
+import java.util.List;
 import java.util.Set;
 
 import com.jgoodies.forms.factories.FormFactory;
@@ -69,7 +77,7 @@ public class MainWindow {
 		DefaultListModel listModel = new DefaultListModel();
 		
 		for (int i = 0; i < tables.length; i++) {
-			listModel.addElement(tables[i].getName() + " --- " + tables[i].getUsers().size() + "/5 players");
+			listModel.addElement(tables[i].getName() + " --- " + tables[i].getUsers().size() + "/5 players ::" + tables[i].getId());
 		}
 		
 		return listModel;
@@ -95,12 +103,24 @@ public class MainWindow {
 			String chat_str = "";
 			Set<User> users = chats[i].getUsers();
 			for (User user : users) {
-				if (user.getUsername() != username) {
+				if (!user.getUsername().equals(username)) {
 					chat_str += user.getUsername() + " ";
 				}
 			}
 			
+			chat_str += "::" + chats[i].getId();
 			listModel.addElement(chat_str);
+		}
+		
+		return listModel;
+	}
+	
+	public DefaultListModel getChatMessages(Chat chat) {
+		List<Message> messages = chat.getMessages();
+		DefaultListModel listModel = new DefaultListModel();
+		
+		for (int i = 0; i < messages.size(); i++) {
+			listModel.addElement(messages.get(i).getUsername() + ": " + messages.get(i).getMessage());
 		}
 		
 		return listModel;
@@ -151,11 +171,6 @@ public class MainWindow {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("max(13dlu;default)"),}));
 		
-
-		
-		JButton btnJoinGame = new JButton("Join Game");
-		frame.getContentPane().add(btnJoinGame, "4, 2");
-		
 		JButton btnJoinFriendsGame = new JButton("Join Friend's Game");
 		frame.getContentPane().add(btnJoinFriendsGame, "10, 2, 3, 1, right, default");
 		
@@ -171,8 +186,22 @@ public class MainWindow {
 		allGames.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		
-		JList listAllGames = new JList(getGameList());
+		final JList listAllGames = new JList(getGameList());
 		allGames.setRowHeaderView(listAllGames);
+		
+		JButton btnJoinGame = new JButton("Join Game");
+		btnJoinGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String table = ((String) listAllGames.getSelectedValue()).split("::")[1];
+				Boolean result = client.joinTable(client.getUser().getUsername(), table);
+				if (!result) {
+					JOptionPane.showMessageDialog(frame, "Error Joining Table");
+				}
+				
+				System.out.println("Table: " + client.getTable());
+			}
+		});
+		frame.getContentPane().add(btnJoinGame, "4, 2");
 		
 		JPanel createGame = new JPanel();
 		main.addTab("Create Game", null, createGame, null);
@@ -537,10 +566,28 @@ public class MainWindow {
 		JLabel pBlueCash = new JLabel("$$$$$");
 		currentGame.add(pBlueCash, "12, 26, 3, 1");
 		
-		JButton btnCheck = new JButton("Check");
+		final JButton btnCheck = new JButton("Check");
+		btnCheck.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ClientEvent event = new ClientEvent(new Object());
+				event.setType(ClientEvent.ACTION_REC);
+				event.setAction(0);
+				
+				client.fireEvent(event);
+			}
+		});
 		currentGame.add(btnCheck, "10, 30, 3, 1");
 		
-		JButton btnFold = new JButton("Fold");
+		final JButton btnFold = new JButton("Fold");
+		btnFold.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ClientEvent event = new ClientEvent(new Object());
+				event.setType(ClientEvent.ACTION_REC);
+				event.setAction(-1);
+				
+				client.fireEvent(event);
+			}
+		});
 		currentGame.add(btnFold, "16, 30, 3, 1");
 		
 		txtBetAmt = new JTextField();
@@ -548,8 +595,26 @@ public class MainWindow {
 		currentGame.add(txtBetAmt, "10, 32, 3, 1, fill, default");
 		txtBetAmt.setColumns(10);
 		
-		JButton btnBet = new JButton("Bet");
+		final JButton btnBet = new JButton("Bet");
+		btnBet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ClientEvent event = new ClientEvent(new Object());
+				event.setType(ClientEvent.ACTION_REC);
+				event.setAction(Integer.parseInt(txtBetAmt.getText()));
+				
+				client.fireEvent(event);
+			}
+		});
 		currentGame.add(btnBet, "16, 32, 3, 1");
+		
+		JButton btnStart = new JButton("Start");
+		btnStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Start Round: " + client.getTable().getId());
+				client.startRound(client.getTable().getId());
+			}
+		});
+		currentGame.add(btnStart, "4, 30, 3, 1");
 		
 		final JTabbedPane friends = new JTabbedPane(JTabbedPane.TOP);
 		frame.getContentPane().add(friends, "6, 1, 7, 1, fill, fill");	
@@ -563,21 +628,6 @@ public class MainWindow {
 		
 		final JList listFriends = new JList(getFriendList());
 		allFriends.setViewportView(listFriends);
-		
-		JButton btnChat = new JButton("Chat");
-		btnChat.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String username = (String) listFriends.getSelectedValue();
-				
-				if (username == null) {
-					JOptionPane.showMessageDialog(frame, "No Friend Selected");
-					return;
-				}
-				
-				client.createChat(client.getUser().getUsername(), username);
-			}
-		});
-		frame.getContentPane().add(btnChat, "6, 2, 3, 1, left, default");
 		
 		JPanel addFriend = new JPanel();
 		friends.addTab("Add Friend", null, addFriend, null);
@@ -618,15 +668,23 @@ public class MainWindow {
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		frame.getContentPane().add(scrollPane, "1, 5, 1, 7, fill, fill");
 		
-		JList listChats = new JList(getChatList());
-		scrollPane.setViewportView(listChats);
-		
-		JScrollPane chatContainer = new JScrollPane();
+		final JScrollPane chatContainer = new JScrollPane();
 		chatContainer.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		frame.getContentPane().add(chatContainer, "3, 5, 2, 5, fill, fill");
 		
 		JList listChatArea = new JList();
 		chatContainer.setViewportView(listChatArea);
+		
+		final JList listChats = new JList(getChatList());
+		ListSelectionModel chatSelection = listChats.getSelectionModel();
+		chatSelection.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				String chat_id = ((String) listChats.getSelectedValue()).split("::")[1];
+				Chat chat = client.getChat(chat_id);
+				chatContainer.setViewportView(new JList(getChatMessages(chat)));
+			}
+		});
+		scrollPane.setViewportView(listChats);
 		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar main.png")));
@@ -674,11 +732,36 @@ public class MainWindow {
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				allGames.setViewportView(new JList(getGameList()));
+				allGames.setRowHeaderView(new JList(getGameList()));
 				scrollPane.setViewportView(new JList(getChatList()));
 				allFriends.setViewportView(new JList(getFriendList()));
 			}
 		});
 		frame.getContentPane().add(btnRefresh, "1, 2, left, default");
+		
+		JButton btnChat = new JButton("Chat");
+		btnChat.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String username = (String) listFriends.getSelectedValue();
+				
+				if (username == null) {
+					JOptionPane.showMessageDialog(frame, "No Friend Selected");
+					return;
+				}
+				
+				client.createChat(client.getUser().getUsername(), username);
+				scrollPane.setViewportView(new JList(getChatList()));
+			}
+		});
+		frame.getContentPane().add(btnChat, "6, 2, 3, 1, left, default");
+		
+		client.addEventListener(new ClientEventListener() {			
+			public void eventOccured(ClientEvent e) {
+				System.out.println("Event Occured: " + e.getType());
+				if (e.getType() == ClientEvent.ACTION) {
+					JOptionPane.showMessageDialog(frame, "It's your turn");
+				}
+			}
+		});
 	}
 }

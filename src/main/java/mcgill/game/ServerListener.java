@@ -42,6 +42,10 @@ public class ServerListener extends JedisPubSub {
 			this.server.getChats(c_key, this.gson.fromJson(message, String[].class));
 		}
 		
+		if (method.equals(Config.GET_CHATS)) {
+			this.server.getChat(c_key, this.gson.fromJson(message, String[].class));
+		}
+		
 		if (method.equals(Config.CREATE_CHAT)) {
 			this.server.createChat(c_key, this.gson.fromJson(message, String[].class));
 		}

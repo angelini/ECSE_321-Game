@@ -21,7 +21,18 @@ public class Server {
 	private Gson gson;
 	private Database db;
 	private ServerListener listener;
-	private Map<String, User> session;
+	
+	private static Map<String, User> session = new HashMap<String, User>();
+	
+	public static String getUserSession(String username) {
+		for (Map.Entry<String, User> entry : session.entrySet()) {
+			if (entry.getValue().getUsername().equals(username)) {
+				return entry.getKey();
+			}
+		}
+		
+		return null;
+	}
 	
     public static void main(String[] args) {
     	Server server = new Server(Config.REDIS_HOST, Config.REDIS_PORT);
@@ -33,7 +44,6 @@ public class Server {
     	this.gson = new Gson();
     	this.db = new Database(Config.REDIS_HOST, Config.REDIS_PORT);
     	this.listener = new ServerListener(this);
-    	this.session = new HashMap<String, User>();
     	
     	this.emit = new Jedis(host, port);
     	this.subscribe = new Jedis(host, port, 0);
@@ -45,23 +55,13 @@ public class Server {
     	this.subscribe.psubscribe(this.listener, "server::*");
     }
     
-    public String getUserSession(String username) {
-		for (Map.Entry<String, User> entry : this.session.entrySet()) {
-			if (entry.getValue().getUsername().equals(username)) {
-				return entry.getKey();
-			}
-		}
-		
-		return null;
-	}
-    
     public void login(String c_key, String[] args) {
     	String session_str = args[0];
     	String username = args[1];
     	String password = args[2];
     	
     	User user = User.verifyUser(username, password, this.db);
-    	this.session.put(session_str, user);
+    	session.put(session_str, user);
     	
     	if (user == null) {
     		this.emit.publish(c_key, "");
@@ -73,7 +73,7 @@ public class Server {
     public void logout(String c_key, String[] args) {
     	String session_str = args[0];
     	
-    	this.session.remove(session_str);
+    	session.remove(session_str);
     	this.emit.publish(c_key, "");
     }
     
@@ -83,7 +83,7 @@ public class Server {
     	String password = args[2];
     	
     	User user = User.createUser(username, password, this.db);
-    	this.session.put(session_str, user);
+    	session.put(session_str, user);
     	
     	if (user == null) {
     		this.emit.publish(c_key, "");
@@ -126,6 +126,13 @@ public class Server {
     	List<Chat> chats = this.db.getUserChats(username);
     	this.emit.publish(c_key, this.gson.toJson(chats));
     }
+    
+    public void getChat(String c_key, String[] args) {
+    	String chat_id = args[1];
+		
+    	Chat chat = this.db.getChat(chat_id);
+    	this.emit.publish(c_key, this.gson.toJson(chat));
+	}
     
     public void createChat(String c_key, String[] args) {
     	String username = args[1];
@@ -227,7 +234,12 @@ public class Server {
 		
 		Boolean result = table.addUser(user);
 		this.db.setTable(table);
-		this.emit.publish(c_key, this.gson.toJson(result));
+		
+		if (result) {
+			this.emit.publish(c_key, this.gson.toJson(table));
+		} else {
+			this.emit.publish(c_key, this.gson.toJson(null));
+		}
 	}
 
 	public void startRound(String c_key, String[] args) {
@@ -237,17 +249,6 @@ public class Server {
 		table.startRound(this);
 		
 		this.emit.publish(c_key, "");
-	}
-	
-	public int getAction(String username, int call_amount) {
-		System.out.println("Get Action for " + username);
-		
-		String session_str = this.getUserSession(username);
-		ClientNotification notification = new ClientNotification(session_str);
-		
-		String command = notification.getCommand(call_amount);
-		
-		return Integer.parseInt(command);
 	}
     
 }
