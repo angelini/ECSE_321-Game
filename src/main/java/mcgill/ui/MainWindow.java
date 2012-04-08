@@ -47,6 +47,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.JList;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class MainWindow {
@@ -185,7 +187,6 @@ public class MainWindow {
 		main.addTab("All Games", null, allGames, null);
 		allGames.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		
 		final JList listAllGames = new JList(getGameList());
 		allGames.setRowHeaderView(listAllGames);
 		
@@ -255,6 +256,13 @@ public class MainWindow {
 		createGame.add(btnCreate, gbc_btnCreate);
 		
 		JPanel currentGame = new JPanel();
+		currentGame.setVisible(false);
+		currentGame.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+			}
+		});
 		main.addTab("Current Game", null, currentGame, null);
 		currentGame.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
@@ -336,6 +344,7 @@ public class MainWindow {
 		currentGame.add(pGreyCash, "20, 6, 3, 1");
 		
 		JLabel pWhiteCard1 = new JLabel("10♠");
+		pWhiteCard1.setVisible(false);
 		pWhiteCard1.setOpaque(true);
 		pWhiteCard1.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pWhiteCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -344,6 +353,7 @@ public class MainWindow {
 		currentGame.add(pWhiteCard1, "4, 8, fill, fill");
 		
 		JLabel pWhiteCard2 = new JLabel("10♠");
+		pWhiteCard2.setVisible(false);
 		pWhiteCard2.setOpaque(true);
 		pWhiteCard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pWhiteCard2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -352,6 +362,7 @@ public class MainWindow {
 		currentGame.add(pWhiteCard2, "6, 8, fill, fill");
 		
 		JLabel pWhiteCard3 = new JLabel("10♠");
+		pWhiteCard3.setVisible(false);
 		pWhiteCard3.setOpaque(true);
 		pWhiteCard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pWhiteCard3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -360,6 +371,7 @@ public class MainWindow {
 		currentGame.add(pWhiteCard3, "8, 8, fill, fill");
 		
 		JLabel pWhiteCard4 = new JLabel("10♠");
+		pWhiteCard4.setVisible(false);
 		pWhiteCard4.setOpaque(true);
 		pWhiteCard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pWhiteCard4.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -368,6 +380,7 @@ public class MainWindow {
 		currentGame.add(pWhiteCard4, "10, 8, fill, fill");
 		
 		JLabel pWhiteCard5 = new JLabel("10♠");
+		pWhiteCard5.setVisible(false);
 		pWhiteCard5.setOpaque(true);
 		pWhiteCard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pWhiteCard5.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -376,6 +389,7 @@ public class MainWindow {
 		currentGame.add(pWhiteCard5, "12, 8, fill, fill");
 		
 		JLabel pGreyCard5 = new JLabel("10♠");
+		pGreyCard5.setVisible(false);
 		pGreyCard5.setOpaque(true);
 		pGreyCard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pGreyCard5.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -384,6 +398,7 @@ public class MainWindow {
 		currentGame.add(pGreyCard5, "16, 8, fill, fill");
 		
 		JLabel pGreyCard4 = new JLabel("10♠");
+		pGreyCard4.setVisible(false);
 		pGreyCard4.setOpaque(true);
 		pGreyCard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pGreyCard4.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -392,6 +407,7 @@ public class MainWindow {
 		currentGame.add(pGreyCard4, "18, 8, fill, fill");
 		
 		JLabel pGreyCard3 = new JLabel("10♠");
+		pGreyCard3.setVisible(false);
 		pGreyCard3.setOpaque(true);
 		pGreyCard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pGreyCard3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -400,6 +416,7 @@ public class MainWindow {
 		currentGame.add(pGreyCard3, "20, 8, fill, fill");
 		
 		JLabel pGreyCard2 = new JLabel("10♠");
+		pGreyCard2.setVisible(false);
 		pGreyCard2.setOpaque(true);
 		pGreyCard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pGreyCard2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -408,6 +425,7 @@ public class MainWindow {
 		currentGame.add(pGreyCard2, "22, 8, fill, fill");
 		
 		JLabel pGreyCard1 = new JLabel("10♠");
+		pGreyCard1.setVisible(false);
 		pGreyCard1.setOpaque(true);
 		pGreyCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pGreyCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -436,6 +454,7 @@ public class MainWindow {
 		currentGame.add(pYellowCash, "20, 16, 3, 1");
 		
 		JLabel pRedCard1 = new JLabel("10♠");
+		pRedCard1.setVisible(false);
 		pRedCard1.setOpaque(true);
 		pRedCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pRedCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -444,6 +463,7 @@ public class MainWindow {
 		currentGame.add(pRedCard1, "4, 18, fill, fill");
 		
 		JLabel pRedCard2 = new JLabel("10♠");
+		pRedCard2.setVisible(false);
 		pRedCard2.setOpaque(true);
 		pRedCard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pRedCard2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -452,6 +472,7 @@ public class MainWindow {
 		currentGame.add(pRedCard2, "6, 18, fill, fill");
 		
 		JLabel pRedCard3 = new JLabel("10♠");
+		pRedCard3.setVisible(false);
 		pRedCard3.setOpaque(true);
 		pRedCard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pRedCard3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -460,6 +481,7 @@ public class MainWindow {
 		currentGame.add(pRedCard3, "8, 18, fill, fill");
 		
 		JLabel pRedCard4 = new JLabel("10♠");
+		pRedCard4.setVisible(false);
 		pRedCard4.setOpaque(true);
 		pRedCard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pRedCard4.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -468,6 +490,7 @@ public class MainWindow {
 		currentGame.add(pRedCard4, "10, 18, fill, fill");
 		
 		JLabel pRedCard5 = new JLabel("10♠");
+		pRedCard5.setVisible(false);
 		pRedCard5.setOpaque(true);
 		pRedCard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pRedCard5.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -476,6 +499,7 @@ public class MainWindow {
 		currentGame.add(pRedCard5, "12, 18, fill, fill");
 		
 		JLabel pYellowCard5 = new JLabel("10♠");
+		pYellowCard5.setVisible(false);
 		pYellowCard5.setOpaque(true);
 		pYellowCard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pYellowCard5.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -484,6 +508,7 @@ public class MainWindow {
 		currentGame.add(pYellowCard5, "16, 18, fill, fill");
 		
 		JLabel pYellowCard4 = new JLabel("10♠");
+		pYellowCard4.setVisible(false);
 		pYellowCard4.setOpaque(true);
 		pYellowCard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pYellowCard4.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -492,6 +517,7 @@ public class MainWindow {
 		currentGame.add(pYellowCard4, "18, 18, fill, fill");
 		
 		JLabel pYellowCard3 = new JLabel("10♠");
+		pYellowCard3.setVisible(false);
 		pYellowCard3.setOpaque(true);
 		pYellowCard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pYellowCard3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -500,6 +526,7 @@ public class MainWindow {
 		currentGame.add(pYellowCard3, "20, 18, fill, fill");
 		
 		JLabel pYellowCard2 = new JLabel("10♠");
+		pYellowCard2.setVisible(false);
 		pYellowCard2.setOpaque(true);
 		pYellowCard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pYellowCard2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -508,6 +535,7 @@ public class MainWindow {
 		currentGame.add(pYellowCard2, "22, 18, fill, fill");
 		
 		JLabel pYellowCard1 = new JLabel("10♠");
+		pYellowCard1.setVisible(false);
 		pYellowCard1.setOpaque(true);
 		pYellowCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pYellowCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -523,6 +551,7 @@ public class MainWindow {
 		currentGame.add(pBlueName, "12, 24, 3, 1");
 		
 		JLabel pBlueCard1 = new JLabel("10♠");
+		pBlueCard1.setVisible(false);
 		pBlueCard1.setOpaque(true);
 		pBlueCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pBlueCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -531,6 +560,7 @@ public class MainWindow {
 		currentGame.add(pBlueCard1, "16, 24, 1, 3, fill, fill");
 		
 		JLabel pBlueCard2 = new JLabel("10♠");
+		pBlueCard2.setVisible(false);
 		pBlueCard2.setOpaque(true);
 		pBlueCard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pBlueCard2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -539,6 +569,7 @@ public class MainWindow {
 		currentGame.add(pBlueCard2, "18, 24, 1, 3, fill, fill");
 		
 		JLabel pBlueCard3 = new JLabel("10♠");
+		pBlueCard3.setVisible(false);
 		pBlueCard3.setOpaque(true);
 		pBlueCard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pBlueCard3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -547,6 +578,7 @@ public class MainWindow {
 		currentGame.add(pBlueCard3, "20, 24, 1, 3, fill, fill");
 		
 		JLabel pBlueCard4 = new JLabel("10♠");
+		pBlueCard4.setVisible(false);
 		pBlueCard4.setOpaque(true);
 		pBlueCard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pBlueCard4.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -555,6 +587,7 @@ public class MainWindow {
 		currentGame.add(pBlueCard4, "22, 24, 1, 3, fill, fill");
 		
 		JLabel pBlueCard5 = new JLabel("10♠");
+		pBlueCard5.setVisible(false);
 		pBlueCard5.setOpaque(true);
 		pBlueCard5.setForeground(Color.BLACK);
 		pBlueCard5.setFont(new Font("Arial", Font.BOLD, 20));
@@ -690,8 +723,14 @@ public class MainWindow {
 		label.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar main.png")));
 		frame.getContentPane().add(label, "8, 5, 1, 3, center, bottom");
 		
-		JButton btnOptions = new JButton("Options");
-		frame.getContentPane().add(btnOptions, "12, 7");
+		JButton btnAddCredit = new JButton("Add Credit");
+		btnAddCredit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (client.getUser().getCredits()<=1000)
+					client.getUser().setCredits(1000);
+			}
+		});
+		frame.getContentPane().add(btnAddCredit, "12, 7");
 		
 		JLabel lblScreenName = new JLabel(this.client.getUser().getUsername());
 		frame.getContentPane().add(lblScreenName, "8, 9, center, center");
