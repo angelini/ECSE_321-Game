@@ -637,8 +637,11 @@ public class MainWindow {
 				
 				int amount = Integer.parseInt(txtBetAmt.getText());
 				
-				if (amount < MIN || amount > MAX) {
-					JOptionPane.showMessageDialog(frame, "You failed to bet within the limits!");
+				if (amount < MIN) {
+					JOptionPane.showMessageDialog(frame, "You need to meet the call amount of " + MIN + "!");
+					return;
+				} else if (amount > MAX) {
+					JOptionPane.showMessageDialog(frame, "You cannot bet anymore than " + MAX + "!");
 					return;
 				}
 				
