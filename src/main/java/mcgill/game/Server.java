@@ -63,8 +63,6 @@ public class Server {
     	User user = User.verifyUser(username, password, this.db);
     	session.put(session_str, user);
     	
-    	System.out.println("I AM HERE: " + c_key);
-    	
     	if (user == null) {
     		this.emit.publish(c_key, "");
     	} else {
@@ -106,7 +104,6 @@ public class Server {
     		return;
     	}
     	
-    	System.out.println("Getting friends: " + this.gson.toJson(user.getFriends()));
     	this.emit.publish(c_key, this.gson.toJson(user.getFriends()));
     }
     
@@ -213,7 +210,6 @@ public class Server {
     }
     
     public void getTables(String c_key, String[] args) {
-    	System.out.println("Getting tables: " + this.gson.toJson(this.db.getTables()));
     	this.emit.publish(c_key, this.gson.toJson(this.db.getTables()));
     }
     
