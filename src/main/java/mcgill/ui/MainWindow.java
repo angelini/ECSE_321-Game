@@ -44,6 +44,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import java.awt.Insets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -80,6 +81,8 @@ public class MainWindow {
 	 * Create the application.
 	 */
 	public MainWindow(Client client) {
+		HANDS = new HashMap<String, Hand>();
+		
 		this.client = client;
 		initialize();
 	}
