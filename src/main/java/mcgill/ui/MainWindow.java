@@ -2,6 +2,7 @@ package mcgill.ui;
 
 import javax.swing.JFrame;
 
+import mcgill.fiveCardStud.EndOfRound;
 import mcgill.game.Chat;
 import mcgill.game.Client;
 import mcgill.game.ClientEvent;
@@ -71,6 +72,8 @@ public class MainWindow {
 	private JTextField txtBetAmt;
 	private JTextField textFriendName;
 
+	private int MIN;
+	private int MAX;
 	/**
 	 * Create the application.
 	 */
@@ -137,6 +140,17 @@ public class MainWindow {
 		}
 		
 		return listModel;
+	}
+	
+	public void setTableLabels(Map<String, Integer> creditMap, JLabel[] nameLabels, JLabel[] cashLabels) {
+		for (int i = 0; i < nameLabels.length; i++) {
+			String username = nameLabels[i].getText();
+			Integer amount = creditMap.get(username);
+			
+			if (amount != null) {
+				cashLabels[i].setText(amount + "$");
+			}
+		}
 	}
 	
 	public void setTableLabels(User[] users, JLabel[] nameLabels, JLabel[] cashLabels) {
@@ -620,9 +634,21 @@ public class MainWindow {
 		final JButton btnBet = new JButton("Bet");
 		btnBet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				int amount = Integer.parseInt(txtBetAmt.getText());
+				
+				if (amount < MIN) {
+					JOptionPane.showMessageDialog(frame, "You need to meet the call amount of " + MIN + "!");
+					return;
+				} else if (amount > MAX) {
+					JOptionPane.showMessageDialog(frame, "You cannot bet anymore than " + MAX + "!");
+					return;
+				}
+				
 				ClientEvent event = new ClientEvent(new Object());
 				event.setType(ClientEvent.ACTION_REC);
-				event.setAction(Integer.parseInt(txtBetAmt.getText()));
+				
+				event.setAction(amount);
 				
 				client.fireEvent(event);
 			}
@@ -654,6 +680,12 @@ public class MainWindow {
 		final JButton btnCheck = new JButton("Check");
 		btnCheck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				if (0 < MIN) {
+					JOptionPane.showMessageDialog(frame, "You need to call or fold!");
+					return;
+				}
+				
 				ClientEvent event = new ClientEvent(new Object());
 				event.setType(ClientEvent.ACTION_REC);
 				event.setAction(0);
@@ -882,6 +914,8 @@ public class MainWindow {
 			public void eventOccured(ClientEvent e) {
 				if (e.getType() == ClientEvent.ACTION_GET) {
 					JOptionPane.showMessageDialog(frame, "It's your turn, Min: " + e.getLimits()[0] + ", Max: " + e.getLimits()[1]);
+					MIN = e.getLimits()[0];
+					MAX = e.getLimits()[1];
 				}
 				
 				if (e.getType() == ClientEvent.HAND) {
@@ -915,6 +949,12 @@ public class MainWindow {
 					}
 					
 					scrollPane.setViewportView(new JList(getChatList()));
+				}
+				
+				if (e.getType() == ClientEvent.END_OF_ROUND) {
+					EndOfRound end = e.getEndOfRound();
+					setTableLabels(end.getCreditMap(), nameLabels, cashLabels);
+					JOptionPane.showMessageDialog(frame, "Round Over & The winner is: " + end.getWinner());
 				}
 			}
 		});
