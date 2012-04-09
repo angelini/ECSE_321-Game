@@ -101,4 +101,9 @@ public class ClientNotification {
 		this.response = response;
 	}
 	
+	public void close() {
+		this.emit.quit();
+		this.subscribe.quit();
+	}
+	
 }

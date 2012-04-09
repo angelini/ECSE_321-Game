@@ -65,6 +65,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.REGISTER, args);
+		server.close();
 		
 		if (res.equals("")) {
 			return false;
@@ -79,6 +80,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		String result = server.call(Config.LOGIN, args);
+		server.close();
 		
 		if (result.equals("")) {
 			return false;
@@ -93,6 +95,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.GET_FRIENDS, args);
+		server.close();
 		
 		return this.gson.fromJson(res, User[].class);
 	}
@@ -102,6 +105,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.ADD_FRIEND, args);
+		server.close();
 		
 		return this.gson.fromJson(res, Boolean.class);	
 	}
@@ -111,6 +115,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.GET_CHATS, args);
+		server.close();
 		
 		return this.gson.fromJson(res, Chat[].class);
 	}
@@ -120,6 +125,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.GET_CHAT, args);
+		server.close();
 		
 		return this.gson.fromJson(res, Chat.class);
 	}
@@ -129,6 +135,7 @@ public class Client implements Runnable {
 			
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.CREATE_CHAT, args);
+		server.close();
 		
 		return this.gson.fromJson(res, Chat.class);
 	}
@@ -138,6 +145,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.MESSAGE, args);
+		server.close();
 		
 		return this.gson.fromJson(res, Chat.class);
 	}
@@ -147,6 +155,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.ADD_CREDITS, args);
+		server.close();
 		
 		return this.gson.fromJson(res, User.class);	
 	}
@@ -156,6 +165,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.GET_TABLES, args);
+		server.close();
 		
 		return this.gson.fromJson(res, Table[].class);
 	}
@@ -165,6 +175,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.CREATE_TABLE, args);
+		server.close();
 		
 		return this.gson.fromJson(res, Table.class);
 	}
@@ -174,6 +185,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.JOIN_TABLE, args);
+		server.close();
 		
 		Table table = this.gson.fromJson(res, Table.class);
 		this.table = table;
@@ -190,6 +202,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		server.call(Config.START_ROUND, args);
+		server.close();
 	}
 	
 	public void logout() {
@@ -197,6 +210,7 @@ public class Client implements Runnable {
 		
 		ServerCall server = new ServerCall(this.session);
 		server.call(Config.LOGOUT, args);
+		server.close();
 	}
 	
 	public String getSession() {

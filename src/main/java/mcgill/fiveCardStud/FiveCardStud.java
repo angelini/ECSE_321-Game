@@ -35,6 +35,8 @@ public class FiveCardStud implements Runnable {
 	private List<Pot> pots;
 	private int startingPlayer;
 	
+	private String trueWinner;
+	
 	public FiveCardStud(List<Player> players, int lowBet, int maxRaises, int bringIn) {
 		this.raises = 0;
 		this.players = players;
@@ -45,6 +47,8 @@ public class FiveCardStud implements Runnable {
 		this.maxRaises = maxRaises;
 		this.bringIn = bringIn;
 		this.startingPlayer = 0;
+		
+		this.trueWinner = "";
 	}
 	
 	public void run() {
@@ -55,6 +59,16 @@ public class FiveCardStud implements Runnable {
 			System.out.println("*** PLAY ROUND EXCEPTION ***");
 			e.printStackTrace();
 		}
+	}
+	
+	public int getTotalPot() {
+		int total = 0;
+		
+		for (Player player : this.players) {
+			total += player.getAmountInPots();
+		}
+		
+		return total;
 	}
 	
 	public void playRound() throws TooFewCardsException, TooManyCardsException, OutOfMoneyException {
@@ -86,35 +100,34 @@ public class FiveCardStud implements Runnable {
 			db.setUser(user);
 			
 			credit_map.put(player.getUsername(), player.getTotalMoney());
-			
-			if (player.isWinner()) {
-				winner = player.getUsername();
-			}
 		}
 		
-		emitEndOfRound(winner, credit_map);
+		emitEndOfRound(credit_map);
+		db.close();
 	}
 	
-	private void emitEndOfRound(String winner, Map<String, Integer> credit_map) {
-		EndOfRound end = new EndOfRound(winner, credit_map);
+	private void emitEndOfRound(Map<String, Integer> credit_map) {
+		EndOfRound end = new EndOfRound(this.trueWinner, credit_map);
 				
 		for (Player player : this.players) {
 			String session_str = Server.getUserSession(player.getUsername());
 			ClientNotification notification = new ClientNotification(session_str);
 			notification.sendEndOfRound(end);
+			notification.close();
 		}
 	}
 
 	private void potAndStatusNotification(Player player) {
 		int[] current = new int[2];
 		
-		current[0] = player.getAmountInPots();
+		current[0] = getTotalPot();
 		current[1] = player.getStatus();
 		
 		String session_str = Server.getUserSession(player.getUsername());
 		ClientNotification notification = new ClientNotification(session_str);
 		
 		notification.potAndStatus(current);
+		notification.close();
 	}
 	
 	private int getAction(String username, int[] limits) {
@@ -122,6 +135,7 @@ public class FiveCardStud implements Runnable {
 		ClientNotification notification = new ClientNotification(session_str);
 		
 		String command = notification.getCommand(limits);
+		notification.close();
 		
 		return Integer.parseInt(command);
 	}
@@ -137,6 +151,7 @@ public class FiveCardStud implements Runnable {
 			String session_str = Server.getUserSession(player.getUsername());
 			ClientNotification notification = new ClientNotification(session_str);
 			notification.sendHand(hands);
+			notification.close();
 		}
 	}
 	
@@ -378,6 +393,7 @@ public class FiveCardStud implements Runnable {
 	
 	private void dividePots() throws TooFewCardsException, TooManyCardsException {
 		//need to account for ties
+		Boolean first = true;
 		
 		for (Pot pot : this.pots) {
 			int winningPlayer = 0;
@@ -393,6 +409,11 @@ public class FiveCardStud implements Runnable {
 			}
 			
 			Player winner = potPlayers.get(winningPlayer);
+			
+			if (first) {
+				this.trueWinner = winner.getUsername();
+				first = false;
+			}
 			
 			for (Player player : this.players) {
 				if ((!player.isFolded()) && (HandRank.compareHands(winner.getHand(), player.getHand(), 5) == -1)) {

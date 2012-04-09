@@ -71,4 +71,9 @@ public class ServerCall {
 		this.response = response;
 	}
 	
+	public void close() {
+		this.emit.quit();
+		this.subscribe.quit();
+	}
+	
 }

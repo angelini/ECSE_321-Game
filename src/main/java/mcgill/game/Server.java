@@ -186,6 +186,7 @@ public class Server {
     		String session_str = Server.getUserSession(c_user.getUsername());
 			ClientNotification notification = new ClientNotification(session_str);
 			notification.sendMessage(chat.getId());
+			notification.close();
     	}
     	
     	this.emit.publish(c_key, this.gson.toJson(chat));
