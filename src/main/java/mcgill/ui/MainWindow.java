@@ -74,6 +74,8 @@ public class MainWindow {
 
 	private int MIN;
 	private int MAX;
+	private Map<String, Hand> HANDS;
+	
 	/**
 	 * Create the application.
 	 */
@@ -175,6 +177,10 @@ public class MainWindow {
 				for (Card card : hand) {
 					cardLabels[i][j].setText(card.toString());
 					j++;
+				}
+				
+				for (; j < Hand.MAX_SIZE; j++) {
+					cardLabels[i][j].setText("");
 				}
 			}
 		}
@@ -913,18 +919,20 @@ public class MainWindow {
 		client.addEventListener(new ClientEventListener() {			
 			public void eventOccured(ClientEvent e) {
 				if (e.getType() == ClientEvent.ACTION_GET) {
-					JOptionPane.showMessageDialog(frame, "It's your turn, Min: " + e.getLimits()[0] + ", Max: " + e.getLimits()[1]);
+					JOptionPane.showMessageDialog(frame, "It's your turn, Min bet: " + e.getLimits()[0] + ", Max bet: " + e.getLimits()[1]);
 					MIN = e.getLimits()[0];
 					MAX = e.getLimits()[1];
 				}
 				
 				if (e.getType() == ClientEvent.HAND) {
+					HANDS = e.getHands();
 					setCardLabels(e.getHands(), nameLabels, cardLabels);
 				}
 				
 				if (e.getType() == ClientEvent.USER) {
 					User[] users = e.getUsers();
 					setTableLabels(users, nameLabels, cashLabels);
+					setCardLabels(HANDS, nameLabels, cardLabels);
 				}
 				
 				if (e.getType() == ClientEvent.POT_STATUS) {
@@ -954,6 +962,7 @@ public class MainWindow {
 				if (e.getType() == ClientEvent.END_OF_ROUND) {
 					EndOfRound end = e.getEndOfRound();
 					setTableLabels(end.getCreditMap(), nameLabels, cashLabels);
+					cash.setText(end.getCreditMap().get(client.getUser().getUsername()) + "$");
 					JOptionPane.showMessageDialog(frame, "Round Over & The winner is: " + end.getWinner());
 				}
 			}
