@@ -46,13 +46,13 @@ public class ClientNotification {
 		this.jedis = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT, 0);
 	}
 	
-	public String getCommand(int call_amount) {
+	public String getCommand(int[] limits) {
 		String n_key = Database.cat(Config.NOTIFICATIONS, Config.GET_COMMAND, this.session);
 		String c_key = Database.cat(Config.COMMAND, this.session);
 		
 		Listener listener = new Listener(this);
 		
-		this.jedis.publish(n_key, Integer.toString(call_amount));
+		this.jedis.publish(n_key, this.gson.toJson(limits));
 		this.jedis.subscribe(listener, c_key);
 		
 		return this.response;

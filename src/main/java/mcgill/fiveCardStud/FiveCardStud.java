@@ -86,11 +86,11 @@ public class FiveCardStud implements Runnable {
 		notification.potAndStatus(current);
 	}
 	
-	private int getAction(String username, int call_amount) {
+	private int getAction(String username, int[] limits) {
 		String session_str = Server.getUserSession(username);
 		ClientNotification notification = new ClientNotification(session_str);
 		
-		String command = notification.getCommand(call_amount);
+		String command = notification.getCommand(limits);
 		
 		return Integer.parseInt(command);
 	}
@@ -181,7 +181,9 @@ public class FiveCardStud implements Runnable {
 						callAmount = this.bringIn;
 					}
 					
-					int action = getAction(players.get(index).getUsername(), callAmount);
+					int[] limits = {callAmount, betLimit};
+					
+					int action = getAction(players.get(index).getUsername(), limits);
 					
 					System.out.println("Action for " + players.get(index).getUsername() + " is: " + action);
 					

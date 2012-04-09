@@ -879,7 +879,7 @@ public class MainWindow {
 		client.addEventListener(new ClientEventListener() {			
 			public void eventOccured(ClientEvent e) {
 				if (e.getType() == ClientEvent.ACTION_GET) {
-					JOptionPane.showMessageDialog(frame, "It's your turn, to call: " + e.getCallAmount());
+					JOptionPane.showMessageDialog(frame, "It's your turn, Min: " + e.getLimits()[0] + ", Max: " + e.getLimits()[1]);
 				}
 				
 				if (e.getType() == ClientEvent.HAND) {

@@ -75,10 +75,10 @@ public class Notifications implements Runnable {
 		this.subscribe.psubscribe(listener, Database.cat(Config.NOTIFICATIONS, "*", this.session));
 	}
 	
-	public void getCommand(final String c_key, String call_amount) {
+	public void getCommand(final String c_key, String limits) {
 		ClientEvent event = new ClientEvent(new Object());
 		event.setType(ClientEvent.ACTION_GET);
-		event.setCallAmount(Integer.parseInt(call_amount));
+		event.setLimits(this.gson.fromJson(limits, int[].class));
 		
 		this.client.addEventListener(new ClientEventListener() {
 			

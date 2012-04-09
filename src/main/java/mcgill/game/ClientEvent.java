@@ -18,7 +18,7 @@ public class ClientEvent extends EventObject {
 	
 	private int type;
 	private int action;
-	private int callAmount;
+	private int[] limits;
 	private Map<String, Hand> hands;
 	private User[] users;
 	private String chatId;
@@ -44,12 +44,12 @@ public class ClientEvent extends EventObject {
 		this.action = action;
 	}
 
-	public int getCallAmount() {
-		return callAmount;
+	public int[] getLimits() {
+		return limits;
 	}
 
-	public void setCallAmount(int callAmount) {
-		this.callAmount = callAmount;
+	public void setLimits(int[] limits) {
+		this.limits = limits;
 	}
 	
 	public Map<String, Hand> getHands() {
