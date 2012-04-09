@@ -174,6 +174,10 @@ public class MainWindow {
 			if (!nameLabels[i].getText().equals(OPEN_SEAT)) {
 				int j = 0;
 				Hand hand = hands.get(nameLabels[i].getText());
+				if (hand == null) {
+					continue;
+				}
+				
 				for (Card card : hand) {
 					cardLabels[i][j].setText(card.toString());
 					j++;
