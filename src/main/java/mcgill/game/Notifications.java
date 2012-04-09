@@ -35,6 +35,14 @@ public class Notifications implements Runnable {
 			if (method.equals(Config.EMIT_HANDS)) {
 				this.notifications.emitHands(message);
 			}
+			
+			if (method.equals(Config.TABLE_USERS)) {
+				this.notifications.emitUsers(message);
+			}
+			
+			if (method.equals(Config.MESSAGE_REC)) {
+				this.notifications.emitMessage(message);
+			}
 		}
 
 		public void onMessage(String channel, String message) {}
@@ -64,8 +72,6 @@ public class Notifications implements Runnable {
 	}
 	
 	public void getCommand(final String c_key, String call_amount) {
-		System.out.println("Notifications.getCommand");
-		
 		ClientEvent event = new ClientEvent(new Object());
 		event.setType(ClientEvent.ACTION_GET);
 		event.setCallAmount(Integer.parseInt(call_amount));
@@ -90,6 +96,25 @@ public class Notifications implements Runnable {
 		event.setHands(hands_serializable.getHands());
 		
 		this.client.fireEvent(event);
+	}
+	
+	public void emitUsers(String message) {
+		User[] users = this.gson.fromJson(message, User[].class);
+		
+		ClientEvent event = new ClientEvent(new Object());
+		event.setType(ClientEvent.USER);
+		event.setUsers(users);
+		
+		this.client.fireEvent(event);
+	}
+	
+	public void emitMessage(String chat_id) {
+		ClientEvent event = new ClientEvent(new Object());
+		event.setType(ClientEvent.MESSAGE);
+		event.setChatId(chat_id);
+		
+		this.client.fireEvent(event);
+		
 	}
 	
 }

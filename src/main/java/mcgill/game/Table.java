@@ -37,6 +37,13 @@ public class Table {
 		}
 		
 		this.users.add(user);
+		
+		for (User t_user : this.users) {
+			String session_str = Server.getUserSession(t_user.getUsername());
+			ClientNotification notification = new ClientNotification(session_str);
+			notification.sendUsers(this.users.toArray(new User[0]));
+		}
+		
 		return true;
 	}
 	

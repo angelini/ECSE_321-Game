@@ -12,11 +12,15 @@ public class ClientEvent extends EventObject {
 	public static int HAND = 0;
 	public static int ACTION_GET = 1;
 	public static int ACTION_REC = 2;
+	public static int USER = 3;
+	public static int MESSAGE = 4;
 	
 	private int type;
 	private int action;
 	private int callAmount;
 	private Map<String, Hand> hands;
+	private User[] users;
+	private String chatId;
 	
 	public ClientEvent(Object source) {
 		super(source);
@@ -52,6 +56,22 @@ public class ClientEvent extends EventObject {
 	
 	public void setHands(Map<String, Hand> hands) {
 		this.hands = hands;
+	}
+
+	public User[] getUsers() {
+		return users;
+	}
+
+	public void setUsers(User[] users) {
+		this.users = users;
+	}
+
+	public String getChatId() {
+		return this.chatId;
+	}
+
+	public void setChatId(String chatId) {
+		this.chatId = chatId;
 	}
 
 }

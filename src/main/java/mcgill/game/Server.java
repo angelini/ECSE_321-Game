@@ -179,6 +179,12 @@ public class Server {
     	chat.addMessage(message);
     	this.db.setChat(chat);
     	
+    	for (User c_user : chat.getUsers()) {
+    		String session_str = Server.getUserSession(c_user.getUsername());
+			ClientNotification notification = new ClientNotification(session_str);
+			notification.sendMessage(chat.getId());
+    	}
+    	
     	this.emit.publish(c_key, this.gson.toJson(chat));
     }
     

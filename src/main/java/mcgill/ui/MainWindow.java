@@ -28,7 +28,6 @@ import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
-import com.google.gson.Gson;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -85,8 +84,6 @@ public class MainWindow {
 		Table[] tables = client.getTables();
 		DefaultListModel listModel = new DefaultListModel();
 		
-		System.out.println("Tables: " + new Gson().toJson(tables));
-		
 		for (int i = 0; i < tables.length; i++) {
 			listModel.addElement(tables[i].getName() + " --- " + tables[i].getUsers().size() + "/5 players ::" + tables[i].getId());
 		}
@@ -137,12 +134,10 @@ public class MainWindow {
 		return listModel;
 	}
 	
-	public void setTableLabels(Table table, JLabel[] nameLabels, JLabel[] cashLabels) {
-		List<User> users = table.getUsers();
-		
-		for (int i = 0; i < users.size(); i++) {
-			nameLabels[i].setText(users.get(i).getUsername());
-			cashLabels[i].setText(users.get(i).getCredits() + "$");
+	public void setTableLabels(User[] users, JLabel[] nameLabels, JLabel[] cashLabels) {
+		for (int i = 0; i < users.length; i++) {
+			nameLabels[i].setText(users[i].getUsername());
+			cashLabels[i].setText(users[i].getCredits() + "$");
 		}
 	}
 	
@@ -152,7 +147,6 @@ public class MainWindow {
 				int j = 0;
 				Hand hand = hands.get(nameLabels[i].getText());
 				for (Card card : hand) {
-					System.out.println("Card: " + card.toString());
 					cardLabels[i][j].setText(card.toString());
 					j++;
 				}
@@ -813,7 +807,7 @@ public class MainWindow {
 				
 				main.setSelectedIndex(2);
 				
-				setTableLabels(client.getTable(), nameLabels, cashLabels);
+				setTableLabels(client.getTable().getUsers().toArray(new User[0]), nameLabels, cashLabels);
 			}
 		});
 		frame.getContentPane().add(btnJoinGame, "4, 2");
@@ -825,8 +819,24 @@ public class MainWindow {
 				}
 				
 				if (e.getType() == ClientEvent.HAND) {
-					System.out.println("Hand event emitted");
 					setCardLabels(e.getHands(), nameLabels, cardLabels);
+				}
+				
+				if (e.getType() == ClientEvent.USER) {
+					User[] users = e.getUsers();
+					setTableLabels(users, nameLabels, cashLabels);
+				}
+				
+				if (e.getType() == ClientEvent.MESSAGE) {
+					JList chatList = (JList) scrollPane.getViewport().getView();
+					String selected_chat = ((String) chatList.getSelectedValue()).split("::")[1];
+					
+					if (selected_chat.equals(e.getChatId())) {
+						Chat chat = client.getChat(selected_chat);
+						chatContainer.setViewportView(new JList(getChatMessages(chat)));
+					}
+					
+					scrollPane.setViewportView(new JList(getChatList()));
 				}
 			}
 		});

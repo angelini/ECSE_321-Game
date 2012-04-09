@@ -64,6 +64,16 @@ public class ClientNotification {
 		this.jedis.publish(n_key, this.gson.toJson(serializable));
 	}
 	
+	public void sendUsers(User[] users) {
+		String n_key = Database.cat(Config.NOTIFICATIONS, Config.TABLE_USERS, this.session);
+		this.jedis.publish(n_key, this.gson.toJson(users));
+	}
+	
+	public void sendMessage(String chat_id) {
+		String n_key = Database.cat(Config.NOTIFICATIONS, Config.MESSAGE_REC, this.session);
+		this.jedis.publish(n_key, chat_id);
+	}
+	
 	public String getResponse() {
 		return response;
 	}
