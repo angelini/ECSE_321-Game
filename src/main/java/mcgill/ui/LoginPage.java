@@ -105,9 +105,9 @@ public class LoginPage {
 		});
 		frmLogin.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("35px"),
-				ColumnSpec.decode("49px"),
+				ColumnSpec.decode("57px"),
 				FormFactory.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("73px"),
+				ColumnSpec.decode("59px"),
 				FormFactory.UNRELATED_GAP_COLSPEC,
 				ColumnSpec.decode("127px"),},
 			new RowSpec[] {
@@ -129,7 +129,7 @@ public class LoginPage {
 		frmLogin.getContentPane().add(lblTitle, "2, 3, 5, 1, center, center");
 		frmLogin.getContentPane().add(login, "2, 10, 3, 1, fill, top");
 		
-		JLabel lblEmail = new JLabel("Email:");
+		JLabel lblEmail = new JLabel("Username:");
 		frmLogin.getContentPane().add(lblEmail, "2, 6, fill, center");
 		
 		JLabel lblPassword = new JLabel("Password:");
@@ -140,6 +140,13 @@ public class LoginPage {
 		textEmail.setColumns(10);
 		
 		JButton forgotPass = new JButton("Forgot Password");
+		forgotPass.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ForgotPassword forgotPassword = new ForgotPassword();
+				forgotPassword.open(client);
+				frmLogin.setVisible(false);
+			}
+		});
 		frmLogin.getContentPane().add(forgotPass, "2, 12, 3, 1, fill, top");
 		
 		JButton register = new JButton("Register");

@@ -12,12 +12,16 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.Toolkit;
 
+import mcgill.game.Client;
+
+
 public class ForgotPassword {
 
 	private JFrame frmPasswordRetrieval;
 	private JTextField textEnterUsername;
 	private JButton btnGetPassword;
 	private JButton btnCancel;
+	private Client client;
 
 	/**
 	 * Launch the application.
@@ -42,11 +46,17 @@ public class ForgotPassword {
 		initialize();
 	}
 
+	
+	public void open(Client client) {
+		this.client = client;
+		frmPasswordRetrieval.setVisible(true);
+	}
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frmPasswordRetrieval = new JFrame();
+		frmPasswordRetrieval.setResizable(false);
 		frmPasswordRetrieval.setIconImage(Toolkit.getDefaultToolkit().getImage(ForgotPassword.class.getResource("/images/icon.png")));
 		frmPasswordRetrieval.setTitle("Password Retrieval");
 		frmPasswordRetrieval.setBounds(100, 100, 450, 170);
