@@ -57,6 +57,16 @@ public class FiveCardStud implements Runnable {
 		}
 	}
 	
+	public int getTotalPot() {
+		int total = 0;
+		
+		for (Player player : this.players) {
+			total += player.getAmountInPots();
+		}
+		
+		return total;
+	}
+	
 	public void playRound() throws TooFewCardsException, TooManyCardsException, OutOfMoneyException {
 		while (this.street < 6) {
 			if (this.street == 2) {
@@ -110,7 +120,7 @@ public class FiveCardStud implements Runnable {
 	private void potAndStatusNotification(Player player) {
 		int[] current = new int[2];
 		
-		current[0] = player.getAmountInPots();
+		current[0] = getTotalPot();
 		current[1] = player.getStatus();
 		
 		String session_str = Server.getUserSession(player.getUsername());
