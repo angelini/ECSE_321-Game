@@ -16,6 +16,7 @@ import mcgill.game.Client;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
+import java.awt.Toolkit;
 
 public class Registration {
 
@@ -43,6 +44,7 @@ public class Registration {
 	 */
 	private void initialize() {
 		registration = new JFrame();
+		registration.setIconImage(Toolkit.getDefaultToolkit().getImage(Registration.class.getResource("/images/icon.png")));
 		registration.setTitle("Registration Page");
 		registration.setBounds(100, 100, 450, 274);
 		registration.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

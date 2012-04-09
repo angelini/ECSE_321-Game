@@ -24,6 +24,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.Toolkit;
 
 public class LoginPage {
 
@@ -73,6 +74,7 @@ public class LoginPage {
 	 */
 	private void initialize() {
 		frmLogin = new JFrame();
+		frmLogin.setIconImage(Toolkit.getDefaultToolkit().getImage(LoginPage.class.getResource("/images/icon.png")));
 		frmLogin.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
