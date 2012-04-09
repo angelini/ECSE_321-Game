@@ -9,6 +9,8 @@ import mcgill.game.ClientEventListener;
 import mcgill.game.Message;
 import mcgill.game.Table;
 import mcgill.game.User;
+import mcgill.poker.Card;
+import mcgill.poker.Hand;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.Component;
@@ -25,6 +27,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
+import com.google.gson.Gson;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -40,6 +44,7 @@ import javax.swing.event.ListSelectionListener;
 
 import java.awt.Insets;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.jgoodies.forms.factories.FormFactory;
@@ -52,6 +57,8 @@ import java.awt.event.MouseEvent;
 
 
 public class MainWindow {
+	
+	private static final String OPEN_SEAT = "OPEN SEAT";
 	
 	private JFrame frame;
 	private JTextField txtGame;
@@ -77,6 +84,8 @@ public class MainWindow {
 	public DefaultListModel getGameList() {
 		Table[] tables = client.getTables();
 		DefaultListModel listModel = new DefaultListModel();
+		
+		System.out.println("Tables: " + new Gson().toJson(tables));
 		
 		for (int i = 0; i < tables.length; i++) {
 			listModel.addElement(tables[i].getName() + " --- " + tables[i].getUsers().size() + "/5 players ::" + tables[i].getId());
@@ -126,6 +135,29 @@ public class MainWindow {
 		}
 		
 		return listModel;
+	}
+	
+	public void setTableLabels(Table table, JLabel[] nameLabels, JLabel[] cashLabels) {
+		List<User> users = table.getUsers();
+		
+		for (int i = 0; i < users.size(); i++) {
+			nameLabels[i].setText(users.get(i).getUsername());
+			cashLabels[i].setText(users.get(i).getCredits() + "$");
+		}
+	}
+	
+	public void setCardLabels(Map<String, Hand> hands, JLabel[] nameLabels, JLabel[][] cardLabels) {
+		for (int i = 0; i < nameLabels.length; i++) {
+			if (!nameLabels[i].getText().equals(OPEN_SEAT)) {
+				int j = 0;
+				Hand hand = hands.get(nameLabels[i].getText());
+				for (Card card : hand) {
+					System.out.println("Card: " + card.toString());
+					cardLabels[i][j].setText(card.toString());
+					j++;
+				}
+			}
+		}
 	}
 
 	/**
@@ -180,7 +212,7 @@ public class MainWindow {
 		lblChat.setFont(new Font("Tahoma", Font.BOLD, 14));
 		frame.getContentPane().add(lblChat, "1, 4, center, bottom");
 		
-		JTabbedPane main = new JTabbedPane(JTabbedPane.TOP);
+		final JTabbedPane main = new JTabbedPane(JTabbedPane.TOP);
 		frame.getContentPane().add(main, "1, 1, 4, 1, fill, fill");
 		
 		final JScrollPane allGames = new JScrollPane();
@@ -188,21 +220,7 @@ public class MainWindow {
 		allGames.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		
 		final JList listAllGames = new JList(getGameList());
-		allGames.setRowHeaderView(listAllGames);
-		
-		JButton btnJoinGame = new JButton("Join Game");
-		btnJoinGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String table = ((String) listAllGames.getSelectedValue()).split("::")[1];
-				Boolean result = client.joinTable(client.getUser().getUsername(), table);
-				if (!result) {
-					JOptionPane.showMessageDialog(frame, "Error Joining Table");
-				}
-				
-				System.out.println("Table: " + client.getTable());
-			}
-		});
-		frame.getContentPane().add(btnJoinGame, "4, 2");
+		allGames.setViewportView(listAllGames);
 		
 		JPanel createGame = new JPanel();
 		main.addTab("Create Game", null, createGame, null);
@@ -216,9 +234,8 @@ public class MainWindow {
 		JButton btnCreate = new JButton("Create");
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String username = client.getUser().getUsername();
-				Table table = client.createTable(username, txtGame.getText());
-				client.joinTable(username, table.getId());
+				client.createTable(txtGame.getText());
+				main.setSelectedIndex(0);
 			}
 		});
 		
@@ -256,7 +273,6 @@ public class MainWindow {
 		createGame.add(btnCreate, gbc_btnCreate);
 		
 		JPanel currentGame = new JPanel();
-		currentGame.setVisible(false);
 		currentGame.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -327,24 +343,23 @@ public class MainWindow {
 		pWhite.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar white.png")));
 		currentGame.add(pWhite, "4, 2, 1, 5, center, bottom");
 		
-		JLabel pWhiteName = new JLabel("Screen Name");
+		final JLabel pWhiteName = new JLabel(OPEN_SEAT);
 		currentGame.add(pWhiteName, "6, 4, 3, 1");
 		
-		JLabel pGreyName = new JLabel("Screen Name");
+		final JLabel pGreyName = new JLabel(OPEN_SEAT);
 		currentGame.add(pGreyName, "20, 4, 3, 1");
 		
 		JLabel pGrey = new JLabel("");
 		pGrey.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar grey.png")));
 		currentGame.add(pGrey, "24, 2, 1, 5, center, bottom");
 		
-		JLabel pWhiteCash = new JLabel("$$$$$");
+		final JLabel pWhiteCash = new JLabel("N/A");
 		currentGame.add(pWhiteCash, "6, 6, 3, 1");
 		
-		JLabel pGreyCash = new JLabel("$$$$$");
+		final JLabel pGreyCash = new JLabel("N/A");
 		currentGame.add(pGreyCash, "20, 6, 3, 1");
 		
-		JLabel pWhiteCard1 = new JLabel("10♠");
-		pWhiteCard1.setVisible(false);
+		JLabel pWhiteCard1 = new JLabel("");
 		pWhiteCard1.setOpaque(true);
 		pWhiteCard1.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pWhiteCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -352,8 +367,7 @@ public class MainWindow {
 		pWhiteCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		currentGame.add(pWhiteCard1, "4, 8, fill, fill");
 		
-		JLabel pWhiteCard2 = new JLabel("10♠");
-		pWhiteCard2.setVisible(false);
+		JLabel pWhiteCard2 = new JLabel("");
 		pWhiteCard2.setOpaque(true);
 		pWhiteCard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pWhiteCard2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -361,8 +375,7 @@ public class MainWindow {
 		pWhiteCard2.setAlignmentX(0.5f);
 		currentGame.add(pWhiteCard2, "6, 8, fill, fill");
 		
-		JLabel pWhiteCard3 = new JLabel("10♠");
-		pWhiteCard3.setVisible(false);
+		JLabel pWhiteCard3 = new JLabel("");
 		pWhiteCard3.setOpaque(true);
 		pWhiteCard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pWhiteCard3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -370,8 +383,7 @@ public class MainWindow {
 		pWhiteCard3.setAlignmentX(0.5f);
 		currentGame.add(pWhiteCard3, "8, 8, fill, fill");
 		
-		JLabel pWhiteCard4 = new JLabel("10♠");
-		pWhiteCard4.setVisible(false);
+		JLabel pWhiteCard4 = new JLabel("");
 		pWhiteCard4.setOpaque(true);
 		pWhiteCard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pWhiteCard4.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -379,8 +391,7 @@ public class MainWindow {
 		pWhiteCard4.setAlignmentX(0.5f);
 		currentGame.add(pWhiteCard4, "10, 8, fill, fill");
 		
-		JLabel pWhiteCard5 = new JLabel("10♠");
-		pWhiteCard5.setVisible(false);
+		JLabel pWhiteCard5 = new JLabel("");
 		pWhiteCard5.setOpaque(true);
 		pWhiteCard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pWhiteCard5.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -388,8 +399,7 @@ public class MainWindow {
 		pWhiteCard5.setAlignmentX(0.5f);
 		currentGame.add(pWhiteCard5, "12, 8, fill, fill");
 		
-		JLabel pGreyCard5 = new JLabel("10♠");
-		pGreyCard5.setVisible(false);
+		JLabel pGreyCard5 = new JLabel("");
 		pGreyCard5.setOpaque(true);
 		pGreyCard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pGreyCard5.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -397,8 +407,7 @@ public class MainWindow {
 		pGreyCard5.setAlignmentX(0.5f);
 		currentGame.add(pGreyCard5, "16, 8, fill, fill");
 		
-		JLabel pGreyCard4 = new JLabel("10♠");
-		pGreyCard4.setVisible(false);
+		JLabel pGreyCard4 = new JLabel("");
 		pGreyCard4.setOpaque(true);
 		pGreyCard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pGreyCard4.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -406,8 +415,7 @@ public class MainWindow {
 		pGreyCard4.setAlignmentX(0.5f);
 		currentGame.add(pGreyCard4, "18, 8, fill, fill");
 		
-		JLabel pGreyCard3 = new JLabel("10♠");
-		pGreyCard3.setVisible(false);
+		JLabel pGreyCard3 = new JLabel("");
 		pGreyCard3.setOpaque(true);
 		pGreyCard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pGreyCard3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -415,8 +423,7 @@ public class MainWindow {
 		pGreyCard3.setAlignmentX(0.5f);
 		currentGame.add(pGreyCard3, "20, 8, fill, fill");
 		
-		JLabel pGreyCard2 = new JLabel("10♠");
-		pGreyCard2.setVisible(false);
+		JLabel pGreyCard2 = new JLabel("");
 		pGreyCard2.setOpaque(true);
 		pGreyCard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pGreyCard2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -424,8 +431,7 @@ public class MainWindow {
 		pGreyCard2.setAlignmentX(0.5f);
 		currentGame.add(pGreyCard2, "22, 8, fill, fill");
 		
-		JLabel pGreyCard1 = new JLabel("10♠");
-		pGreyCard1.setVisible(false);
+		JLabel pGreyCard1 = new JLabel("");
 		pGreyCard1.setOpaque(true);
 		pGreyCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pGreyCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -441,20 +447,19 @@ public class MainWindow {
 		pYellow.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar yellow.png")));
 		currentGame.add(pYellow, "24, 12, 1, 5, center, bottom");
 		
-		JLabel pRedName = new JLabel("Screen Name");
+		JLabel pRedName = new JLabel(OPEN_SEAT);
 		currentGame.add(pRedName, "6, 14, 3, 1");
 		
-		JLabel pYellowName = new JLabel("Screen Name");
+		JLabel pYellowName = new JLabel(OPEN_SEAT);
 		currentGame.add(pYellowName, "20, 14, 3, 1");
 		
-		JLabel pRedCash = new JLabel("$$$$$");
+		JLabel pRedCash = new JLabel("N/A");
 		currentGame.add(pRedCash, "6, 16, 3, 1");
 		
-		JLabel pYellowCash = new JLabel("$$$$$");
+		JLabel pYellowCash = new JLabel("N/A");
 		currentGame.add(pYellowCash, "20, 16, 3, 1");
 		
-		JLabel pRedCard1 = new JLabel("10♠");
-		pRedCard1.setVisible(false);
+		JLabel pRedCard1 = new JLabel("");
 		pRedCard1.setOpaque(true);
 		pRedCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pRedCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -462,8 +467,7 @@ public class MainWindow {
 		pRedCard1.setAlignmentX(0.5f);
 		currentGame.add(pRedCard1, "4, 18, fill, fill");
 		
-		JLabel pRedCard2 = new JLabel("10♠");
-		pRedCard2.setVisible(false);
+		JLabel pRedCard2 = new JLabel("");
 		pRedCard2.setOpaque(true);
 		pRedCard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pRedCard2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -471,8 +475,7 @@ public class MainWindow {
 		pRedCard2.setAlignmentX(0.5f);
 		currentGame.add(pRedCard2, "6, 18, fill, fill");
 		
-		JLabel pRedCard3 = new JLabel("10♠");
-		pRedCard3.setVisible(false);
+		JLabel pRedCard3 = new JLabel("");
 		pRedCard3.setOpaque(true);
 		pRedCard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pRedCard3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -480,8 +483,7 @@ public class MainWindow {
 		pRedCard3.setAlignmentX(0.5f);
 		currentGame.add(pRedCard3, "8, 18, fill, fill");
 		
-		JLabel pRedCard4 = new JLabel("10♠");
-		pRedCard4.setVisible(false);
+		JLabel pRedCard4 = new JLabel("");
 		pRedCard4.setOpaque(true);
 		pRedCard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pRedCard4.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -489,8 +491,7 @@ public class MainWindow {
 		pRedCard4.setAlignmentX(0.5f);
 		currentGame.add(pRedCard4, "10, 18, fill, fill");
 		
-		JLabel pRedCard5 = new JLabel("10♠");
-		pRedCard5.setVisible(false);
+		JLabel pRedCard5 = new JLabel("");
 		pRedCard5.setOpaque(true);
 		pRedCard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pRedCard5.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -498,8 +499,7 @@ public class MainWindow {
 		pRedCard5.setAlignmentX(0.5f);
 		currentGame.add(pRedCard5, "12, 18, fill, fill");
 		
-		JLabel pYellowCard5 = new JLabel("10♠");
-		pYellowCard5.setVisible(false);
+		JLabel pYellowCard5 = new JLabel("");
 		pYellowCard5.setOpaque(true);
 		pYellowCard5.setFont(new Font("Arial", Font.BOLD, 20));
 		pYellowCard5.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -507,8 +507,7 @@ public class MainWindow {
 		pYellowCard5.setAlignmentX(0.5f);
 		currentGame.add(pYellowCard5, "16, 18, fill, fill");
 		
-		JLabel pYellowCard4 = new JLabel("10♠");
-		pYellowCard4.setVisible(false);
+		JLabel pYellowCard4 = new JLabel("");
 		pYellowCard4.setOpaque(true);
 		pYellowCard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pYellowCard4.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -516,8 +515,7 @@ public class MainWindow {
 		pYellowCard4.setAlignmentX(0.5f);
 		currentGame.add(pYellowCard4, "18, 18, fill, fill");
 		
-		JLabel pYellowCard3 = new JLabel("10♠");
-		pYellowCard3.setVisible(false);
+		JLabel pYellowCard3 = new JLabel("");
 		pYellowCard3.setOpaque(true);
 		pYellowCard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pYellowCard3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -525,8 +523,7 @@ public class MainWindow {
 		pYellowCard3.setAlignmentX(0.5f);
 		currentGame.add(pYellowCard3, "20, 18, fill, fill");
 		
-		JLabel pYellowCard2 = new JLabel("10♠");
-		pYellowCard2.setVisible(false);
+		JLabel pYellowCard2 = new JLabel("");
 		pYellowCard2.setOpaque(true);
 		pYellowCard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pYellowCard2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -534,8 +531,7 @@ public class MainWindow {
 		pYellowCard2.setAlignmentX(0.5f);
 		currentGame.add(pYellowCard2, "22, 18, fill, fill");
 		
-		JLabel pYellowCard1 = new JLabel("10♠");
-		pYellowCard1.setVisible(false);
+		JLabel pYellowCard1 = new JLabel("");
 		pYellowCard1.setOpaque(true);
 		pYellowCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pYellowCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -547,11 +543,10 @@ public class MainWindow {
 		pBlue.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar blue.png")));
 		currentGame.add(pBlue, "10, 24, 1, 3, center, center");
 		
-		JLabel pBlueName = new JLabel("Screen Name");
+		JLabel pBlueName = new JLabel(OPEN_SEAT);
 		currentGame.add(pBlueName, "12, 24, 3, 1");
 		
-		JLabel pBlueCard1 = new JLabel("10♠");
-		pBlueCard1.setVisible(false);
+		JLabel pBlueCard1 = new JLabel("");
 		pBlueCard1.setOpaque(true);
 		pBlueCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pBlueCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -559,8 +554,7 @@ public class MainWindow {
 		pBlueCard1.setAlignmentX(0.5f);
 		currentGame.add(pBlueCard1, "16, 24, 1, 3, fill, fill");
 		
-		JLabel pBlueCard2 = new JLabel("10♠");
-		pBlueCard2.setVisible(false);
+		JLabel pBlueCard2 = new JLabel("");
 		pBlueCard2.setOpaque(true);
 		pBlueCard2.setFont(new Font("Arial", Font.BOLD, 20));
 		pBlueCard2.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -568,8 +562,7 @@ public class MainWindow {
 		pBlueCard2.setAlignmentX(0.5f);
 		currentGame.add(pBlueCard2, "18, 24, 1, 3, fill, fill");
 		
-		JLabel pBlueCard3 = new JLabel("10♠");
-		pBlueCard3.setVisible(false);
+		JLabel pBlueCard3 = new JLabel("");
 		pBlueCard3.setOpaque(true);
 		pBlueCard3.setFont(new Font("Arial", Font.BOLD, 20));
 		pBlueCard3.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -577,8 +570,7 @@ public class MainWindow {
 		pBlueCard3.setAlignmentX(0.5f);
 		currentGame.add(pBlueCard3, "20, 24, 1, 3, fill, fill");
 		
-		JLabel pBlueCard4 = new JLabel("10♠");
-		pBlueCard4.setVisible(false);
+		JLabel pBlueCard4 = new JLabel("");
 		pBlueCard4.setOpaque(true);
 		pBlueCard4.setFont(new Font("Arial", Font.BOLD, 20));
 		pBlueCard4.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -586,8 +578,7 @@ public class MainWindow {
 		pBlueCard4.setAlignmentX(0.5f);
 		currentGame.add(pBlueCard4, "22, 24, 1, 3, fill, fill");
 		
-		JLabel pBlueCard5 = new JLabel("10♠");
-		pBlueCard5.setVisible(false);
+		JLabel pBlueCard5 = new JLabel("");
 		pBlueCard5.setOpaque(true);
 		pBlueCard5.setForeground(Color.BLACK);
 		pBlueCard5.setFont(new Font("Arial", Font.BOLD, 20));
@@ -596,20 +587,16 @@ public class MainWindow {
 		pBlueCard5.setAlignmentX(0.5f);
 		currentGame.add(pBlueCard5, "24, 24, 1, 3, fill, fill");
 		
-		JLabel pBlueCash = new JLabel("$$$$$");
+		JLabel pBlueCash = new JLabel("N/A");
 		currentGame.add(pBlueCash, "12, 26, 3, 1");
 		
-		final JButton btnCheck = new JButton("Check");
-		btnCheck.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ClientEvent event = new ClientEvent(new Object());
-				event.setType(ClientEvent.ACTION_REC);
-				event.setAction(0);
-				
-				client.fireEvent(event);
-			}
-		});
-		currentGame.add(btnCheck, "10, 30, 3, 1");
+		final JLabel[] nameLabels = { pWhiteName, pGreyName, pRedName, pYellowName, pBlueName };
+		final JLabel[] cashLabels = { pWhiteCash, pGreyCash, pRedCash, pYellowCash, pBlueCash };
+		final JLabel[][] cardLabels = { {pWhiteCard1, pWhiteCard2, pWhiteCard3, pWhiteCard4, pWhiteCard5}
+									  , {pGreyCard1, pGreyCard2, pGreyCard3, pGreyCard4, pGreyCard5}
+									  , {pRedCard1, pRedCard2, pRedCard3, pRedCard4, pRedCard5}
+									  , {pYellowCard1, pYellowCard2, pYellowCard3, pYellowCard4, pYellowCard5}
+									  , {pBlueCard1, pBlueCard2, pBlueCard3, pBlueCard4, pBlueCard5}};
 		
 		final JButton btnFold = new JButton("Fold");
 		btnFold.addActionListener(new ActionListener() {
@@ -621,12 +608,6 @@ public class MainWindow {
 				client.fireEvent(event);
 			}
 		});
-		currentGame.add(btnFold, "16, 30, 3, 1");
-		
-		txtBetAmt = new JTextField();
-		txtBetAmt.setText("bet amt");
-		currentGame.add(txtBetAmt, "10, 32, 3, 1, fill, default");
-		txtBetAmt.setColumns(10);
 		
 		final JButton btnBet = new JButton("Bet");
 		btnBet.addActionListener(new ActionListener() {
@@ -638,7 +619,13 @@ public class MainWindow {
 				client.fireEvent(event);
 			}
 		});
-		currentGame.add(btnBet, "16, 32, 3, 1");
+		currentGame.add(btnBet, "10, 30, 3, 1");
+		currentGame.add(btnFold, "16, 30, 3, 1");
+		
+		txtBetAmt = new JTextField();
+		txtBetAmt.setText("0");
+		currentGame.add(txtBetAmt, "10, 32, 3, 1, fill, default");
+		txtBetAmt.setColumns(10);
 		
 		JButton btnStart = new JButton("Start");
 		btnStart.addActionListener(new ActionListener() {
@@ -648,6 +635,18 @@ public class MainWindow {
 			}
 		});
 		currentGame.add(btnStart, "4, 30, 3, 1");
+		
+		final JButton btnCheck = new JButton("Check");
+		btnCheck.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ClientEvent event = new ClientEvent(new Object());
+				event.setType(ClientEvent.ACTION_REC);
+				event.setAction(0);
+				
+				client.fireEvent(event);
+			}
+		});
+		currentGame.add(btnCheck, "16, 32, 3, 1");
 		
 		final JTabbedPane friends = new JTabbedPane(JTabbedPane.TOP);
 		frame.getContentPane().add(friends, "6, 1, 7, 1, fill, fill");	
@@ -712,7 +711,8 @@ public class MainWindow {
 		ListSelectionModel chatSelection = listChats.getSelectionModel();
 		chatSelection.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				String chat_id = ((String) listChats.getSelectedValue()).split("::")[1];
+				JList chats = (JList) scrollPane.getViewport().getView();
+				String chat_id = ((String) chats.getSelectedValue()).split("::")[1];
 				Chat chat = client.getChat(chat_id);
 				chatContainer.setViewportView(new JList(getChatMessages(chat)));
 			}
@@ -748,11 +748,18 @@ public class MainWindow {
 		frame.getContentPane().add(btnLogOut, "12, 9");
 		
 		txtChatHere = new JTextField();
-		txtChatHere.setText("chat here");
+		txtChatHere.setText("Chat here");
 		frame.getContentPane().add(txtChatHere, "3, 11, fill, fill");
 		txtChatHere.setColumns(10);
 		
 		JButton btnSend = new JButton("Send");
+		btnSend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String message = txtChatHere.getText();
+				String chat_id = ((String) listChats.getSelectedValue()).split("::")[1];
+				client.sendMessage(client.getUser().getUsername(), message, chat_id);
+			}
+		});
 		frame.getContentPane().add(btnSend, "4, 11");
 		
 		JLabel cash = new JLabel(client.getUser().getCredits() + "$");
@@ -771,7 +778,7 @@ public class MainWindow {
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				allGames.setRowHeaderView(new JList(getGameList()));
+				allGames.setViewportView(new JList(getGameList()));
 				scrollPane.setViewportView(new JList(getChatList()));
 				allFriends.setViewportView(new JList(getFriendList()));
 			}
@@ -794,11 +801,32 @@ public class MainWindow {
 		});
 		frame.getContentPane().add(btnChat, "6, 2, 3, 1, left, default");
 		
+		JButton btnJoinGame = new JButton("Join Game");
+		btnJoinGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JList games = (JList) allGames.getViewport().getView();
+				String table_id = ((String) games.getSelectedValue()).split("::")[1];
+				Boolean result = client.joinTable(client.getUser().getUsername(), table_id);
+				if (!result) {
+					JOptionPane.showMessageDialog(frame, "Error Joining Table");
+				}
+				
+				main.setSelectedIndex(2);
+				
+				setTableLabels(client.getTable(), nameLabels, cashLabels);
+			}
+		});
+		frame.getContentPane().add(btnJoinGame, "4, 2");
+		
 		client.addEventListener(new ClientEventListener() {			
 			public void eventOccured(ClientEvent e) {
-				System.out.println("Event Occured: " + e.getType());
-				if (e.getType() == ClientEvent.ACTION) {
-					JOptionPane.showMessageDialog(frame, "It's your turn");
+				if (e.getType() == ClientEvent.ACTION_GET) {
+					JOptionPane.showMessageDialog(frame, "It's your turn, to call: " + e.getCallAmount());
+				}
+				
+				if (e.getType() == ClientEvent.HAND) {
+					System.out.println("Hand event emitted");
+					setCardLabels(e.getHands(), nameLabels, cardLabels);
 				}
 			}
 		});

@@ -1,9 +1,7 @@
 package mcgill.game;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import mcgill.fiveCardStud.FiveCardStud;
@@ -13,9 +11,9 @@ public class Table {
 
 	String id;
 	String name;
-	Set<User> users;
+	List<User> users;
 	
-	public Table(String id, String name, Set<User> users) {
+	public Table(String id, String name, List<User> users) {
 		this.id = id;
 		this.name = name;
 		this.users = users;
@@ -24,7 +22,7 @@ public class Table {
 	public Table(String name) {
 		this.name = name;
 		this.id = UUID.randomUUID().toString();
-		this.users = new HashSet<User>();
+		this.users = new ArrayList<User>();
 	}
 	
 	public Boolean addUser(User user) {
@@ -32,12 +30,25 @@ public class Table {
 			return false;
 		}
 		
+		for (User t_user : this.users) {
+			if (t_user.getUsername().equals(user.getUsername())) {
+				return true;
+			}
+		}
+		
 		this.users.add(user);
 		return true;
 	}
 	
 	public Boolean removeUser(User user) {
-		return users.remove(user);
+		for (int i = 0; i < this.users.size(); i++) {
+			if (this.users.get(i).getUsername().equals(user.getUsername())) {
+				this.users.remove(i);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public void startRound(Server server) {
@@ -60,7 +71,7 @@ public class Table {
 		return name;
 	}
 
-	public Set<User> getUsers() {
+	public List<User> getUsers() {
 		return users;
 	}
 	

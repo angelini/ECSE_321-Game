@@ -205,17 +205,9 @@ public class Server {
     }
     
     public void createTable(String c_key, String[] args) {
-    	String username = args[1];
-    	String name = args[2];
-    	
-    	User user = this.db.getUser(username, false);
-    	if (user == null) {
-    		this.emit.publish(c_key, "null");
-    		return;
-    	}
+    	String name = args[1];
     	
     	Table table = new Table(name);
-    	table.addUser(user);
     	this.db.setTable(table);
     	this.emit.publish(c_key, this.gson.toJson(table));
     }

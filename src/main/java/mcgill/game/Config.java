@@ -33,6 +33,7 @@ public class Config {
 	public static final String START_ROUND = "start_round";
 	
 	public static final String GET_COMMAND = "get_command";
+	public static final String EMIT_HANDS = "emit_hands";
 	
 	// Game Configs
 	

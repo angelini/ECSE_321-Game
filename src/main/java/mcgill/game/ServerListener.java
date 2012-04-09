@@ -42,7 +42,7 @@ public class ServerListener extends JedisPubSub {
 			this.server.getChats(c_key, this.gson.fromJson(message, String[].class));
 		}
 		
-		if (method.equals(Config.GET_CHATS)) {
+		if (method.equals(Config.GET_CHAT)) {
 			this.server.getChat(c_key, this.gson.fromJson(message, String[].class));
 		}
 		

@@ -113,6 +113,7 @@ public class Database {
 			this.jedis.sadd(cat(CHATS, chat.getId(), USERS), user.getUsername());
 		}
 		
+		this.jedis.del(cat(CHATS, chat.getId(), MESSAGES));
 		for (Message message : chat.getMessages()) {
 			this.jedis.rpush(cat(CHATS, chat.getId(), MESSAGES), message.getId());
 		}
@@ -162,9 +163,9 @@ public class Database {
 	// TABLE DB Adapter
 	
 	public Table getTable(String id) {
-		Set<User> users = new HashSet<User>();
+		List<User> users = new ArrayList<User>();
 		
-		Set<String> usernames = this.jedis.smembers(cat(TABLES, id, USERS));
+		List<String> usernames = this.jedis.lrange(cat(TABLES, id, USERS), 0, -1);
 		
 		for (String username : usernames) {
 			users.add(getUser(username, false));
@@ -176,8 +177,9 @@ public class Database {
 	}
 	
 	public void setTable(Table table) {
+		this.jedis.del(cat(TABLES, table.getId(), USERS));
 		for (User user : table.getUsers()) {
-			this.jedis.sadd(cat(TABLES, table.getId(), USERS), user.getUsername());
+			this.jedis.rpush(cat(TABLES, table.getId(), USERS), user.getUsername());
 		}
 		
 		this.jedis.set(cat(TABLES, table.getId()), table.getName());

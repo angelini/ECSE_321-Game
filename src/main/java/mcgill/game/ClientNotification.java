@@ -1,10 +1,16 @@
 package mcgill.game;
 
+import java.util.Map;
+
+import com.google.gson.Gson;
+
+import mcgill.poker.Hand;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
 public class ClientNotification {
 
+	private Gson gson;
 	private Jedis jedis;
 	private String session;
 	private String response;
@@ -36,6 +42,7 @@ public class ClientNotification {
 	
 	public ClientNotification(String session) {
 		this.session = session;
+		this.gson = new Gson();
 		this.jedis = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT, 0);
 	}
 	
@@ -51,6 +58,12 @@ public class ClientNotification {
 		return this.response;
 	}
 
+	public void sendHand(Map<String, Hand> hands) {
+		String n_key = Database.cat(Config.NOTIFICATIONS, Config.EMIT_HANDS, this.session);
+		HandsSerializable serializable = new HandsSerializable(hands);
+		this.jedis.publish(n_key, this.gson.toJson(serializable));
+	}
+	
 	public String getResponse() {
 		return response;
 	}

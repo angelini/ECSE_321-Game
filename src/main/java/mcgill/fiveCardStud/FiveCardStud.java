@@ -2,11 +2,14 @@ package mcgill.fiveCardStud;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mcgill.game.ClientNotification;
 import mcgill.game.Server;
 import mcgill.poker.Deck;
+import mcgill.poker.Hand;
 import mcgill.poker.HandRank;
 import mcgill.poker.Player;
 import mcgill.poker.Pot;
@@ -61,6 +64,7 @@ public class FiveCardStud implements Runnable {
 			
 			for(Player player : this.players) {
 				player.addCard(this.deck.getTop());
+				emitHands();
 			}
 			
 			betting();
@@ -70,7 +74,7 @@ public class FiveCardStud implements Runnable {
 		dividePots();
 	}
 	
-	public int getAction(String username, int call_amount) {
+	private int getAction(String username, int call_amount) {
 		String session_str = Server.getUserSession(username);
 		ClientNotification notification = new ClientNotification(session_str);
 		
@@ -79,12 +83,27 @@ public class FiveCardStud implements Runnable {
 		return Integer.parseInt(command);
 	}
 
+	private void emitHands() {
+		Map<String, Hand> hands = new HashMap<String, Hand>();
+		
+		for (Player player : this.players) {
+			hands.put(player.getUsername(), player.getHand());
+		}
+		
+		for (Player player : this.players) {
+			String session_str = Server.getUserSession(player.getUsername());
+			ClientNotification notification = new ClientNotification(session_str);
+			notification.sendHand(hands);
+		}
+	}
+	
 	private void initialize() throws TooFewCardsException, TooManyCardsException, OutOfMoneyException {
 		for(Player player : this.players) {
 			try {
 				player.bet(this.lowBet/4);
 				
 				player.addCard(this.deck.getTop()); //face down
+				emitHands();
 			} catch (OutOfMoneyException e) {
 				this.players.remove(player);
 			} catch (TooManyCardsException e) {

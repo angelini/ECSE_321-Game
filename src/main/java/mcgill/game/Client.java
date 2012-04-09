@@ -156,8 +156,8 @@ public class Client implements Runnable {
 		return this.gson.fromJson(res, Table[].class);
 	}
 	
-	public Table createTable(String username, String name) {
-		String[] args = {this.session, username, name};
+	public Table createTable(String name) {
+		String[] args = {this.session, name};
 		
 		ServerCall server = new ServerCall(this.session);
 		String res = server.call(Config.CREATE_TABLE, args);
