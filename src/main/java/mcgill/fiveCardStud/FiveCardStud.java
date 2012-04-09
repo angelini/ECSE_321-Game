@@ -80,7 +80,9 @@ public class FiveCardStud implements Runnable {
 			if (onlyOneBetting()) break;
 			
 			for(Player player : this.players) {
-				player.addCard(this.deck.getTop());
+				if (!player.isFolded()) {
+					player.addCard(this.deck.getTop());
+				}
 				emitHands();
 			}
 			
@@ -193,7 +195,7 @@ public class FiveCardStud implements Runnable {
 				//Betting limits based on which street the round is in
 				if (this.street == 2) {
 					if (index == this.startingPlayer && i == 1) {
-						betLimit = this.bringIn; 
+						betLimit = 0; 
 					} else if (index == (this.startingPlayer + 1) && i == 1) {
 						betLimit = this.lowBet - this.bringIn;
 					} else {
