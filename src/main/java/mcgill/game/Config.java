@@ -7,7 +7,7 @@ public class Config {
 	
 	// Redis server info
 	
-	public static final String REDIS_HOST = "localhost";
+	public static final String REDIS_HOST = "23.21.64.174";
 	public static final int REDIS_PORT = 6379;
 	
 	// Network commands

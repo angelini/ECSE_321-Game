@@ -8,16 +8,21 @@ import redis.clients.jedis.JedisPubSub;
 public class ServerCall {
 
 	private Gson gson;
-	private Jedis jedis;
+	private Jedis subscribe;
+	private Jedis emit;
 	private String session;
 	private String response;
 	
 	private class Listener extends JedisPubSub {
 
 		private ServerCall serverCall;
+		private String key;
+		private String message;
 		
-		public Listener(ServerCall serverCall) {
+		public Listener(ServerCall serverCall, String key, String message) {
 			this.serverCall = serverCall;
+			this.key = key;
+			this.message = message;
 		}
 		
 		public void onMessage(String channel, String message) {
@@ -31,7 +36,9 @@ public class ServerCall {
 
 		public void onPUnsubscribe(String arg0, int arg1) {}
 
-		public void onSubscribe(String arg0, int arg1) {}
+		public void onSubscribe(String arg0, int arg1) {
+			this.serverCall.emit.publish(this.key, this.message);
+		}
 
 		public void onUnsubscribe(String arg0, int arg1) {}
 		
@@ -40,17 +47,18 @@ public class ServerCall {
 	public ServerCall(String session) {
 		this.session = session;
 		this.gson = new Gson();
-		this.jedis = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT, 0);
+		
+		this.subscribe = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT, 0);
+		this.emit = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT);
 	}
 	
 	public String call(String method, String[] args) {
 		String s_key = Database.cat(Config.SERVER, method, this.session);
 		String c_key = Database.cat(Config.CLIENT, this.session);
 		
-		Listener listener = new Listener(this);
+		Listener listener = new Listener(this, s_key, this.gson.toJson(args));
 		
-		this.jedis.publish(s_key, this.gson.toJson(args));
-		this.jedis.subscribe(listener, c_key);
+		this.subscribe.subscribe(listener, c_key);
 		
 		return this.response;
 	}
