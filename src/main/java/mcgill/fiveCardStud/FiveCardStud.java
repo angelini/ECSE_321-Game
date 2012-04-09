@@ -213,7 +213,9 @@ public class FiveCardStud implements Runnable {
 						betLimit = callAmount;
 					}
 					
-					int[] limits = {callAmount, betLimit};	
+					int limitAmount = callAmount + betLimit;
+					
+					int[] limits = {callAmount, limitAmount};	
 					
 					int action = getAction(players.get(index).getUsername(), limits);
 					
