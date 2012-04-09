@@ -93,7 +93,6 @@ public class FiveCardStud implements Runnable {
 		dividePots();
 		
 		Database db = new Database(Config.REDIS_HOST, Config.REDIS_PORT);
-		String winner = null;
 		Map<String, Integer> credit_map = new HashMap<String, Integer>();
 		
 		for (Player player : this.players) {
