@@ -3,6 +3,7 @@ package mcgill.game;
 import java.util.EventObject;
 import java.util.Map;
 
+import mcgill.fiveCardStud.EndOfRound;
 import mcgill.poker.Hand;
 
 public class ClientEvent extends EventObject {
@@ -14,7 +15,8 @@ public class ClientEvent extends EventObject {
 	public static int ACTION_REC = 2;
 	public static int USER = 3;
 	public static int MESSAGE = 4;
-	public static int POT_STATUS = 5;	
+	public static int POT_STATUS = 5;
+	public static int END_OF_ROUND = 6;
 	
 	private int type;
 	private int action;
@@ -23,6 +25,7 @@ public class ClientEvent extends EventObject {
 	private User[] users;
 	private String chatId;
 	private int[] potStatus;
+	private EndOfRound endOfRound;
 	
 	public ClientEvent(Object source) {
 		super(source);
@@ -82,6 +85,14 @@ public class ClientEvent extends EventObject {
 
 	public void setPotStatus(int[] potStatus) {
 		this.potStatus = potStatus;
+	}
+
+	public EndOfRound getEndOfRound() {
+		return endOfRound;
+	}
+
+	public void setEndOfRound(EndOfRound endOfRound) {
+		this.endOfRound = endOfRound;
 	}
 
 }

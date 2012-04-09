@@ -1,5 +1,7 @@
 package mcgill.game;
 
+import mcgill.fiveCardStud.EndOfRound;
+
 import com.google.gson.Gson;
 
 import redis.clients.jedis.Jedis;
@@ -46,6 +48,10 @@ public class Notifications implements Runnable {
 			
 			if (method.equals(Config.POT_STATUS)) {
 				this.notifications.emitPotStatus(message);
+			}
+			
+			if (method.equals(Config.END_OF_ROUND)) {
+				this.notifications.emitEndOfRound(message);
 			}
 		}
 
@@ -127,7 +133,17 @@ public class Notifications implements Runnable {
 		event.setType(ClientEvent.POT_STATUS);
 		event.setPotStatus(current);
 		
-		this.client.fireEvent(event);	
+		this.client.fireEvent(event);
+	}
+	
+	public void emitEndOfRound(String message) {
+		EndOfRound end = this.gson.fromJson(message, EndOfRound.class);
+		
+		ClientEvent event = new ClientEvent(new Object());
+		event.setType(ClientEvent.END_OF_ROUND);
+		event.setEndOfRound(end);
+		
+		this.client.fireEvent(event);
 	}
 	
 }

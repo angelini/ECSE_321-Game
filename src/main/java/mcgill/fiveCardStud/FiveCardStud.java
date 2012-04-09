@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import mcgill.game.ClientNotification;
+import mcgill.game.Config;
+import mcgill.game.Database;
 import mcgill.game.Server;
+import mcgill.game.User;
 import mcgill.poker.Deck;
 import mcgill.poker.Hand;
 import mcgill.poker.HandRank;
@@ -72,8 +75,36 @@ public class FiveCardStud implements Runnable {
 		
 		makePots();
 		dividePots();
+		
+		Database db = new Database(Config.REDIS_HOST, Config.REDIS_PORT);
+		String winner = null;
+		Map<String, Integer> credit_map = new HashMap<String, Integer>();
+		
+		for (Player player : this.players) {
+			User user = db.getUser(player.getUsername(), false);
+			user.setCredits(player.getTotalMoney());
+			db.setUser(user);
+			
+			credit_map.put(player.getUsername(), player.getTotalMoney());
+			
+			if (player.isWinner()) {
+				winner = player.getUsername();
+			}
+		}
+		
+		emitEndOfRound(winner, credit_map);
 	}
 	
+	private void emitEndOfRound(String winner, Map<String, Integer> credit_map) {
+		EndOfRound end = new EndOfRound(winner, credit_map);
+				
+		for (Player player : this.players) {
+			String session_str = Server.getUserSession(player.getUsername());
+			ClientNotification notification = new ClientNotification(session_str);
+			notification.sendEndOfRound(end);
+		}
+	}
+
 	private void potAndStatusNotification(Player player) {
 		int[] current = new int[2];
 		
