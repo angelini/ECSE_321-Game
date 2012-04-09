@@ -177,6 +177,10 @@ public class FiveCardStud implements Runnable {
 					
 					int callAmount = getCallAmount() - currentPlayer.getAmountInPots();
 					
+					if (this.startingPlayer == index && i == 1) {
+						callAmount = this.bringIn;
+					}
+					
 					int action = getAction(players.get(index).getUsername(), callAmount);
 					
 					System.out.println("Action for " + players.get(index).getUsername() + " is: " + action);
