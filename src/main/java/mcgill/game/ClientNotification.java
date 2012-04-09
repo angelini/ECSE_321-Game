@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
+import mcgill.fiveCardStud.EndOfRound;
 import mcgill.poker.Hand;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
@@ -85,6 +86,11 @@ public class ClientNotification {
 	public void potAndStatus(int[] current) {
 		String n_key = Database.cat(Config.NOTIFICATIONS, Config.POT_STATUS, this.session); 
 		this.emit.publish(n_key, this.gson.toJson(current));
+	}
+	
+	public void sendEndOfRound(EndOfRound end) {
+		String n_key = Database.cat(Config.NOTIFICATIONS, Config.END_OF_ROUND, this.session); 
+		this.emit.publish(n_key, this.gson.toJson(end));
 	}
 	
 	public String getResponse() {

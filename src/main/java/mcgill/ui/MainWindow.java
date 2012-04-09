@@ -2,6 +2,7 @@ package mcgill.ui;
 
 import javax.swing.JFrame;
 
+import mcgill.fiveCardStud.EndOfRound;
 import mcgill.game.Chat;
 import mcgill.game.Client;
 import mcgill.game.ClientEvent;
@@ -139,6 +140,17 @@ public class MainWindow {
 		}
 		
 		return listModel;
+	}
+	
+	public void setTableLabels(Map<String, Integer> creditMap, JLabel[] nameLabels, JLabel[] cashLabels) {
+		for (int i = 0; i < nameLabels.length; i++) {
+			String username = nameLabels[i].getText();
+			Integer amount = creditMap.get(username);
+			
+			if (amount != null) {
+				cashLabels[i].setText(amount + "$");
+			}
+		}
 	}
 	
 	public void setTableLabels(User[] users, JLabel[] nameLabels, JLabel[] cashLabels) {
@@ -934,6 +946,12 @@ public class MainWindow {
 					}
 					
 					scrollPane.setViewportView(new JList(getChatList()));
+				}
+				
+				if (e.getType() == ClientEvent.END_OF_ROUND) {
+					EndOfRound end = e.getEndOfRound();
+					setTableLabels(end.getCreditMap(), nameLabels, cashLabels);
+					JOptionPane.showMessageDialog(frame, "Round Over & The winner is: " + end.getWinner());
 				}
 			}
 		});
