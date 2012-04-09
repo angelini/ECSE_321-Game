@@ -35,6 +35,10 @@ public class Client implements Runnable {
 		return this.user;
 	}
 	
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
 	public Table getTable() {
 		return this.table;
 	}

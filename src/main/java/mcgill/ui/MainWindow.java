@@ -742,11 +742,15 @@ public class MainWindow {
 		label.setIcon(new ImageIcon(MainWindow.class.getResource("/images/avatar main.png")));
 		frame.getContentPane().add(label, "8, 5, 1, 3, center, bottom");
 		
+		final JLabel cash = new JLabel(client.getUser().getCredits() + "$");
+		frame.getContentPane().add(cash, "8, 11, center, top");
+		
 		JButton btnAddCredit = new JButton("Add Credit");
 		btnAddCredit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (client.getUser().getCredits()<=1000)
-					client.getUser().setCredits(1000);
+				User user = client.addCredits(client.getUser().getUsername());
+				client.setUser(user);
+				cash.setText(user.getCredits() + "$");
 			}
 		});
 		frame.getContentPane().add(btnAddCredit, "12, 7");
@@ -789,10 +793,7 @@ public class MainWindow {
 			}
 		});
 		frame.getContentPane().add(btnSend, "4, 11");
-		
-		JLabel cash = new JLabel(client.getUser().getCredits() + "$");
-		frame.getContentPane().add(cash, "8, 11, center, top");
-		
+				
 		JButton btnQuit = new JButton("Quit");
 		btnQuit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
