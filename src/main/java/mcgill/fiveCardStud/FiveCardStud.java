@@ -93,6 +93,7 @@ public class FiveCardStud implements Runnable {
 		}
 		
 		emitEndOfRound(winner, credit_map);
+		db.close();
 	}
 	
 	private void emitEndOfRound(String winner, Map<String, Integer> credit_map) {
@@ -102,6 +103,7 @@ public class FiveCardStud implements Runnable {
 			String session_str = Server.getUserSession(player.getUsername());
 			ClientNotification notification = new ClientNotification(session_str);
 			notification.sendEndOfRound(end);
+			notification.close();
 		}
 	}
 
@@ -115,6 +117,7 @@ public class FiveCardStud implements Runnable {
 		ClientNotification notification = new ClientNotification(session_str);
 		
 		notification.potAndStatus(current);
+		notification.close();
 	}
 	
 	private int getAction(String username, int[] limits) {
@@ -122,6 +125,7 @@ public class FiveCardStud implements Runnable {
 		ClientNotification notification = new ClientNotification(session_str);
 		
 		String command = notification.getCommand(limits);
+		notification.close();
 		
 		return Integer.parseInt(command);
 	}
@@ -137,6 +141,7 @@ public class FiveCardStud implements Runnable {
 			String session_str = Server.getUserSession(player.getUsername());
 			ClientNotification notification = new ClientNotification(session_str);
 			notification.sendHand(hands);
+			notification.close();
 		}
 	}
 	
