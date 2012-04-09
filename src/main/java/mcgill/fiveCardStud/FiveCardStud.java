@@ -169,19 +169,15 @@ public class FiveCardStud implements Runnable {
 				if (currentPlayer.isBetting()) {
 					potAndStatusNotification(players.get(index));
 					
-					if (raises > maxRaises) {
-						System.out.println("You cannot raise");
-					} else {
-						System.out.println("The max you can raise is "+betLimit);
-					}
-					
 					int callAmount = getCallAmount() - currentPlayer.getAmountInPots();
 					
 					if (this.street == 2 && this.startingPlayer == index && i == 1) {
 						callAmount = this.bringIn;
+					} else if (raises >= maxRaises) {
+						betLimit = callAmount;
 					}
 					
-					int[] limits = {callAmount, betLimit};
+					int[] limits = {callAmount, betLimit};	
 					
 					int action = getAction(players.get(index).getUsername(), limits);
 					
