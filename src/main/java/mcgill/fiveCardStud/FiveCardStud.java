@@ -178,7 +178,7 @@ public class FiveCardStud implements Runnable {
 					int callAmount = getCallAmount() - currentPlayer.getAmountInPots();
 					
 					if (this.street == 2 && this.startingPlayer == index && i == 1) {
-						callAmount = this.bringIn;
+						callAmount = 666;//this.bringIn;
 					}
 					
 					int[] limits = {callAmount, betLimit};
