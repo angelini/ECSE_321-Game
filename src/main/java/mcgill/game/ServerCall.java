@@ -1,5 +1,8 @@
 package mcgill.game;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import com.google.gson.Gson;
 
 import redis.clients.jedis.Jedis;
@@ -11,6 +14,7 @@ public class ServerCall {
 	private Jedis jedis;
 	private String session;
 	private String response;
+	private String message;
 	
 	private class Listener extends JedisPubSub {
 
@@ -41,6 +45,22 @@ public class ServerCall {
 		this.session = session;
 		this.gson = new Gson();
 		this.jedis = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT, 0);
+	}
+	
+	public void publish(final String key, final String message) {
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		executor.execute(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(100);
+					Jedis jedis = new Jedis(Config.REDIS_HOST, Config.REDIS_PORT);
+					jedis.publish(key, message);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		});
 	}
 	
 	public String call(String method, String[] args) {

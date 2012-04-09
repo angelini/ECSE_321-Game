@@ -22,6 +22,8 @@ public class ServerListener extends JedisPubSub {
 		
 		String c_key = Database.cat(Config.CLIENT, session);
 		
+		System.out.println("Method received: " + method);
+		
 		if (method.equals(Config.LOGIN)) {
 			this.server.login(c_key, this.gson.fromJson(message, String[].class));
 		}
