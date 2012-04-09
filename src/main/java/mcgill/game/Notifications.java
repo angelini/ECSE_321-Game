@@ -43,6 +43,10 @@ public class Notifications implements Runnable {
 			if (method.equals(Config.MESSAGE_REC)) {
 				this.notifications.emitMessage(message);
 			}
+			
+			if (method.equals(Config.POT_STATUS)) {
+				this.notifications.emitPotStatus(message);
+			}
 		}
 
 		public void onMessage(String channel, String message) {}
@@ -113,8 +117,17 @@ public class Notifications implements Runnable {
 		event.setType(ClientEvent.MESSAGE);
 		event.setChatId(chat_id);
 		
-		this.client.fireEvent(event);
+		this.client.fireEvent(event);	
+	}
+	
+	public void emitPotStatus(String current_str) {
+		int[] current = this.gson.fromJson(current_str, int[].class);
 		
+		ClientEvent event = new ClientEvent(new Object());
+		event.setType(ClientEvent.POT_STATUS);
+		event.setPotStatus(current);
+		
+		this.client.fireEvent(event);	
 	}
 	
 }

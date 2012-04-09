@@ -25,6 +25,14 @@ public class Table {
 		this.users = new ArrayList<User>();
 	}
 	
+	private void emitUsers() {
+		for (User t_user : this.users) {
+			String session_str = Server.getUserSession(t_user.getUsername());
+			ClientNotification notification = new ClientNotification(session_str);
+			notification.sendUsers(this.users.toArray(new User[0]));
+		}
+	}
+	
 	public Boolean addUser(User user) {
 		if (this.users.size() >= Config.MAX_PLAYERS) {
 			return false;
@@ -37,12 +45,7 @@ public class Table {
 		}
 		
 		this.users.add(user);
-		
-		for (User t_user : this.users) {
-			String session_str = Server.getUserSession(t_user.getUsername());
-			ClientNotification notification = new ClientNotification(session_str);
-			notification.sendUsers(this.users.toArray(new User[0]));
-		}
+		emitUsers();
 		
 		return true;
 	}
@@ -51,6 +54,7 @@ public class Table {
 		for (int i = 0; i < this.users.size(); i++) {
 			if (this.users.get(i).getUsername().equals(user.getUsername())) {
 				this.users.remove(i);
+				emitUsers();
 				return true;
 			}
 		}

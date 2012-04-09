@@ -6,6 +6,7 @@ import mcgill.game.Chat;
 import mcgill.game.Client;
 import mcgill.game.ClientEvent;
 import mcgill.game.ClientEventListener;
+import mcgill.game.Config;
 import mcgill.game.Message;
 import mcgill.game.Table;
 import mcgill.game.User;
@@ -53,6 +54,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.SwingConstants;
 
 
 public class MainWindow {
@@ -85,7 +87,9 @@ public class MainWindow {
 		DefaultListModel listModel = new DefaultListModel();
 		
 		for (int i = 0; i < tables.length; i++) {
-			listModel.addElement(tables[i].getName() + " --- " + tables[i].getUsers().size() + "/5 players ::" + tables[i].getId());
+			String display = tables[i].getName() + " --- " + tables[i].getUsers().size() + "/5 players";
+			DisplayWithId display_obj = new DisplayWithId(display, tables[i].getId());
+			listModel.addElement(display_obj);
 		}
 		
 		return listModel;
@@ -116,8 +120,8 @@ public class MainWindow {
 				}
 			}
 			
-			chat_str += "::" + chats[i].getId();
-			listModel.addElement(chat_str);
+			DisplayWithId display = new DisplayWithId(chat_str, chats[i].getId());
+			listModel.addElement(display);
 		}
 		
 		return listModel;
@@ -135,9 +139,16 @@ public class MainWindow {
 	}
 	
 	public void setTableLabels(User[] users, JLabel[] nameLabels, JLabel[] cashLabels) {
-		for (int i = 0; i < users.length; i++) {
+		int i = 0;
+		
+		for (; i < users.length; i++) {
 			nameLabels[i].setText(users[i].getUsername());
 			cashLabels[i].setText(users[i].getCredits() + "$");
+		}
+		
+		for (; i < Config.MAX_PLAYERS; i++) {
+			nameLabels[i].setText(OPEN_SEAT);
+			cashLabels[i].setText("N/A");
 		}
 	}
 	
@@ -229,6 +240,7 @@ public class MainWindow {
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				client.createTable(txtGame.getText());
+				allGames.setViewportView(new JList(getGameList()));
 				main.setSelectedIndex(0);
 			}
 		});
@@ -616,6 +628,14 @@ public class MainWindow {
 		currentGame.add(btnBet, "10, 30, 3, 1");
 		currentGame.add(btnFold, "16, 30, 3, 1");
 		
+		JLabel lblPot = new JLabel("Pot:");
+		lblPot.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPot.setFont(new Font("Lucida Grande", Font.BOLD, 13));
+		currentGame.add(lblPot, "4, 32");
+		
+		final JLabel lblPotCash = new JLabel("N/A");
+		currentGame.add(lblPotCash, "6, 32");
+		
 		txtBetAmt = new JTextField();
 		txtBetAmt.setText("0");
 		currentGame.add(txtBetAmt, "10, 32, 3, 1, fill, default");
@@ -624,7 +644,6 @@ public class MainWindow {
 		JButton btnStart = new JButton("Start");
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Start Round: " + client.getTable().getId());
 				client.startRound(client.getTable().getId());
 			}
 		});
@@ -706,7 +725,13 @@ public class MainWindow {
 		chatSelection.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				JList chats = (JList) scrollPane.getViewport().getView();
-				String chat_id = ((String) chats.getSelectedValue()).split("::")[1];
+				DisplayWithId chat_display = (DisplayWithId) chats.getSelectedValue();
+				if (chat_display == null) {
+					return;
+				}
+				
+				String chat_id = chat_display.getId();
+				
 				Chat chat = client.getChat(chat_id);
 				chatContainer.setViewportView(new JList(getChatMessages(chat)));
 			}
@@ -749,8 +774,17 @@ public class MainWindow {
 		JButton btnSend = new JButton("Send");
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				JList chatList = (JList) scrollPane.getViewport().getView();
+				DisplayWithId chat_display = (DisplayWithId) chatList.getSelectedValue();
+				
+				if (chat_display == null) {
+					JOptionPane.showMessageDialog(frame, "No Chat Selected");
+					return;
+				}
+				
+				String chat_id = chat_display.getId();
 				String message = txtChatHere.getText();
-				String chat_id = ((String) listChats.getSelectedValue()).split("::")[1];
+				
 				client.sendMessage(client.getUser().getUsername(), message, chat_id);
 			}
 		});
@@ -773,8 +807,28 @@ public class MainWindow {
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				allGames.setViewportView(new JList(getGameList()));
-				scrollPane.setViewportView(new JList(getChatList()));
 				allFriends.setViewportView(new JList(getFriendList()));
+				
+				// HACKY TODO Remove
+				JList chatList = new JList(getChatList());
+				
+				ListSelectionModel chatSelection = chatList.getSelectionModel();
+				chatSelection.addListSelectionListener(new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent e) {
+						JList chats = (JList) scrollPane.getViewport().getView();
+						DisplayWithId chat_display = (DisplayWithId) chats.getSelectedValue();
+						if (chat_display == null) {
+							return;
+						}
+						
+						String chat_id = chat_display.getId();
+						
+						Chat chat = client.getChat(chat_id);
+						chatContainer.setViewportView(new JList(getChatMessages(chat)));
+					}
+				});
+				
+				scrollPane.setViewportView(chatList);
 			}
 		});
 		frame.getContentPane().add(btnRefresh, "1, 2, left, default");
@@ -782,7 +836,8 @@ public class MainWindow {
 		JButton btnChat = new JButton("Chat");
 		btnChat.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String username = (String) listFriends.getSelectedValue();
+				JList friendList = (JList) allFriends.getViewport().getView();
+				String username = (String) friendList.getSelectedValue();
 				
 				if (username == null) {
 					JOptionPane.showMessageDialog(frame, "No Friend Selected");
@@ -799,7 +854,15 @@ public class MainWindow {
 		btnJoinGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JList games = (JList) allGames.getViewport().getView();
-				String table_id = ((String) games.getSelectedValue()).split("::")[1];
+				
+				DisplayWithId table_display = (DisplayWithId) games.getSelectedValue();
+				if (table_display == null) {
+					JOptionPane.showMessageDialog(frame, "No Game Selected");
+					return;
+				}
+				
+				String table_id = table_display.getId();
+				
 				Boolean result = client.joinTable(client.getUser().getUsername(), table_id);
 				if (!result) {
 					JOptionPane.showMessageDialog(frame, "Error Joining Table");
@@ -827,9 +890,21 @@ public class MainWindow {
 					setTableLabels(users, nameLabels, cashLabels);
 				}
 				
+				if (e.getType() == ClientEvent.POT_STATUS) {
+					int[] current = e.getPotStatus();
+					lblPotCash.setText(current[0] + "$");
+				}
+				
 				if (e.getType() == ClientEvent.MESSAGE) {
 					JList chatList = (JList) scrollPane.getViewport().getView();
-					String selected_chat = ((String) chatList.getSelectedValue()).split("::")[1];
+					DisplayWithId chat_display = (DisplayWithId) chatList.getSelectedValue();
+					
+					if (chat_display == null) {
+						scrollPane.setViewportView(new JList(getChatList()));
+						return;
+					}
+					
+					String selected_chat = chat_display.getId();
 					
 					if (selected_chat.equals(e.getChatId())) {
 						Chat chat = client.getChat(selected_chat);

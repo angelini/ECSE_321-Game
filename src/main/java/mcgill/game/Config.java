@@ -36,6 +36,7 @@ public class Config {
 	public static final String EMIT_HANDS = "emit_hands";
 	public static final String TABLE_USERS = "table_users";
 	public static final String MESSAGE_REC = "message_rec";
+	public static final String POT_STATUS = "pot_status";
 	
 	// Game Configs
 	

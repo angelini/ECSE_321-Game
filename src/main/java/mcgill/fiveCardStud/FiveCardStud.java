@@ -74,6 +74,18 @@ public class FiveCardStud implements Runnable {
 		dividePots();
 	}
 	
+	private void potAndStatusNotification(Player player) {
+		int[] current = new int[2];
+		
+		current[0] = player.getAmountInPots();
+		current[1] = player.getStatus();
+		
+		String session_str = Server.getUserSession(player.getUsername());
+		ClientNotification notification = new ClientNotification(session_str);
+		
+		notification.potAndStatus(current);
+	}
+	
 	private int getAction(String username, int call_amount) {
 		String session_str = Server.getUserSession(username);
 		ClientNotification notification = new ClientNotification(session_str);
@@ -155,10 +167,7 @@ public class FiveCardStud implements Runnable {
 				Player currentPlayer = players.get(index);
 				
 				if (currentPlayer.isBetting()) {
-					
-					//GameTest.printHand(players.get(index));
-					//GameTest.printAmountInPots(players.get(index));
-					//GameTest.printPlayerStatus(players.get(index));
+					potAndStatusNotification(players.get(index));
 					
 					if (raises > maxRaises) {
 						System.out.println("You cannot raise");
@@ -193,7 +202,7 @@ public class FiveCardStud implements Runnable {
 			i++;
 		}
 	}
-	
+
 	//Fix 2,3,4 cards (it for some reason does not just look for pairs, three of a kind, four of a kind, 2 pairs)
 	private void findStartingPlayer() throws TooFewCardsException, TooManyCardsException {
 		int i = 0; 

@@ -73,6 +73,9 @@ public class Server {
     public void logout(String c_key, String[] args) {
     	String session_str = args[0];
     	
+    	User user = session.get(session_str);
+    	this.db.removeUserTable(user.getUsername());
+    	
     	session.remove(session_str);
     	this.emit.publish(c_key, "");
     }
@@ -124,7 +127,7 @@ public class Server {
     	String  username = args[1];
     	
     	List<Chat> chats = this.db.getUserChats(username);
-    	this.emit.publish(c_key, this.gson.toJson(chats));
+    	this.emit.publish(c_key, this.gson.toJson(chats.toArray(new Chat[0])));
     }
     
     public void getChat(String c_key, String[] args) {

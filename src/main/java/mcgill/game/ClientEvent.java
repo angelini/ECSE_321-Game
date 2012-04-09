@@ -7,13 +7,14 @@ import mcgill.poker.Hand;
 
 public class ClientEvent extends EventObject {
 
-	private static final long serialVersionUID = -6303128939724816459L;	
+	private static final long serialVersionUID = -6303128939724816459L;
 	
 	public static int HAND = 0;
 	public static int ACTION_GET = 1;
 	public static int ACTION_REC = 2;
 	public static int USER = 3;
 	public static int MESSAGE = 4;
+	public static int POT_STATUS = 5;	
 	
 	private int type;
 	private int action;
@@ -21,6 +22,7 @@ public class ClientEvent extends EventObject {
 	private Map<String, Hand> hands;
 	private User[] users;
 	private String chatId;
+	private int[] potStatus;
 	
 	public ClientEvent(Object source) {
 		super(source);
@@ -72,6 +74,14 @@ public class ClientEvent extends EventObject {
 
 	public void setChatId(String chatId) {
 		this.chatId = chatId;
+	}
+
+	public int[] getPotStatus() {
+		return potStatus;
+	}
+
+	public void setPotStatus(int[] potStatus) {
+		this.potStatus = potStatus;
 	}
 
 }

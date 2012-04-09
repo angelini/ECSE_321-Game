@@ -203,6 +203,27 @@ public class Database {
 		
 		return tables;
 	}
+	
+	public void removeUserTable(String username) {
+		List<Table> tables = getTables();
+		
+		for (Table table : tables) {
+			List<User> users = table.getUsers();
+			
+			for (int i = 0; i < users.size(); i++) {
+				User user = users.get(i);
+				if (user.getUsername().equals(username)) {
+					table.removeUser(user);
+					
+					if (table.getUsers().size() == 0) {
+						delTable(table.getId());
+					} else {
+						setTable(table);
+					}
+				}
+			}
+		}
+	}
 
 	public void close() {
 		this.jedis.quit();

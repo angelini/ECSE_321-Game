@@ -74,6 +74,11 @@ public class ClientNotification {
 		this.jedis.publish(n_key, chat_id);
 	}
 	
+	public void potAndStatus(int[] current) {
+		String n_key = Database.cat(Config.NOTIFICATIONS, Config.POT_STATUS, this.session); 
+		this.jedis.publish(n_key, this.gson.toJson(current));
+	}
+	
 	public String getResponse() {
 		return response;
 	}

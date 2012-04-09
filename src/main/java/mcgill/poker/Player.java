@@ -116,4 +116,8 @@ public class Player implements Comparable<Player> {
 	public boolean isWinner() {
 		return this.winner;
 	}
+	
+	public int getStatus() {
+		return this.status;
+	}
 }
