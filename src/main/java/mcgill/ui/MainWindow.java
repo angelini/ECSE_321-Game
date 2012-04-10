@@ -837,19 +837,22 @@ public class MainWindow {
 		JButton btnSend = new JButton("Send");
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JList chatList = (JList) scrollPane.getViewport().getView();
-				DisplayWithId chat_display = (DisplayWithId) chatList.getSelectedValue();
-				
-				if (chat_display == null) {
+				JList message_list = (JList) chatContainer.getViewport().getView();
+				if (message_list == null) {
 					JOptionPane.showMessageDialog(frame, "No Chat Selected");
 					return;
 				}
 				
-				String chat_id = chat_display.getId();
+				MessageList message_model = (MessageList) message_list.getModel();
+				if (message_model == null) {
+					JOptionPane.showMessageDialog(frame, "No Chat Selected");
+					return;
+				}
+				
+				String chat_id = message_model.getChatId();
 				String message = txtChatHere.getText();
 				
 				client.sendMessage(client.getUser().getUsername(), message, chat_id);
-	
 			}
 		});
 		frame.getContentPane().add(btnSend, "4, 11");
