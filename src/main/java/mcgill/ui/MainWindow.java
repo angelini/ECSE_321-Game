@@ -783,6 +783,8 @@ public class MainWindow {
 				
 				Chat chat = client.getChat(chat_id);
 				chatContainer.setViewportView(new JList(getChatMessages(chat)));
+				
+				chatContainer.scrollRectToVisible(new Rectangle(0,chatContainer.getHeight(),1,1));	
 			}
 		});
 		scrollPane.setViewportView(listChats);
@@ -839,8 +841,7 @@ public class MainWindow {
 				String message = txtChatHere.getText();
 				
 				client.sendMessage(client.getUser().getUsername(), message, chat_id);
-				
-				chatContainer.scrollRectToVisible(new Rectangle(0,chatContainer.getHeight(),1,1));	
+	
 			}
 		});
 		frame.getContentPane().add(btnSend, "4, 11");
@@ -877,6 +878,8 @@ public class MainWindow {
 						
 						Chat chat = client.getChat(chat_id);
 						chatContainer.setViewportView(new JList(getChatMessages(chat)));
+						
+						chatContainer.scrollRectToVisible(new Rectangle(0,chatContainer.getHeight(),1,1));	
 					}
 				});
 				
@@ -968,6 +971,8 @@ public class MainWindow {
 					}
 					
 					scrollPane.setViewportView(new JList(getChatList()));
+					
+					chatContainer.scrollRectToVisible(new Rectangle(0,chatContainer.getHeight(),1,1));	
 				}
 				
 				if (e.getType() == ClientEvent.END_OF_ROUND) {
