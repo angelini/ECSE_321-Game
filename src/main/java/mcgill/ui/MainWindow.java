@@ -892,6 +892,7 @@ public class MainWindow {
 						chatContainer.setViewportView(chat_messages);
 
 						chatContainer.getViewport().setViewPosition(new Point(0,chatContainer.getHeight()));
+					}
 				});
 				
 				scrollPane.setViewportView(chatList);
