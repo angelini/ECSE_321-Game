@@ -184,8 +184,8 @@ public class MainWindow {
 				}
 				
 				for (Card card : hand) {
-					if (j == 0 && nameLabels[i].getText().equals(client.getUser().getUsername())) {
-						cardLabels[i][j].setBackground(Color.LIGHT_GRAY);
+					if (j == 0 && !nameLabels[i].getText().equals(client.getUser().getUsername())) {
+						continue;
 					}
 					
 					cardLabels[i][j].setText(card.toString());
@@ -404,7 +404,7 @@ public class MainWindow {
 		pWhiteCard1.setOpaque(true);
 		pWhiteCard1.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pWhiteCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pWhiteCard1.setBackground(Color.BLACK);
+		pWhiteCard1.setBackground(Color.GRAY);
 		pWhiteCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		currentGame.add(pWhiteCard1, "4, 8, fill, fill");
 		
@@ -476,7 +476,7 @@ public class MainWindow {
 		pGreyCard1.setOpaque(true);
 		pGreyCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pGreyCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pGreyCard1.setBackground(Color.BLACK);
+		pGreyCard1.setBackground(Color.GRAY);
 		pGreyCard1.setAlignmentX(0.5f);
 		currentGame.add(pGreyCard1, "24, 8, fill, fill");
 		
@@ -504,7 +504,7 @@ public class MainWindow {
 		pRedCard1.setOpaque(true);
 		pRedCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pRedCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pRedCard1.setBackground(Color.BLACK);
+		pRedCard1.setBackground(Color.GRAY);
 		pRedCard1.setAlignmentX(0.5f);
 		currentGame.add(pRedCard1, "4, 18, fill, fill");
 		
@@ -576,7 +576,7 @@ public class MainWindow {
 		pYellowCard1.setOpaque(true);
 		pYellowCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pYellowCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pYellowCard1.setBackground(Color.BLACK);
+		pYellowCard1.setBackground(Color.GRAY);
 		pYellowCard1.setAlignmentX(0.5f);
 		currentGame.add(pYellowCard1, "24, 18, fill, fill");
 		
@@ -591,7 +591,7 @@ public class MainWindow {
 		pBlueCard1.setOpaque(true);
 		pBlueCard1.setFont(new Font("Arial", Font.BOLD, 20));
 		pBlueCard1.setBorder(new LineBorder(new Color(0, 0, 0)));
-		pBlueCard1.setBackground(Color.BLACK);
+		pBlueCard1.setBackground(Color.GRAY);
 		pBlueCard1.setAlignmentX(0.5f);
 		currentGame.add(pBlueCard1, "16, 24, 1, 3, fill, fill");
 		
