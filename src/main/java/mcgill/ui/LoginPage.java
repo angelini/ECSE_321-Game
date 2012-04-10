@@ -105,9 +105,9 @@ public class LoginPage {
 		});
 		frmLogin.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("35px"),
-				ColumnSpec.decode("57px"),
+				ColumnSpec.decode("68px"),
 				FormFactory.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("59px"),
+				ColumnSpec.decode("49px"),
 				FormFactory.UNRELATED_GAP_COLSPEC,
 				ColumnSpec.decode("127px"),},
 			new RowSpec[] {
