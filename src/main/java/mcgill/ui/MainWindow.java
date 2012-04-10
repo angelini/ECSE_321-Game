@@ -27,6 +27,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.Rectangle;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
@@ -764,7 +766,7 @@ public class MainWindow {
 		chatContainer.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		frame.getContentPane().add(chatContainer, "3, 5, 2, 5, fill, fill");
 		
-		JList listChatArea = new JList();
+		final JList listChatArea = new JList();
 		chatContainer.setViewportView(listChatArea);
 		
 		final JList listChats = new JList(getChatList());
@@ -837,6 +839,8 @@ public class MainWindow {
 				String message = txtChatHere.getText();
 				
 				client.sendMessage(client.getUser().getUsername(), message, chat_id);
+				
+				chatContainer.scrollRectToVisible(new Rectangle(0,chatContainer.getHeight(),1,1));	
 			}
 		});
 		frame.getContentPane().add(btnSend, "4, 11");
