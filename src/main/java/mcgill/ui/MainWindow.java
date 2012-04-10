@@ -792,7 +792,7 @@ public class MainWindow {
 				JList chat_messages = new JList(getChatMessages(chat));
 				chatContainer.setViewportView(chat_messages);
 
-				chatContainer.getViewport().setViewPosition(new Point(0,chatContainer.getHeight()));
+				chatContainer.getViewport().setViewPosition(new Point(0,chatContainer.getHeight()+99));
 			}
 		});
 		scrollPane.setViewportView(listChats);
@@ -891,7 +891,7 @@ public class MainWindow {
 						JList chat_messages = new JList(getChatMessages(chat));
 						chatContainer.setViewportView(chat_messages);
 
-						chatContainer.getViewport().setViewPosition(new Point(0,chatContainer.getHeight()));
+						chatContainer.getViewport().setViewPosition(new Point(0,chatContainer.getHeight()+99));
 					}
 				});
 				
@@ -975,7 +975,7 @@ public class MainWindow {
 						JList chat_message_list = new JList(getChatMessages(chat));
 						chatContainer.setViewportView(chat_message_list);
 						
-						chatContainer.getViewport().setViewPosition(new Point(0,chatContainer.getHeight()));
+						chatContainer.getViewport().setViewPosition(new Point(0,chatContainer.getHeight()+99));
 					}
 					
 					scrollPane.setViewportView(new JList(getChatList()));
