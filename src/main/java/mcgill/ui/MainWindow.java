@@ -786,9 +786,10 @@ public class MainWindow {
 				String chat_id = chat_display.getId();
 				
 				Chat chat = client.getChat(chat_id);
-				chatContainer.setViewportView(new JList(getChatMessages(chat)));
-				
-				chatContainer.getViewport().scrollRectToVisible(new Rectangle(0,chatContainer.getHeight(),1,1));	
+				JList chat_messages = new JList(getChatMessages(chat));
+				chatContainer.setViewportView(chat_messages);
+
+				chatContainer.getVerticalScrollBar().setValue(chat_messages.getHeight());
 			}
 		});
 		scrollPane.setViewportView(listChats);
@@ -881,10 +882,10 @@ public class MainWindow {
 						String chat_id = chat_display.getId();
 						
 						Chat chat = client.getChat(chat_id);
-						chatContainer.setViewportView(new JList(getChatMessages(chat)));
-						
-						chatContainer.getViewport().scrollRectToVisible(new Rectangle(0,chatContainer.getHeight(),1,1));	
-					}
+						JList chat_messages = new JList(getChatMessages(chat));
+						chatContainer.setViewportView(chat_messages);
+
+						chatContainer.getVerticalScrollBar().setValue(chat_messages.getHeight());}
 				});
 				
 				scrollPane.setViewportView(chatList);
@@ -976,7 +977,11 @@ public class MainWindow {
 					
 					scrollPane.setViewportView(new JList(getChatList()));
 					
-					chatContainer.getViewport().scrollRectToVisible(new Rectangle(0,chatContainer.getHeight(),1,1));	
+					
+					String chat_id = chat_display.getId();
+					Chat chat = client.getChat(chat_id);
+					JList chat_messages = new JList(getChatMessages(chat));
+					chatContainer.getVerticalScrollBar().setValue(chat_messages.getHeight());
 				}
 				
 				if (e.getType() == ClientEvent.END_OF_ROUND) {
