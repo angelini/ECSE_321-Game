@@ -139,7 +139,9 @@ public class MainWindow {
 	
 	public DefaultListModel getChatMessages(Chat chat) {
 		List<Message> messages = chat.getMessages();
-		DefaultListModel listModel = new DefaultListModel();
+		MessageList listModel = new MessageList();
+		
+		listModel.setChatId(chat.getId());
 		
 		for (int i = 0; i < messages.size(); i++) {
 			listModel.addElement(messages.get(i).getUsername() + ": " + messages.get(i).getMessage());
@@ -960,28 +962,17 @@ public class MainWindow {
 				}
 				
 				if (e.getType() == ClientEvent.MESSAGE) {
-					JList chatList = (JList) scrollPane.getViewport().getView();
-					DisplayWithId chat_display = (DisplayWithId) chatList.getSelectedValue();
+					JList message_list = (JList) chatContainer.getViewport().getView();
+					MessageList message_model = (MessageList) message_list.getModel();
 					
-					if (chat_display == null) {
-						scrollPane.setViewportView(new JList(getChatList()));
-						return;
-					}
-					
-					String selected_chat = chat_display.getId();
-					
-					if (selected_chat.equals(e.getChatId())) {
-						Chat chat = client.getChat(selected_chat);
-						chatContainer.setViewportView(new JList(getChatMessages(chat)));
+					if (message_model != null && message_model.getChatId().equals(e.getChatId())) {
+						Chat chat = client.getChat(e.getChatId());
+						JList chat_message_list = new JList(getChatMessages(chat));
+						chatContainer.setViewportView(chat_message_list);
+						chatContainer.getVerticalScrollBar().setValue(chat_message_list.getHeight());
 					}
 					
 					scrollPane.setViewportView(new JList(getChatList()));
-					
-					
-					String chat_id = chat_display.getId();
-					Chat chat = client.getChat(chat_id);
-					JList chat_messages = new JList(getChatMessages(chat));
-					chatContainer.getVerticalScrollBar().setValue(chat_messages.getHeight());
 				}
 				
 				if (e.getType() == ClientEvent.END_OF_ROUND) {
