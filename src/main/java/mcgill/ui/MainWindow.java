@@ -27,7 +27,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import java.awt.Rectangle;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -185,6 +184,7 @@ public class MainWindow {
 				
 				for (Card card : hand) {
 					if (j == 0 && !nameLabels[i].getText().equals(client.getUser().getUsername())) {
+						j++;
 						continue;
 					}
 					
