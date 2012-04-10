@@ -96,6 +96,8 @@ public class FiveCardStud implements Runnable {
 		Map<String, Integer> credit_map = new HashMap<String, Integer>();
 		
 		for (Player player : this.players) {
+			potAndStatusNotification(player);
+			
 			User user = db.getUser(player.getUsername(), false);
 			user.setCredits(player.getTotalMoney());
 			db.setUser(user);
