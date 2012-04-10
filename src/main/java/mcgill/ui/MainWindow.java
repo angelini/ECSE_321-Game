@@ -27,6 +27,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.Point;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -791,7 +792,7 @@ public class MainWindow {
 				JList chat_messages = new JList(getChatMessages(chat));
 				chatContainer.setViewportView(chat_messages);
 
-				chatContainer.getVerticalScrollBar().setValue(chat_messages.getHeight());
+				chatContainer.getViewport().setViewPosition(new Point(0,chatContainer.getHeight()));
 			}
 		});
 		scrollPane.setViewportView(listChats);
@@ -887,7 +888,7 @@ public class MainWindow {
 						JList chat_messages = new JList(getChatMessages(chat));
 						chatContainer.setViewportView(chat_messages);
 
-						chatContainer.getVerticalScrollBar().setValue(chat_messages.getHeight());}
+						chatContainer.getViewport().setViewPosition(new Point(0,chatContainer.getHeight()));
 				});
 				
 				scrollPane.setViewportView(chatList);
@@ -969,7 +970,8 @@ public class MainWindow {
 						Chat chat = client.getChat(e.getChatId());
 						JList chat_message_list = new JList(getChatMessages(chat));
 						chatContainer.setViewportView(chat_message_list);
-						chatContainer.getVerticalScrollBar().setValue(chat_message_list.getHeight());
+						
+						chatContainer.getViewport().setViewPosition(new Point(0,chatContainer.getHeight()));
 					}
 					
 					scrollPane.setViewportView(new JList(getChatList()));
