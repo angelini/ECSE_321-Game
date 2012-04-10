@@ -190,13 +190,17 @@ public class FiveCardStud implements Runnable {
 				
 				int index = j;
 				int betLimit;
+				boolean firstPlayer = false;
+				boolean secondPlayer = false;
 			
 				//Betting limits based on which street the round is in
 				if (this.street == 2) {
 					if (index == this.startingPlayer && i == 1) {
 						betLimit = 0; 
+						firstPlayer = true;
 					} else if (index == (this.startingPlayer + 1) && i == 1) {
-						betLimit = this.lowBet - this.bringIn;
+						betLimit = 0;
+						secondPlayer = true;
 					} else {
 						betLimit = this.lowBet;
 					}
@@ -218,14 +222,21 @@ public class FiveCardStud implements Runnable {
 					
 					int callAmount = getCallAmount() - currentPlayer.getAmountInPots();
 					
-					if (this.street == 2 && this.startingPlayer == index && i == 1) {
-						callAmount = this.bringIn;
-					} else if (raises >= maxRaises) {
+					if (raises >= maxRaises) {
 						betLimit = 0;
 					}
 					
-					int limitAmount = callAmount + betLimit;
+					int limitAmount;
 					
+					if (firstPlayer) {
+						callAmount = this.bringIn;
+						limitAmount = this.lowBet;
+					} else if (secondPlayer) {
+						limitAmount = this.lowBet;
+					} else {
+						limitAmount = callAmount + betLimit;
+					}
+						
 					int[] limits = {callAmount, limitAmount};	
 					
 					int action = getAction(players.get(index).getUsername(), limits);
