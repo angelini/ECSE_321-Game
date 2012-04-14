@@ -29,7 +29,7 @@ public class Deck {
 	private ArrayList<Card> deck;
 	
 	/**
-	 * Deck constructor. The Deck is an Arraylist of Cards.
+	 * Deck constructor
 	 */
 	public Deck() {
 		this.deck = new ArrayList<Card>();
@@ -44,14 +44,14 @@ public class Deck {
 	}
 	
 	/**
-	 * Randomly permutes the Cards in the deck
+	 * Randomly permutes the cards in the deck
 	 */
 	public void shuffle() {
 		Collections.shuffle(this.deck);
 	}
 	
 	/**
-	 * Returns the first Card in the deck
+	 * Returns the first card in the deck
 	 * @return Card
 	 */
 	public Card getTop() {
