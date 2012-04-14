@@ -6,6 +6,9 @@ import java.util.Map;
 import mcgill.fiveCardStud.EndOfRound;
 import mcgill.poker.Hand;
 
+/**
+ * Implements client events
+ */
 public class ClientEvent extends EventObject {
 
 	private static final long serialVersionUID = -6303128939724816459L;

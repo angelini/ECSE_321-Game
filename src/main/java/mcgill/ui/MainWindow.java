@@ -61,7 +61,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingConstants;
 import java.awt.Toolkit;
 
-
+/**
+ * GUI for main window interface
+ */
 public class MainWindow {
 	
 	private static final String OPEN_SEAT = "OPEN SEAT";

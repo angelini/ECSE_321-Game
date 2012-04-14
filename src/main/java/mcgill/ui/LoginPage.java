@@ -26,6 +26,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.Toolkit;
 
+/**
+ * GUI for login page interface
+ */
 public class LoginPage {
 
 	private JFrame frmLogin;

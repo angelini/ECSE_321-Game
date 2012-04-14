@@ -20,23 +20,82 @@ import mcgill.poker.OutOfMoneyException;
 import mcgill.poker.TooFewCardsException;
 import mcgill.poker.TooManyCardsException;
 
+/**
+ * The FiveCardStud class implements the rule of the five-card stud poker to the game.
+ */
 public class FiveCardStud implements Runnable {
+	/**
+	 * Player folds
+	 */
 	public static final int FOLDED = -1;
+	
+	/**
+	 * Player bets
+	 */
 	public static final int BETTING = 0;
+	
+	/**
+	 * Player puts all in
+	 */
 	public static final int ALL_IN = 1;
 	
+	/**
+	 * Max raises
+	 */
 	private int maxRaises;
+	
+	/**
+	 * The round the game is in
+	 */
 	private int street;
+	
+	/**
+	 * Raises
+	 */
 	private int raises;
+	
+	/**
+	 * Minimum bet
+	 */
 	private int lowBet;
+	
+	/**
+	 * Bring in 
+	 */
 	private int bringIn;
+	
+	/**
+	 * The deck of cards
+	 */
 	private Deck deck;
+	
+	/**
+	 * Players in the game
+	 */
 	private List<Player> players;
+	
+	/**
+	 * List of all the player's pots
+	 */
 	private List<Pot> pots;
+	
+	/**
+	 * The starting player
+	 */
 	private int startingPlayer;
 	
+	/**
+	 * Winner of the game
+	 */
 	private String trueWinner;
 	
+	/**
+	 * FiveCardStud constructor
+	 * @param players
+	 * @param lowBet
+	 * @param maxRaises
+	 * @param bringIn
+	 */
 	public FiveCardStud(List<Player> players, int lowBet, int maxRaises, int bringIn) {
 		this.raises = 0;
 		this.players = players;
@@ -51,6 +110,9 @@ public class FiveCardStud implements Runnable {
 		this.trueWinner = "";
 	}
 	
+	/**
+	 * Starts the game
+	 */
 	public void run() {
 		try {
 			this.playRound();
@@ -61,6 +123,10 @@ public class FiveCardStud implements Runnable {
 		}
 	}
 	
+	/**
+	 * Return the amount in the pot
+	 * @return int
+	 */
 	public int getTotalPot() {
 		int total = 0;
 		
@@ -71,6 +137,12 @@ public class FiveCardStud implements Runnable {
 		return total;
 	}
 	
+	/**
+	 * Plays the round
+	 * @throws TooFewCardsException
+	 * @throws TooManyCardsException
+	 * @throws OutOfMoneyException
+	 */
 	public void playRound() throws TooFewCardsException, TooManyCardsException, OutOfMoneyException {
 		while (this.street < 6) {
 			if (this.street == 2) {
@@ -109,6 +181,10 @@ public class FiveCardStud implements Runnable {
 		db.close();
 	}
 	
+	/**
+	 * Notifies client at the end of round
+	 * @param credit_map
+	 */
 	private void emitEndOfRound(Map<String, Integer> credit_map) {
 		EndOfRound end = new EndOfRound(this.trueWinner, credit_map);
 				
@@ -120,6 +196,10 @@ public class FiveCardStud implements Runnable {
 		}
 	}
 
+	/**
+	 * Pot and status notification to the client server
+	 * @param player
+	 */
 	private void potAndStatusNotification(Player player) {
 		int[] current = new int[2];
 		
@@ -133,6 +213,12 @@ public class FiveCardStud implements Runnable {
 		notification.close();
 	}
 	
+	/**
+	 * 
+	 * @param username
+	 * @param limits
+	 * @return int
+	 */
 	private int getAction(String username, int[] limits) {
 		String session_str = Server.getUserSession(username);
 		ClientNotification notification = new ClientNotification(session_str);
@@ -143,6 +229,9 @@ public class FiveCardStud implements Runnable {
 		return Integer.parseInt(command);
 	}
 
+	/**
+	 * Sends the player's hands to the client server
+	 */
 	private void emitHands() {
 		Map<String, Hand> hands = new HashMap<String, Hand>();
 		
@@ -158,6 +247,12 @@ public class FiveCardStud implements Runnable {
 		}
 	}
 	
+	/**
+	 * Setup player for game: ante and face down card
+	 * @throws TooFewCardsException
+	 * @throws TooManyCardsException
+	 * @throws OutOfMoneyException
+	 */
 	private void initialize() throws TooFewCardsException, TooManyCardsException, OutOfMoneyException {
 		for(Player player : this.players) {
 			try {
@@ -173,6 +268,12 @@ public class FiveCardStud implements Runnable {
 		}
 	}
 	
+	/**
+	 * Players makes bets based on the round
+	 * @throws OutOfMoneyException
+	 * @throws TooFewCardsException
+	 * @throws TooManyCardsException
+	 */
 	private void betting() throws OutOfMoneyException, TooFewCardsException, TooManyCardsException {
 		int i = 1;
 		boolean continueStreet = true;
@@ -267,6 +368,11 @@ public class FiveCardStud implements Runnable {
 		}
 	}
 
+	/**
+	 * Finds the starting player by comparing hands
+	 * @throws TooFewCardsException
+	 * @throws TooManyCardsException
+	 */
 	//Fix 2,3,4 cards (it for some reason does not just look for pairs, three of a kind, four of a kind, 2 pairs)
 	private void findStartingPlayer() throws TooFewCardsException, TooManyCardsException {
 		int i = 0; 
@@ -288,6 +394,9 @@ public class FiveCardStud implements Runnable {
 		}
 	}
 	
+	/**
+	 * Adds the pot of each player's pot
+	 */
 	private void makePots() {
 		Player[] playerArray = new Player[this.players.size()]; 
 		this.players.toArray(playerArray);
@@ -361,6 +470,10 @@ public class FiveCardStud implements Runnable {
 		this.pots.add(pot);
 	}
 	
+	/**
+	 * Determines if there is only one player left betting
+	 * @return boolean
+	 */
 	private boolean onlyOneBetting() {
 		int playersBetting = 0;
 		
@@ -377,6 +490,10 @@ public class FiveCardStud implements Runnable {
 		}
 	}
 	
+	/**
+	 * Determines if player can call
+	 * @return boolean
+	 */
 	private boolean noMoreCalls() {
 		for (Player player : this.players) {
 			if (player.isBetting()) {
@@ -393,6 +510,10 @@ public class FiveCardStud implements Runnable {
 		return true;
 	}
 	
+	/**
+	 * Return the call amount
+	 * @return int
+	 */
 	private int getCallAmount() {
 		int callAmount = 0;
 		
@@ -405,6 +526,11 @@ public class FiveCardStud implements Runnable {
 		return callAmount;
 	}
 	
+	/**
+	 * Divides the pot after the game ends
+	 * @throws TooFewCardsException
+	 * @throws TooManyCardsException
+	 */
 	private void dividePots() throws TooFewCardsException, TooManyCardsException {
 		//need to account for ties
 		Boolean first = true;

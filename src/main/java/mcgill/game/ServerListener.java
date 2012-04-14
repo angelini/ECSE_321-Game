@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 
 import redis.clients.jedis.JedisPubSub;
 
+/**
+ * Server listens for notifications
+ */
 public class ServerListener extends JedisPubSub {
 
 	Gson gson;

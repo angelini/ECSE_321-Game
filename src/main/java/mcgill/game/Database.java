@@ -8,6 +8,9 @@ import java.util.Set;
 
 import redis.clients.jedis.Jedis;
 
+/**
+ * Implements the database
+ */
 public class Database {
 
 	static final String SEPERATOR = "::";
