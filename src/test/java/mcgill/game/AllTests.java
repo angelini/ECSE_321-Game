@@ -10,5 +10,5 @@ import org.junit.runners.Suite.SuiteClasses;
 				ChatTest.class })
 
 public class AllTests {
-
+	
 }
