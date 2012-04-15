@@ -7,6 +7,9 @@ import java.util.Map;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * User class keeps track of users on the database
+ */
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = 2000312905803278839L;

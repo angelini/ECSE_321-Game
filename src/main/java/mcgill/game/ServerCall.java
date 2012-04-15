@@ -5,6 +5,9 @@ import com.google.gson.Gson;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
+/**
+ * Calls the redis server
+ */
 public class ServerCall {
 
 	private Gson gson;

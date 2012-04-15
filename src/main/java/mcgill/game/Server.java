@@ -12,6 +12,9 @@ import com.google.gson.Gson;
 
 import redis.clients.jedis.Jedis;
 
+/**
+ * Implements the redis server
+ */
 public class Server {
 	
 	public Jedis emit;

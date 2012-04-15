@@ -18,6 +18,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 import java.awt.Toolkit;
 
+/**
+ * GUI for registration interface
+ */
 public class Registration {
 
 	private JFrame registration;
