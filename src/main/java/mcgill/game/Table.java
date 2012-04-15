@@ -7,6 +7,9 @@ import java.util.UUID;
 import mcgill.fiveCardStud.FiveCardStud;
 import mcgill.poker.Player;
 
+/**
+ * Keeps track of players in a table
+ */
 public class Table {
 
 	String id;

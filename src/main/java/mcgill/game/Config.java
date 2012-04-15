@@ -1,5 +1,8 @@
 package mcgill.game;
 
+/**
+ * Server configurations
+ */
 public class Config {
 	
 	// Server config

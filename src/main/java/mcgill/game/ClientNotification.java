@@ -9,6 +9,9 @@ import mcgill.poker.Hand;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
+/**
+ * Notifies client
+ */
 public class ClientNotification {
 
 	private Gson gson;

@@ -14,7 +14,9 @@ import java.awt.Toolkit;
 
 import mcgill.game.Client;
 
-
+/**
+ * GUI for forgot password interface
+ */
 public class ForgotPassword {
 
 	private JFrame frmPasswordRetrieval;

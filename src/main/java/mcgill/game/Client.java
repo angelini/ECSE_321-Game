@@ -8,6 +8,9 @@ import javax.swing.event.EventListenerList;
 
 import com.google.gson.Gson;
 
+/**
+ * Implements client
+ */
 public class Client implements Runnable {
 	
 	private User user;
